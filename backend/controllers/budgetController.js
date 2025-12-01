@@ -1,16 +1,35 @@
+'use strict';
+
 const mongoose = require("mongoose");
 const Budget = require('../models/Budget.js');
 const IncomeExpense = require('../models/IncomeExpense.js');
+const subscriptionService = require('../services/subscriptionService');
+const usageService = require('../services/usageService');
+const { UsageLimitExceededError } = require('../services/errors/SubscriptionError');
 
 const createBudget = async (req, res) => {
     try {
+        const userId = req.user.id;
+        const plan = await subscriptionService.getUserPlan(userId);
+        
+        await usageService.checkUsageLimit(userId, plan, 'budgets', 'monthly');
+        
         const { category, amount, month, year } = req.body;
-        const budget = new Budget({ user: req.user.id, category, amount, month, year });
+        const budget = new Budget({ user: userId, category, amount, month, year });
         const savedBudget = await budget.save();
+        
+        await usageService.incrementUsage(userId, 'budgets', 'monthly', 1);
+        
         res.status(201).json(savedBudget);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server Error', error: err.message });
+    } catch (error) {
+        if (error instanceof UsageLimitExceededError) {
+            return res.status(error.statusCode).json({
+                message: error.message,
+                code: error.code,
+                context: error.context,
+            });
+        }
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -52,9 +71,8 @@ const getBudgets = async (req, res) => {
 
         res.status(200).json(budgetsWithSpent);
 
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server Error', error: err.message });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -67,9 +85,8 @@ const deleteBudget = async (req, res) => {
 
         await budget.deleteOne();
         res.json({ message: 'Budget deleted successfully' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Server Error', error: err.message });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 

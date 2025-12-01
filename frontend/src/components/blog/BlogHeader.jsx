@@ -15,7 +15,6 @@ const BlogHeader = () => {
   const handleSubscribe = (e) => {
     e.preventDefault();
     if (email) {
-      console.log('Subscribing email:', email);
       setEmail('');
     }
   };

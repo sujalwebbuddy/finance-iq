@@ -1,5 +1,11 @@
+'use strict';
+
 const IncomeExpense = require('../models/IncomeExpense');
 const Papa = require('papaparse');
+const subscriptionService = require('../services/subscriptionService');
+const usageService = require('../services/usageService');
+const { UsageLimitExceededError } = require('../services/errors/SubscriptionError');
+
 // @desc    Add a new transaction
 // @route   POST /api/transactions
 // @access  Private
@@ -7,8 +13,13 @@ const addTransaction = async (req, res) => {
   const { name, category, cost, addedOn, isIncome, note } = req.body;
 
   try {
+    const userId = req.user.id;
+    const plan = await subscriptionService.getUserPlan(userId);
+    
+    await usageService.checkUsageLimit(userId, plan, 'transactions', 'monthly');
+    
     const transaction = new IncomeExpense({
-      user: req.user.id,
+      user: userId,
       name,
       category,
       cost,
@@ -18,8 +29,18 @@ const addTransaction = async (req, res) => {
     });
 
     const createdTransaction = await transaction.save();
+    
+    await usageService.incrementUsage(userId, 'transactions', 'monthly', 1);
+    
     res.status(201).json(createdTransaction);
   } catch (error) {
+    if (error instanceof UsageLimitExceededError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+        code: error.code,
+        context: error.context,
+      });
+    }
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
@@ -252,8 +273,6 @@ const getChartData = async (req, res) => {
 
     res.json({ expensesByCategory, incomeByCategory, expensesOverTime, incomeOverTime });
   } catch (error) {
-    // Also log the error to the backend console for easier debugging
-    console.error('Error in getChartData:', error);
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
@@ -342,7 +361,12 @@ const deleteCategory = async (req, res) => {
 
 const exportTransactions = async (req, res) => {
   try {
-    const transactions = await IncomeExpense.find({ user: req.user._id, isDeleted: false }).lean();
+    const userId = req.user._id;
+    const plan = await subscriptionService.getUserPlan(userId);
+    
+    await usageService.checkUsageLimit(userId, plan, 'exports', 'monthly');
+    
+    const transactions = await IncomeExpense.find({ user: userId, isDeleted: false }).lean();
 
     const csvData = transactions.map(({ _id, user, name, category, cost, addedOn, isIncome }) => ({
       id: _id,
@@ -354,13 +378,21 @@ const exportTransactions = async (req, res) => {
       isIncome,
     }));
 
-    // Use Papa.unparse directly
     const csv = Papa.unparse(csvData, { header: true });
+
+    await usageService.incrementUsage(userId, 'exports', 'monthly', 1);
 
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="financeIQ_transactions.csv"');
     res.status(200).send(csv);
   } catch (error) {
+    if (error instanceof UsageLimitExceededError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+        code: error.code,
+        context: error.context,
+      });
+    }
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };

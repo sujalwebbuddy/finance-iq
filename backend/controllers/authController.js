@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 
-const frontendUrl = process.env.ALLOWED_CORS_ORIGIN || 'http://localhost:5173';
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // Function to generate JWT
 const generateToken = (id) => {

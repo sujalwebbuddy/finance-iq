@@ -1,5 +1,10 @@
+'use strict';
+
 const RecurringTransaction = require('../models/RecurringTransactions');
 const { calculateNextDueDate } = require('../utils');
+const subscriptionService = require('../services/subscriptionService');
+const usageService = require('../services/usageService');
+const { UsageLimitExceededError } = require('../services/errors/SubscriptionError');
 
 const createRecurringTransaction = async (req, res) => {
     const { name, category, amount, isIncome, frequency, startDate } = req.body;
@@ -9,11 +14,15 @@ const createRecurringTransaction = async (req, res) => {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
+        const userId = req.user.id;
+        const plan = await subscriptionService.getUserPlan(userId);
+        
+        await usageService.checkUsageLimit(userId, plan, 'recurring_transactions', 'monthly');
+
         const nextDueDate = calculateNextDueDate(startDate, frequency);
 
-
         const recurringTransaction = new RecurringTransaction({
-            user: req.user.id,
+            user: userId,
             name,
             category,
             amount,
@@ -24,10 +33,19 @@ const createRecurringTransaction = async (req, res) => {
         });
 
         const createdRecurringTransaction = await recurringTransaction.save();
+        
+        await usageService.incrementUsage(userId, 'recurring_transactions', 'monthly', 1);
+        
         res.status(201).json(createdRecurringTransaction);
-    } catch (err) {
-        console.error('Error creating recurring transaction:', err.message);
-        res.status(500).json({ message: 'Server Error', error: err.message });
+    } catch (error) {
+        if (error instanceof UsageLimitExceededError) {
+            return res.status(error.statusCode).json({
+                message: error.message,
+                code: error.code,
+                context: error.context,
+            });
+        }
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -36,9 +54,8 @@ const getRecurringTransactions = async (req, res) => {
     try {
         const transactions = await RecurringTransaction.find({ user: req.user.id });
         res.json(transactions);
-    } catch (err) {
-        console.error('Error fetching recurring transactions:', err.message);
-        res.status(500).json({ message: 'Server Error', error: err.message });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -71,9 +88,8 @@ const updateRecurringTransaction = async (req, res) => {
         }
 
         res.json(updated);
-    } catch (err) {
-        console.error('Error updating recurring transaction:', err.message);
-        res.status(500).json({ message: 'Server Error', error: err.message });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -90,9 +106,8 @@ const deleteRecurringTransaction = async (req, res) => {
         }
 
         res.json({ message: 'Deleted successfully' });
-    } catch (err) {
-        console.error('Error deleting recurring transaction:', err.message);
-        res.status(500).json({ message: 'Server Error', error: err.message });
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 

@@ -1,6 +1,11 @@
+'use strict';
+
 const Receipt = require("../models/Receipt");
 const IncomeExpense = require("../models/IncomeExpense");
 const { GoogleGenAI } = require("@google/genai");
+const subscriptionService = require('../services/subscriptionService');
+const usageService = require('../services/usageService');
+const { UsageLimitExceededError, FeatureNotAvailableError } = require('../services/errors/SubscriptionError');
 
 const fs = require("fs");
 
@@ -27,6 +32,11 @@ const uploadReceipt = async (req, res) => {
   }
 
   try {
+    const userId = req.user.id;
+    const plan = await subscriptionService.getUserPlan(userId);
+    
+    await subscriptionService.requireFeatureAccess(userId, 'receiptOcr');
+    await usageService.checkUsageLimit(userId, plan, 'receipts', 'monthly');
     const prompt = `
       Analyze this receipt image. Extract the following details:
       - merchant: The name of the store or merchant.
@@ -57,8 +67,7 @@ const uploadReceipt = async (req, res) => {
     let extractedData;
     try {
       extractedData = JSON.parse(cleanedText);
-    } catch (e) {
-      console.warn("[Gemini] Invalid JSON, fallback to defaults.", e);
+    } catch (parseError) {
       extractedData = {};
     }
 
@@ -74,16 +83,22 @@ const uploadReceipt = async (req, res) => {
     });
 
     const savedReceipt = await newReceipt.save();
+    
+    await usageService.incrementUsage(userId, 'receipts', 'monthly', 1);
 
     res.status(201).json(savedReceipt);
   } catch (error) {
-    console.error("Error with Gemini API:", error);
-    res
-      .status(500)
-      .json({
-        message: "Failed to process receipt with AI",
-        error: error.message,
+    if (error instanceof UsageLimitExceededError || error instanceof FeatureNotAvailableError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+        code: error.code,
+        context: error.context,
       });
+    }
+    res.status(500).json({
+      message: "Failed to process receipt with AI",
+      error: error.message,
+    });
   } finally {
     // Deleting the temporary file from the server
     fs.unlinkSync(req.file.path);
@@ -143,7 +158,6 @@ const saveTransactionFromReceipt = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error saving transaction:', error);
     res.status(500).json({ message: 'Failed to save transaction', error: error.message });
   }
 };
