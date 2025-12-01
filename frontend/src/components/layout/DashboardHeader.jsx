@@ -6,7 +6,7 @@ import ThemeToggle from '../ThemeToggle';
 import CurrencySelector from '../CurrencySelector';
 import { APP_NAME } from '../../config/app';
 
-const DashboardHeader = ({ onLogout }) => {
+const DashboardHeader = () => {
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -31,12 +31,6 @@ const DashboardHeader = ({ onLogout }) => {
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <CurrencySelector />
-            <button
-              onClick={onLogout}
-              className="bg-red-500 dark:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 dark:hover:bg-red-700 transition-colors"
-            >
-              Logout
-            </button>
           </div>
         </div>
       </div>

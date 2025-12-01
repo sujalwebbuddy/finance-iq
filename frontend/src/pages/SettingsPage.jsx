@@ -28,24 +28,38 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Settings</h1>
+    <div className="max-w-3xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-6">Settings</h1>
       
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Account Info</h2>
-        <p className="mt-2 text-gray-800 dark:text-gray-200"><strong>Email:</strong> {user?.email}</p>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+      
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Account Info</h2>
+        <p className="text-gray-600 dark:text-gray-400"><strong>Email:</strong> {user?.email}</p>
       </div>
 
-      <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
-        <h2 className="text-lg font-semibold text-red-600 mb-2">Danger Zone</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
+      <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Account Actions</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Sign out of your account. You can sign back in anytime.
+        </p>
+        <button
+          onClick={logout}
+          className="px-4 py-2 bg-red-500 dark:bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-600 dark:hover:bg-red-700 transition-colors"
+        >
+          Logout
+        </button>
+      </div>
+
+      <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-red-200 dark:border-red-800 p-6">
+        <h2 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Danger Zone</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Deleting your account is permanent. All your data will be lost.
         </p>
-        {error && <p className="text-red-600 mb-2">{error}</p>}
+        {error && <p className="text-red-600 dark:text-red-400 mb-2 text-sm">{error}</p>}
         <button
           onClick={handleDeleteAccount}
           disabled={loading}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors text-sm font-semibold"
         >
           {loading ? 'Deleting...' : 'Delete Account'}
         </button>

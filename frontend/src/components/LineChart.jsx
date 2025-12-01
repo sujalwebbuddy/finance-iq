@@ -13,30 +13,40 @@ import {
   Legend,
 } from 'chart.js';
 import useCurrency from '../hooks/useCurrency';
+import { chartColors } from '../config/chartColors';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+const hexToRgba = (hex, alpha = 0.7) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 const LineChart = ({ data, theme, label }) => {
   const isDarkMode = theme === 'dark';
   const textColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.9)';
   const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 
-  const { currency } = useCurrency()
+  const { currency } = useCurrency();
   const chartData = useMemo(() => {
-    // Extract and sort all unique dates
-    const allDates = data.map(d => d.date);
+    const allDates = data.map((d) => d.date);
     const uniqueDates = [...new Set(allDates)].sort();
 
-    const dataMap = new Map(data.map(d => [d.date, d.total]));
+    const dataMap = new Map(data.map((d) => [d.date, d.total]));
+
+    const isIncome = label?.toLowerCase().includes('income');
+    const primaryColor = isIncome ? chartColors.tertiary : chartColors.primary;
 
     return {
-      labels: uniqueDates.map(date => new Date(date).toDateString().slice(4, 10)), // Format dates as 'MMM DD'
+      labels: uniqueDates.map((date) => new Date(date).toDateString().slice(4, 10)),
       datasets: [
         {
           label: label || 'Amount',
-          data: uniqueDates.map(date => dataMap.get(date) || 0),
-          borderColor: isDarkMode ? 'rgba(34, 197, 94, 0.8)' : 'rgba(34, 197, 94, 0.7)',
-          backgroundColor: isDarkMode ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.2)',
+          data: uniqueDates.map((date) => dataMap.get(date) || 0),
+          borderColor: hexToRgba(primaryColor, 0.8),
+          backgroundColor: hexToRgba(primaryColor, 0.2),
           fill: true,
           tension: 0.4,
           pointRadius: 4,
@@ -44,7 +54,7 @@ const LineChart = ({ data, theme, label }) => {
         },
       ],
     };
-  }, [data, isDarkMode]);
+  }, [data, label]);
 
   const options = useMemo(
     () => ({
@@ -56,10 +66,7 @@ const LineChart = ({ data, theme, label }) => {
           labels: { color: textColor },
         },
         title: {
-          display: true,
-          text: 'Daily Activity (Last 30 Days)',
-          color: textColor,
-          font: { size: 16, weight: '600' },
+          display: false,
         },
         tooltip: {
           callbacks: {
@@ -81,9 +88,9 @@ const LineChart = ({ data, theme, label }) => {
           grid: { color: gridColor },
           title: {
             display: true,
-            text: `Amount (${currency.symbol})`,
+            text: 'Amount',
             color: textColor,
-            font: { size: 14 },
+            font: { size: 12, weight: '500' },
           },
         },
         x: {
@@ -91,9 +98,9 @@ const LineChart = ({ data, theme, label }) => {
           grid: { color: gridColor },
           title: {
             display: true,
-            text: 'Date',
+            text: 'Time Period',
             color: textColor,
-            font: { size: 14 },
+            font: { size: 12, weight: '500' },
           },
         },
       },
