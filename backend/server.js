@@ -13,6 +13,9 @@ const { sanitizeMiddleware } = require("./middleware/sanitizeMiddleware")
 // Load environment variables
 dotenv.config();
 
+const ALLOWED_CORS_ORIGIN = process.env.ALLOWED_CORS_ORIGIN || 'http://localhost:5173';
+const PORT = process.env.PORT || 5000;
+
 // Connect to database
 connectDB();
 
@@ -20,6 +23,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:5173",
+  ALLOWED_CORS_ORIGIN,
 ];
 
 app.use(
@@ -53,8 +57,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/', (req, res) => {
   res.send('API is Running');
 });
-
-const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () =>
   console.log(`Server started on port ${PORT}`)
