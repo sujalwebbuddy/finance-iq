@@ -1,20 +1,27 @@
+'use strict';
+
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('passport');
 const connectDB = require('./config/db');
 const axios = require('axios');
 const cron = require('node-cron');
+const { initializeGoogleStrategy } = require('./services/googleOAuthService');
 require('./cron');
 
 // import the sanitizeMiddleware
-const { sanitizeMiddleware } = require("./middleware/sanitizeMiddleware")
+const { sanitizeMiddleware } = require("./middleware/sanitizeMiddleware");
 
 // Load environment variables
 dotenv.config();
 
 const ALLOWED_CORS_ORIGIN = process.env.ALLOWED_CORS_ORIGIN || 'http://localhost:5173';
 const PORT = process.env.PORT || 5000;
+const SESSION_SECRET = process.env.SESSION_SECRET || process.env.JWT_SECRET || 'default-secret';
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 // Connect to database
 connectDB();
@@ -40,6 +47,31 @@ app.use(
 );
 app.use(express.json());
 
+// Session configuration for OAuth
+app.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: NODE_ENV === 'production',
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  })
+);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Initialize Google OAuth Strategy
+try {
+  initializeGoogleStrategy();
+} catch (error) {
+  console.warn('Google OAuth not configured:', error.message);
+}
+
 // sanitizeMiddleware
 app.use(sanitizeMiddleware());
 
@@ -59,7 +91,7 @@ app.get('/', (req, res) => {
 });
 
 const server = app.listen(PORT, () =>
-  console.log(`Server started on port ${PORT}`)
+  console.info(`Server started on port ${PORT}`)
 );
 
 cron.schedule("*/10 * * * *", async () => {

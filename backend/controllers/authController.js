@@ -1,6 +1,11 @@
+'use strict';
+
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
+
+const frontendUrl = process.env.ALLOWED_CORS_ORIGIN || 'http://localhost:5173';
 
 // Function to generate JWT
 const generateToken = (id) => {
@@ -54,7 +59,22 @@ const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    if (!user.password) {
+      if (user.googleId) {
+        return res.status(401).json({ 
+          message: 'This account uses Google Sign-In. Please sign in with Google.' 
+        });
+      }
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+    if (isPasswordValid) {
       res.json({
         _id: user._id,
         email: user.email,
@@ -113,9 +133,55 @@ const completeSetup = async (req, res) => {
   }
 };
 
+// @desc    Initiate Google OAuth authentication
+// @route   GET /api/auth/google
+// @access  Public
+const googleAuth = passport.authenticate('google', {
+  scope: ['profile', 'email'],
+});
+
+// @desc    Google OAuth callback handler
+// @route   GET /api/auth/google/callback
+// @access  Public
+const googleCallback = passport.authenticate('google', {
+  failureRedirect: frontendUrl + '/login?error=google_auth_failed',
+  session: false,
+});
+
+// @desc    Handle successful Google OAuth authentication
+// @route   GET /api/auth/google/success
+// @access  Public
+const googleSuccess = async (req, res) => {
+  try {
+
+    if (!req.user) {
+      return res.redirect(
+        frontendUrl + '/login?error=google_auth_failed'
+      );
+    }
+
+    const token = generateToken(req.user._id);
+    const redirectUrl = new URL(frontendUrl + '/auth/google/callback');
+    redirectUrl.searchParams.set('token', token);
+    redirectUrl.searchParams.set('userId', req.user._id.toString());
+    redirectUrl.searchParams.set('email', req.user.email);
+    redirectUrl.searchParams.set('isSetupComplete', req.user.isSetupComplete ? 'true' : 'false');
+    redirectUrl.searchParams.set('defaultCurrency', req.user.defaultCurrency || 'USD');
+
+    res.redirect(redirectUrl.toString());
+  } catch (error) {
+    res.redirect(
+      frontendUrl + '/login?error=server_error'
+    );
+  }
+};
+
 module.exports = {
   signup,
   login,
   getMe,
   completeSetup,
+  googleAuth,
+  googleCallback,
+  googleSuccess,
 };

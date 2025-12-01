@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import TransactionModal from '../components/TransactionModal';
 import useTheme from '../hooks/useTheme';
-import dashboardService from '../services/dashboardService';
 import transactionsService from '../services/transactionsService';
 import { handleTransactionError } from '../utils/errorHandler';
 import DashboardHeader from '../components/dashboard/DashboardHeader';
@@ -31,10 +30,10 @@ const DashboardPage = () => {
     try {
       setLoading(true);
       const [summaryData, chartData, expenseCategories, incomeCategories] = await Promise.all([
-        dashboardService.getSummary(),
-        dashboardService.getCharts(),
-        dashboardService.getExpenseCategories(),
-        dashboardService.getIncomeCategories(),
+        transactionsService.getSummary(),
+        transactionsService.getCharts(),
+        transactionsService.getExpenseCategories(),
+        transactionsService.getIncomeCategories(),
       ]);
 
       setSummaryData(summaryData);

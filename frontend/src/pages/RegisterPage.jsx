@@ -6,6 +6,7 @@ import FormInput from '../components/auth/FormInput';
 import FormButton from '../components/auth/FormButton';
 import PasswordInput from '../components/PasswordInput';
 import PasswordStrengthIndicator from '../components/auth/PasswordStrengthIndicator';
+import GoogleSignInButton from '../components/auth/GoogleSignInButton';
 import EmailIcon from '../components/icons/EmailIcon';
 
 const RegisterPage = () => {
@@ -14,7 +15,8 @@ const RegisterPage = () => {
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { signup } = useAuth();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const { signup, initiateGoogleAuth } = useAuth();
 
   const validate = () => {
     const newErrors = {};
@@ -62,6 +64,11 @@ const RegisterPage = () => {
     }
   };
 
+  const handleGoogleSignIn = () => {
+    setIsGoogleLoading(true);
+    initiateGoogleAuth();
+  };
+
   return (
     <AuthFormLayout
       title="Create Account"
@@ -78,37 +85,56 @@ const RegisterPage = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <FormField label="Email Address" id="email" error={errors.email} required>
-          <FormInput
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            icon={EmailIcon}
-            error={errors.email}
-            required
-          />
-        </FormField>
+      <div className="space-y-6">
+        <GoogleSignInButton 
+          onClick={handleGoogleSignIn} 
+          isLoading={isGoogleLoading}
+          text="Sign up with Google"
+        />
 
-        <FormField label="Password" id="password" error={errors.password} required>
-          <PasswordInput
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={`w-full px-4 py-3 border rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-all duration-200 ${
-              errors.password 
-                ? 'border-red-500 focus:ring-red-500' 
-                : 'border-gray-300 dark:border-gray-600 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent'
-            }`}
-          />
-          <PasswordStrengthIndicator password={password} />
-        </FormField>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+              Or continue with email
+            </span>
+          </div>
+        </div>
 
-        <FormButton isLoading={isLoading}>
-          {isLoading ? 'Creating account...' : 'Create Account'}
-        </FormButton>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <FormField label="Email Address" id="email" error={errors.email} required>
+            <FormInput
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              icon={EmailIcon}
+              error={errors.email}
+              required
+            />
+          </FormField>
+
+          <FormField label="Password" id="password" error={errors.password} required>
+            <PasswordInput
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`w-full px-4 py-3 border rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 transition-all duration-200 ${
+                errors.password 
+                  ? 'border-red-500 focus:ring-red-500' 
+                  : 'border-gray-300 dark:border-gray-600 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent'
+              }`}
+            />
+            <PasswordStrengthIndicator password={password} />
+          </FormField>
+
+          <FormButton isLoading={isLoading}>
+            {isLoading ? 'Creating account...' : 'Create Account'}
+          </FormButton>
+        </form>
+      </div>
 
       <p className="mt-6 text-xs text-gray-500 dark:text-gray-400 text-center">
         By signing up, you agree to our Terms & Privacy Policy

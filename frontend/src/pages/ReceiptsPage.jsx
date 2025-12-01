@@ -7,6 +7,7 @@ import ReceiptUpload from '../components/receipts/ReceiptUpload';
 import ReceiptResult from '../components/receipts/ReceiptResult';
 import { receiptsService } from '../services/receiptsService';
 import { handleTransactionError } from '../utils/errorHandler';
+import transactionsService from '../services/transactionsService';
 
 const ReceiptsPage = () => {
 	const [file, setFile] = useState(null);
@@ -22,18 +23,11 @@ const ReceiptsPage = () => {
 	useEffect(() => {
 		const fetchCategories = async () => {
 			try {
-				const categoriesData = await receiptsService.getCategories();
+				const categoriesData = await transactionsService.getExpenseCategories();
 				setCategories(categoriesData);
 			} catch (err) {
 				const receiptError = handleTransactionError(err, { action: 'fetchCategories' });
-				toast.error(receiptError.message, {
-					position: 'top-right',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(receiptError.message, { autoClose: 5000 });
 			}
 		};
 
@@ -51,14 +45,7 @@ const ReceiptsPage = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!file) {
-			toast.error('Please select a file to upload.', {
-				position: 'top-right',
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error('Please select a file to upload.');
 			return;
 		}
 
@@ -67,24 +54,10 @@ const ReceiptsPage = () => {
 			const result = await receiptsService.uploadReceipt(file);
 			setReceiptResult(result);
 			setOpenEditReceiptResult(true);
-			toast.success('Receipt uploaded successfully! Review and edit the extracted data.', {
-				position: 'top-right',
-				autoClose: 4000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success('Receipt uploaded successfully! Review and edit the extracted data.', { autoClose: 4000 });
 		} catch (err) {
 			const receiptError = handleTransactionError(err, { action: 'uploadReceipt' });
-			toast.error(receiptError.message, {
-				position: 'top-right',
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(receiptError.message, { autoClose: 5000 });
 		} finally {
 			setUploading(false);
 		}
@@ -122,26 +95,12 @@ const ReceiptsPage = () => {
 
 			await receiptsService.saveTransactionFromReceipt(receiptResult._id, transactionData);
 
-			toast.success('Transaction saved successfully!', {
-				position: 'top-right',
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success('Transaction saved successfully!');
 
 			setTimeout(() => navigate('/dashboard'), 1000);
 		} catch (err) {
 			const receiptError = handleTransactionError(err, { action: 'saveTransactionFromReceipt' });
-			toast.error(receiptError.message, {
-				position: 'top-right',
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(receiptError.message, { autoClose: 5000 });
 		} finally {
 			setIsSaving(false);
 		}

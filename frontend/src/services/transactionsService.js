@@ -73,6 +73,11 @@ export const transactionsService = {
     });
     return response.data;
   },
+
+  getCharts: async () => {
+    const response = await api.get('/transactions/charts');
+    return response.data;
+  },
 };
 
 export default transactionsService;

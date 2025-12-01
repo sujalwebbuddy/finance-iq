@@ -20,10 +20,6 @@ export const receiptsService = {
     return response.data;
   },
 
-  getCategories: async () => {
-    const response = await api.get('/transactions/categories/expense');
-    return response.data;
-  },
 };
 
 export default receiptsService;

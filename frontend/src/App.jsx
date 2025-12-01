@@ -16,6 +16,7 @@ import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import SetupProtectedRoute from './components/SetupProtectedRoute';
 import RecurringTransactions from './pages/RecurringTransactions';
+import GoogleAuthCallback from './pages/GoogleAuthCallback';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
         <Route path="/contact" element={<ContactUs />} />
         {/* Protected Routes */}
         <Route
@@ -55,7 +57,12 @@ function App() {
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <ToastContainer />
+      <ToastContainer
+        autoClose={3000}
+        closeOnClick
+        draggable
+        theme="light"
+      />
     </>
   );
 }

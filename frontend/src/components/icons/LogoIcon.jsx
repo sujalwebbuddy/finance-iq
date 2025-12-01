@@ -1,20 +1,28 @@
-import React from 'react';
+import React from "react";
 
-const LogoIcon = ({ className = 'h-8 w-8' }) => {
+const LogoIcon = ({ className = "h-8 w-8" }) => {
   return (
     <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      className={className}
     >
-      <path
-        d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-        fill="currentColor"
-      />
+      <rect width="512" height="512" fill="teal" rx="200" />
+
+      <text
+        x="256"
+        y="256"
+        font-family="Arial, sans-serif"
+        font-size="440"
+        font-weight="300"
+        fill="#ffffff"
+        text-anchor="middle"
+        dominant-baseline="central"
+      >
+        ₹
+      </text>
     </svg>
   );
 };
 
 export default LogoIcon;
-

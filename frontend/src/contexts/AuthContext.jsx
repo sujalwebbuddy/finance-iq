@@ -1,7 +1,8 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/axios';
+import authService from '../services/authService';
+import { setAuthToken, handleAuthSuccess, handleAuthError } from '../utils/authUtils';
 
 const AuthContext = createContext();
 
@@ -17,25 +18,21 @@ export const AuthProvider = ({ children }) => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         setToken(storedToken);
-        api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        setAuthToken(storedToken);
         try {
-          // Check if the token is valid by fetching user data
-          const response = await api.get('/auth/me');
-          setUser(response.data);
+          const userData = await authService.getMe();
+          setUser(userData);
         } catch (error) {
-          // Clear invalid token
-          console.error("Token verification failed", error);
-          localStorage.removeItem('token');
           setUser(null);
           setToken(null);
+          setAuthToken(null);
         }
       }
-      setLoading(false); // Finished checking
+      setLoading(false);
     };
     verifyUser();
   }, []);
 
-  // Show pending toast after redirect
   useEffect(() => {
     if (pendingToast) {
       toast[pendingToast.type](pendingToast.message);
@@ -43,72 +40,73 @@ export const AuthProvider = ({ children }) => {
     }
   }, [pendingToast]);
 
-  const login = async (email, password) => {
+  const login = useCallback(async (email, password) => {
     try {
-      const response = await api.post('/auth/login', { email, password });
-      const { token: newToken, ...userData } = response.data;
-
-      setToken(newToken);
-      setUser(userData);
-      localStorage.setItem('token', newToken);
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-
-      setPendingToast({ type: 'success', message: 'Login successful!' });
-      if (!userData.isSetupComplete) {
-        navigate('/setup');
-      } else {
-        navigate('/dashboard');
-      }
+      const { token: newToken, ...userData } = await authService.login(email, password);
+      handleAuthSuccess(newToken, userData, navigate, setToken, setUser, setPendingToast);
     } catch (error) {
-      console.error('Login failed', error.response?.data);
-      setPendingToast({ type: 'error', message: error.response?.data?.message || 'Login failed. Please try again.' });
-      throw new Error(error.response?.data?.message || 'Login failed. Please try again.');
+      handleAuthError(error, setPendingToast, 'Login failed. Please try again.');
     }
-  };
+  }, [navigate]);
 
-  const signup = async (email, password) => {
+  const signup = useCallback(async (email, password) => {
     try {
-      const response = await api.post('/auth/signup', { email, password });
-      const { token: newToken, ...userData } = response.data;
-
+      const { token: newToken, ...userData } = await authService.signup(email, password);
       setToken(newToken);
       setUser(userData);
-      localStorage.setItem('token', newToken);
-      api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-
+      setAuthToken(newToken);
       setPendingToast({ type: 'success', message: 'Signup successful!' });
       navigate('/setup');
     } catch (error) {
-      console.error('Signup failed', error.response?.data);
-      setPendingToast({ type: 'error', message: error.response?.data?.message || 'Signup failed. Please try again.' });
-      throw new Error(error.response?.data?.message || 'Signup failed. Please try again.');
+      handleAuthError(error, setPendingToast, 'Signup failed. Please try again.');
     }
-  };
+  }, [navigate]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setPendingToast({ type: 'info', message: 'Logged out successfully.' });
     setUser(null);
     setToken(null);
-    localStorage.removeItem('token');
-    delete api.defaults.headers.common['Authorization'];
+    setAuthToken(null);
     navigate('/login');
-  };
+  }, [navigate]);
 
-  const setup = async (defaultCurrency) => {
+  const setup = useCallback(async (defaultCurrency) => {
     try {
-      const response = await api.put('/auth/setup', { defaultCurrency });
-
-      setUser(response.data);
-
+      const userData = await authService.completeSetup(defaultCurrency);
+      setUser(userData);
       navigate('/dashboard');
     } catch (error) {
-      console.error('Setup failed', error);
-      throw new Error(error.response?.data?.message || 'Setup failed. Please try again.');
+      handleAuthError(error, setPendingToast, 'Setup failed. Please try again.');
     }
-  };
+  }, [navigate]);
+
+  const initiateGoogleAuth = useCallback(() => {
+    window.location.href = authService.getGoogleAuthUrl();
+  }, []);
+
+  const handleGoogleCallback = useCallback((data) => {
+    const { token: newToken, userId, email, isSetupComplete, defaultCurrency } = data;
+    const userData = {
+      _id: userId,
+      email: email,
+      isSetupComplete: isSetupComplete === 'true' || isSetupComplete === true,
+      defaultCurrency: defaultCurrency || 'USD',
+    };
+    handleAuthSuccess(newToken, userData, navigate, setToken, setUser, setPendingToast);
+  }, [navigate]);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, setup }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      token, 
+      loading, 
+      login, 
+      signup, 
+      logout, 
+      setup,
+      initiateGoogleAuth,
+      handleGoogleCallback,
+    }}>
       {children}
     </AuthContext.Provider>
   );

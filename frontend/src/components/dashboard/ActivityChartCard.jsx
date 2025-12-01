@@ -2,6 +2,7 @@ import React from 'react';
 import ActivityBarChart from '../ActivityBarChart';
 import RecentTransactions from './RecentTransactions';
 import ChartCard from './ChartCard';
+import ActivityIcon from '../icons/ActivityIcon';
 
 const ActivityChartCard = ({ chartData, recentTransactions, theme, loading }) => {
   const hasData = chartData?.expensesOverTime?.length > 0 || chartData?.incomeOverTime?.length > 0;
@@ -11,7 +12,8 @@ const ActivityChartCard = ({ chartData, recentTransactions, theme, loading }) =>
       title="Financial Activity"
       subtitle="Daily income and expenses overview"
       loading={loading}
-      emptyMessage={!hasData ? 'No activity data available. Start adding transactions to see your financial activity.' : null}
+      emptyMessage={!hasData ? 'Start adding transactions to see your financial activity' : null}
+      emptyIcon={<ActivityIcon className="h-12 w-12 text-teal-500 dark:text-teal-400" />}
     >
       <div className="relative h-80">
         {hasData && (
