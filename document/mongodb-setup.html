@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MongoDB Setup – Paisable Docs</title>
+    <title>MongoDB Setup – FinanceIQ Docs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -15,7 +15,7 @@
       <div class="brand">
         <img src="./screenshots/logo.svg" alt="Logo" />
         <div>
-          <h1>Paisable</h1>
+          <h1>FinanceIQ</h1>
           <p>Documentation v1.0</p>
         </div>
       </div>
@@ -45,7 +45,7 @@
 
       <section class="prose">
         <div class="callout">
-          <strong>🗄️ About MongoDB:</strong> Paisable uses MongoDB with Mongoose to store all core entities: users, transactions, budgets, receipts, recurring transactions, subscriptions, and usage tracking. Use MongoDB Atlas for a managed cloud deployment or self-host MongoDB locally.
+          <strong>🗄️ About MongoDB:</strong> FinanceIQ uses MongoDB with Mongoose to store all core entities: users, transactions, budgets, receipts, recurring transactions, subscriptions, and usage tracking. Use MongoDB Atlas for a managed cloud deployment or self-host MongoDB locally.
         </div>
 
         <h3>Why MongoDB?</h3>
@@ -85,23 +85,23 @@
           <li class="step">Copy the SRV URI and replace <code>&lt;username&gt;</code>, <code>&lt;password&gt;</code>, and the database name.</li>
         </ol>
 
-        <div class="code"><pre><code>mongodb+srv://dbUser:dbPassword@cluster0.xzy.mongodb.net/paisable?retryWrites=true&w=majority</code></pre></div>
+        <div class="code"><pre><code>mongodb+srv://dbUser:dbPassword@cluster0.xzy.mongodb.net/finance-iq?retryWrites=true&w=majority</code></pre></div>
 
         <div class="callout success">
-          <strong>✅ Tip:</strong> Use <code>paisable</code> as the default database name.
+          <strong>✅ Tip:</strong> Use <code>finance-iq</code> as the default database name.
         </div>
 
         <h3>5. Add the URI to backend <code>.env</code></h3>
         <div class="code"><pre><code># backend/.env
-MONGO_URI=mongodb+srv://dbUser:dbPassword@cluster0.xzy.mongodb.net/paisable?retryWrites=true&w=majority</code></pre></div>
+MONGO_URI=mongodb+srv://dbUser:dbPassword@cluster0.xzy.mongodb.net/finance-iq?retryWrites=true&w=majority</code></pre></div>
 
         <h2>Option 2 · Local MongoDB</h2>
         <ol class="steps">
           <li class="step">Install MongoDB Community Server (macOS: <code>brew install mongodb-community</code>).</li>
           <li class="step">Start the daemon (<code>brew services start mongodb-community</code> or systemd).</li>
-          <li class="step">Create the <code>paisable</code> database via Compass or <code>mongosh</code>.</li>
+          <li class="step">Create the <code>finance-iq</code> database via Compass or <code>mongosh</code>.</li>
         </ol>
-        <div class="code"><pre><code>MONGO_URI=mongodb://localhost:27017/paisable</code></pre></div>
+        <div class="code"><pre><code>MONGO_URI=mongodb://localhost:27017/finance-iq</code></pre></div>
 
         <h2>Collections Created by Mongoose Models</h2>
         <table>

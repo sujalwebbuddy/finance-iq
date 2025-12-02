@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Install on Render – Paisable Docs</title>
+    <title>Install on Render – FinanceIQ Docs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -15,7 +15,7 @@
       <div class="brand">
         <img src="./screenshots/logo.svg" alt="Logo" />
         <div>
-          <h1>Paisable</h1>
+          <h1>FinanceIQ</h1>
           <p>Installation</p>
         </div>
       </div>
@@ -58,7 +58,7 @@
           <div class="step"><strong>4.</strong> Connect to GitHub and select your repository.</div>
           <div class="step"><strong>5.</strong> Configure service settings:
             <ul>
-              <li><strong>Name:</strong> paisable-backend (or your preferred name)</li>
+              <li><strong>Name:</strong> finance-iq-backend (or your preferred name)</li>
               <li><strong>Region:</strong> Choose closest to your users</li>
               <li><strong>Branch:</strong> main (or your default branch)</li>
               <li><strong>Root Directory:</strong> backend</li>
@@ -103,7 +103,7 @@
         <h3>Environment Variables</h3>
         <p>Add all required environment variables in Render Dashboard → Environment:</p>
         <div class="code"><pre><code># Database
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/paisable?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/finance-iq?retryWrites=true&w=majority
 
 # Server
 PORT=10000
@@ -134,7 +134,7 @@ KEEP_ALIVE_URL=https://your-backend.onrender.com</code></pre></div>
 
         <h3>Stripe Webhook Configuration</h3>
         <ol>
-          <li>After deployment, copy your Render backend URL (e.g., <code>https://paisable-backend.onrender.com</code>)</li>
+          <li>After deployment, copy your Render backend URL (e.g., <code>https://finance-iq-backend.onrender.com</code>)</li>
           <li>Go to Stripe Dashboard → Developers → Webhooks</li>
           <li>Add endpoint: <code>https://your-backend.onrender.com/api/stripe/webhook</code></li>
           <li>Select events: <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code></li>
@@ -186,7 +186,7 @@ KEEP_ALIVE_URL=https://your-backend.onrender.com</code></pre></div>
         </ul>
 
         <div class="callout info">
-          <strong>📝 Note:</strong> Paisable uses a separate frontend (React + Vite on Netlify) and backend (Express on Render). Make sure both are deployed and configured with correct environment variables pointing to each other.
+          <strong>📝 Note:</strong> FinanceIQ uses a separate frontend (React + Vite on Netlify) and backend (Express on Render). Make sure both are deployed and configured with correct environment variables pointing to each other.
         </div>
 
         <div class="callout success">

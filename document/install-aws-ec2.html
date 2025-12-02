@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Install Backend on AWS EC2 – Paisable Docs</title>
+    <title>Install Backend on AWS EC2 – FinanceIQ Docs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -15,7 +15,7 @@
       <div class="brand">
         <img src="./screenshots/logo.svg" alt="Logo" />
         <div>
-          <h1>Paisable</h1>
+          <h1>FinanceIQ</h1>
           <p>AWS EC2 Installation</p>
         </div>
       </div>
@@ -50,7 +50,7 @@
         </div>
 
         <h2>Deploying Backend to AWS EC2</h2>
-        <p>This guide will walk you through deploying the Paisable backend to an AWS EC2 Ubuntu server. This is an alternative to Render for backend hosting.</p>
+        <p>This guide will walk you through deploying the FinanceIQ backend to an AWS EC2 Ubuntu server. This is an alternative to Render for backend hosting.</p>
 
         <div class="callout info">
           <strong>Note:</strong> AWS EC2 requires more setup than Render but gives you full control over your server. For a simpler deployment, consider using <a href="./install-render.html">Render</a> instead.
@@ -167,9 +167,9 @@ sudo mkdir -p /var/www
 cd /var/www
 
 # Clone your repository (replace with your actual repo URL)
-sudo git clone https://github.com/yourusername/paisable.git
-sudo chown -R ubuntu:ubuntu paisable
-cd paisable/backend</code></pre></div>
+sudo git clone https://github.com/yourusername/finance-iq.git
+sudo chown -R ubuntu:ubuntu finance-iq
+cd finance-iq/backend</code></pre></div>
 
         <h4>4.2 Install Dependencies</h4>
         <div class="code"><pre><code># Install project dependencies
@@ -180,7 +180,7 @@ npm install</code></pre></div>
 nano .env
 
 # Add all required environment variables (see env-setup.html)
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/paisable?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/finance-iq?retryWrites=true&w=majority
 PORT=5000
 NODE_ENV=production
 FRONTEND_URL=https://your-app.netlify.app
@@ -208,7 +208,7 @@ STRIPE_PRICE_ID_ENTERPRISE=price_your_enterprise_plan_price_id</code></pre></div
         
         <h4>5.1 Create Nginx Configuration</h4>
         <div class="code"><pre><code># Create Nginx configuration
-sudo nano /etc/nginx/sites-available/paisable
+sudo nano /etc/nginx/sites-available/finance-iq
 
 # Add the following configuration:
 server {
@@ -230,7 +230,7 @@ server {
 
         <h4>5.2 Enable the Site</h4>
         <div class="code"><pre><code># Enable the site
-sudo ln -s /etc/nginx/sites-available/paisable /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/finance-iq /etc/nginx/sites-enabled/
 
 # Remove default site (optional)
 sudo rm /etc/nginx/sites-enabled/default
@@ -245,17 +245,17 @@ sudo systemctl restart nginx</code></pre></div>
         
         <h4>6.1 Start with PM2</h4>
         <div class="code"><pre><code># Navigate to backend directory
-cd /var/www/paisable/backend
+cd /var/www/finance-iq/backend
 
 # Start the application with PM2
-pm2 start server.js --name "paisable-backend"
+pm2 start server.js --name "finance-iq-backend"
 
 # Save PM2 configuration
 pm2 save
 
 # Check status
 pm2 status
-pm2 logs paisable-backend</code></pre></div>
+pm2 logs finance-iq-backend</code></pre></div>
 
         <h3>Step 7: Configure SSL (Optional but Recommended)</h3>
         
@@ -304,25 +304,25 @@ sudo systemctl status nginx
 pm2 status
 
 # View application logs
-pm2 logs paisable-backend</code></pre></div>
+pm2 logs finance-iq-backend</code></pre></div>
 
         <h3>Useful Commands</h3>
         
         <h4>Application Management</h4>
         <div class="code"><pre><code># Restart application
-pm2 restart paisable-backend
+pm2 restart finance-iq-backend
 
 # Stop application
-pm2 stop paisable-backend
+pm2 stop finance-iq-backend
 
 # View logs
-pm2 logs paisable-backend
+pm2 logs finance-iq-backend
 
 # Monitor resources
 pm2 monit
 
 # View detailed info
-pm2 show paisable-backend</code></pre></div>
+pm2 show finance-iq-backend</code></pre></div>
 
         <h4>Nginx Management</h4>
         <div class="code"><pre><code># Restart Nginx
@@ -343,10 +343,10 @@ sudo tail -f /var/log/nginx/error.log</code></pre></div>
 sudo apt update && sudo apt upgrade -y
 
 # Update application
-cd /var/www/paisable/backend
+cd /var/www/finance-iq/backend
 git pull origin main
 npm install
-pm2 restart paisable-backend</code></pre></div>
+pm2 restart finance-iq-backend</code></pre></div>
 
         <h3>Troubleshooting</h3>
         
@@ -354,7 +354,7 @@ pm2 restart paisable-backend</code></pre></div>
         <ul>
           <li><strong>EC2 Instance Connect not working:</strong> Ensure your instance has the EC2 Instance Connect agent installed (pre-installed on Ubuntu 18.04+)</li>
           <li><strong>Port 5000 not accessible:</strong> Check security group rules and firewall settings. Ensure port 5000 is open in security group.</li>
-          <li><strong>Application not starting:</strong> Check PM2 logs with <code>pm2 logs paisable-backend</code>. Verify environment variables are set correctly.</li>
+          <li><strong>Application not starting:</strong> Check PM2 logs with <code>pm2 logs finance-iq-backend</code>. Verify environment variables are set correctly.</li>
           <li><strong>Nginx 502 error:</strong> Ensure the application is running on port 5000. Check PM2 status and logs.</li>
           <li><strong>Environment variables not working:</strong> Verify .env file exists in backend directory and has correct values. Restart PM2 after changing .env.</li>
           <li><strong>MongoDB connection failed:</strong> Check MONGO_URI in .env file. Ensure MongoDB Atlas allows connections from your EC2 IP address.</li>
@@ -363,7 +363,7 @@ pm2 restart paisable-backend</code></pre></div>
 
         <h4>Log Locations</h4>
         <div class="code"><pre><code># Application logs
-pm2 logs paisable-backend
+pm2 logs finance-iq-backend
 
 # Nginx logs
 sudo tail -f /var/log/nginx/access.log

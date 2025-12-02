@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Authentication Setup – Paisable Docs</title>
+    <title>Authentication Setup – FinanceIQ Docs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -13,9 +13,9 @@
   <body>
     <aside class="sidebar">
       <div class="brand">
-        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <img src="./screenshots/logo.svg" alt="FinanceIQ Logo" />
         <div>
-          <h1>Paisable</h1>
+          <h1>FinanceIQ</h1>
           <p>Documentation v1.0</p>
         </div>
       </div>
@@ -45,13 +45,13 @@
 
       <section class="prose">
         <div class="callout info">
-          <strong>🔐 Authentication System:</strong> Paisable uses JWT (JSON Web Tokens) for authentication with Express.js backend. Users can register and login with email/password or use Google OAuth. Mongoose is used with MongoDB to store user accounts and session data.
+          <strong>🔐 Authentication System:</strong> FinanceIQ uses JWT (JSON Web Tokens) for authentication with Express.js backend. Users can register and login with email/password or use Google OAuth. Mongoose is used with MongoDB to store user accounts and session data.
         </div>
 
         <h2>Authentication Methods</h2>
 
         <h3>1. JWT Authentication (Required)</h3>
-        <p>Paisable uses JWT tokens for secure authentication. Users receive a JWT token upon successful login, which is used to authenticate API requests.</p>
+        <p>FinanceIQ uses JWT tokens for secure authentication. Users receive a JWT token upon successful login, which is used to authenticate API requests.</p>
         
         <h4>Setup JWT Authentication</h4>
         <ol class="steps">
@@ -204,7 +204,7 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
 
 # Database (Required)
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/paisable?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/finance-iq?retryWrites=true&w=majority
 
 # Frontend Environment Variables (.env)
 VITE_API_URL=http://localhost:5000/api</code></pre></div>
@@ -239,7 +239,7 @@ VITE_API_URL=http://localhost:5000/api</code></pre></div>
         </div>
 
         <div class="callout success">
-          <strong><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Authentication is now configured!</strong> Users can register, login, and use Google OAuth to access Paisable. All protected routes require valid JWT tokens.
+          <strong><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Authentication is now configured!</strong> Users can register, login, and use Google OAuth to access FinanceIQ. All protected routes require valid JWT tokens.
         </div>
       </section>
     </main>
