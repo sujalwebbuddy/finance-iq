@@ -36,6 +36,7 @@ const LandingHeader = () => {
     { label: 'Management', to: '/dashboard' },
     { label: 'Capital', to: '/budgets' },
     { label: 'Resources', to: '/transactions' },
+    { label: 'Pricing', to: '/pricing' },
     { label: 'About', to: '/contact' },
   ];
 

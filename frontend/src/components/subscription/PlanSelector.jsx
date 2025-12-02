@@ -20,7 +20,7 @@ const PlanSelector = ({ currentPlan, onSelectPlan, loading }) => {
     {
       id: 'basic',
       name: 'Basic',
-      price: '$9',
+      price: '$19',
       period: 'month',
       features: [
         '500 transactions/month',
@@ -37,7 +37,7 @@ const PlanSelector = ({ currentPlan, onSelectPlan, loading }) => {
     {
       id: 'pro',
       name: 'Pro',
-      price: '$29',
+      price: '$49',
       period: 'month',
       features: [
         'Unlimited transactions',
@@ -72,7 +72,7 @@ const PlanSelector = ({ currentPlan, onSelectPlan, loading }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {plans.map((plan) => {
-        const isCurrentPlan = currentPlan === plan.id;
+        const isCurrentPlan = currentPlan && currentPlan === plan.id;
         const isUpgrade = ['basic', 'pro'].includes(plan.id);
 
         return (

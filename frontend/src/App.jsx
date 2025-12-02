@@ -12,6 +12,7 @@ import SettingsPage from './pages/SettingsPage';
 import NotFound from './pages/NotFound';
 import Budgets from './pages/Budgets';
 import ContactUs from './pages/ContactUs';
+import PricingPage from './pages/PricingPage';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import SetupProtectedRoute from './components/SetupProtectedRoute';
@@ -28,6 +29,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/pricing" element={<PricingPage />} />
         {/* Protected Routes */}
         <Route
           path="/setup"
