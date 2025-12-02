@@ -8,6 +8,7 @@ import FeatureComparisonTable from '../components/pricing/FeatureComparisonTable
 import PricingFAQ from '../components/pricing/PricingFAQ';
 import PricingCTA from '../components/pricing/PricingCTA';
 import useAuth from '../hooks/useAuth';
+import subscriptionService from '../services/subscriptionService';
 
 const PricingPage = () => {
   const { user } = useAuth();
@@ -26,7 +27,6 @@ const PricingPage = () => {
 
     setLoading(true);
     try {
-      const subscriptionService = (await import('../services/subscriptionService')).default;
       const { url } = await subscriptionService.createCheckoutSession(planId);
       window.location.href = url;
     } catch (error) {
