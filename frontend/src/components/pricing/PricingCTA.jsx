@@ -13,7 +13,7 @@ const PricingCTA = () => {
           Ready to get started?
         </h2>
         <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-          Join thousands of users managing their finances with Paisable
+          Join thousands of users managing their finances with FinanceIQ
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           {user ? (

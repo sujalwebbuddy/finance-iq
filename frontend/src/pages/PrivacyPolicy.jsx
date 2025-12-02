@@ -35,7 +35,7 @@ const PrivacyPolicy = () => {
                   1. Introduction
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Paisable ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains 
+                  FinanceIQ ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains 
                   how we collect, use, disclose, and safeguard your information when you use our personal finance management 
                   application. Please read this policy carefully to understand our practices regarding your data.
                 </p>
@@ -203,7 +203,7 @@ const PrivacyPolicy = () => {
                   9. Children's Privacy
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Paisable is not intended for users under the age of 18. We do not knowingly collect personal information 
+                  FinanceIQ is not intended for users under the age of 18. We do not knowingly collect personal information 
                   from children. If you believe we have collected information from a child, please contact us immediately, 
                   and we will take steps to delete such information.
                 </p>

@@ -19,7 +19,7 @@ const TermsOfUse = () => {
               Terms of Use
             </h1>
             <p className="text-lg lg:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              Please read these terms carefully before using Paisable.
+              Please read these terms carefully before using FinanceIQ.
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
               Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -35,7 +35,7 @@ const TermsOfUse = () => {
                   1. Acceptance of Terms
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  By accessing and using Paisable, you accept and agree to be bound by the terms and provision of this agreement. 
+                  By accessing and using FinanceIQ, you accept and agree to be bound by the terms and provision of this agreement. 
                   If you do not agree to abide by the above, please do not use this service.
                 </p>
               </section>
@@ -45,7 +45,7 @@ const TermsOfUse = () => {
                   2. Description of Service
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                  Paisable is a personal finance management application that provides users with tools to:
+                  FinanceIQ is a personal finance management application that provides users with tools to:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 ml-4">
                   <li>Track income and expenses</li>
@@ -62,7 +62,7 @@ const TermsOfUse = () => {
                   3. User Accounts
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                  To use certain features of Paisable, you must register for an account. You agree to:
+                  To use certain features of FinanceIQ, you must register for an account. You agree to:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 ml-4">
                   <li>Provide accurate, current, and complete information during registration</li>
@@ -78,7 +78,7 @@ const TermsOfUse = () => {
                   4. Subscription Plans and Payments
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                  Paisable offers multiple subscription plans (Free, Basic, Pro, Enterprise) with different features and limits. 
+                  FinanceIQ offers multiple subscription plans (Free, Basic, Pro, Enterprise) with different features and limits. 
                   By subscribing to a paid plan, you agree to:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 ml-4">
@@ -95,7 +95,7 @@ const TermsOfUse = () => {
                   5. User Content and Data
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                  You retain ownership of all data and content you upload to Paisable. By using our service, you grant us:
+                  You retain ownership of all data and content you upload to FinanceIQ. By using our service, you grant us:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 ml-4">
                   <li>A license to store, process, and display your data as necessary to provide the service</li>
@@ -112,7 +112,7 @@ const TermsOfUse = () => {
                   6. Prohibited Uses
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                  You agree not to use Paisable to:
+                  You agree not to use FinanceIQ to:
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 ml-4">
                   <li>Violate any applicable laws or regulations</li>
@@ -130,8 +130,8 @@ const TermsOfUse = () => {
                   7. Intellectual Property
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  All content, features, and functionality of Paisable, including but not limited to text, graphics, logos, 
-                  icons, images, and software, are the exclusive property of Paisable and its licensors and are protected by 
+                  All content, features, and functionality of FinanceIQ, including but not limited to text, graphics, logos, 
+                  icons, images, and software, are the exclusive property of FinanceIQ and its licensors and are protected by 
                   international copyright, trademark, patent, trade secret, and other intellectual property laws.
                 </p>
               </section>
@@ -141,7 +141,7 @@ const TermsOfUse = () => {
                   8. Disclaimer of Warranties
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Paisable is provided "as is" and "as available" without warranties of any kind, either express or implied. 
+                  FinanceIQ is provided "as is" and "as available" without warranties of any kind, either express or implied. 
                   We do not guarantee that the service will be uninterrupted, secure, or error-free. We are not responsible for 
                   any financial decisions you make based on information provided by the service.
                 </p>
@@ -152,7 +152,7 @@ const TermsOfUse = () => {
                   9. Limitation of Liability
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  To the maximum extent permitted by law, Paisable and its affiliates shall not be liable for any indirect, 
+                  To the maximum extent permitted by law, FinanceIQ and its affiliates shall not be liable for any indirect, 
                   incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred 
                   directly or indirectly, or any loss of data, use, goodwill, or other intangible losses.
                 </p>
