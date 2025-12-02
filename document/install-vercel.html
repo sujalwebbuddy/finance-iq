@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Install on Vercel – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Installation</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a class="active" href="./install-netlify.html">How to install on Vercel</a>
+        <a href="./install-render.html">How to install on AWS EC2</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables </a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>How to install on Vercel recommended</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Install on Vercel</h2>
+      </header>
+      <section class="prose">
+        <div class="callout warning">
+          <strong>⚠️ Deprecated:</strong> This page is for the old application. Paisable uses separate frontend and backend deployments. Please see <a href="./install-netlify.html">How to install on Netlify</a> for frontend deployment.
+        </div>
+
+        <div class="steps">
+          <div class="step"><strong>1.</strong> Ensure your project is pushed to GitHub (see <a href="./push-to-github.html">How to push to GitHub guide</a>).</div>
+          <div class="step"><strong>2.</strong> In Vercel, click <em>New Project → Import</em> your repository.</div>
+          <div class="step"><strong>3.</strong> Framework preset: <code>Next.js</code>. Keep default build command <code>next build</code> and output.</div>
+          <div class="step"><strong>4.</strong> Add all environment variables from the <a href="./env-setup.html">Environment Variables </a> page.</div>
+          <div class="step"><strong>5.</strong> Deploy. After deploy, update <code>NEXT_PUBLIC_APP_URL</code> with your production domain (e.g., <code>https://your-domain.vercel.app</code>).</div>
+        </div>
+
+        <h3>Notes</h3>
+        <ul>
+          <li>Next.js App Router is already configured. No further runtime settings are needed.</li>
+          <li>Stripe webhooks must be configured post-deploy. See <a href="./stripe-keys.html">Stripe keys</a>.</li>
+          <li>MongoDB connection must be configured in environment variables.</li>
+          <li>All API routes are served from the same Next.js application under <code>/api</code>.</li>
+        </ul>
+
+        <div class="callout">
+          This is a monolithic Next.js 14 application. All frontend and backend code runs in a single Next.js server. No separate backend deployment is needed.
+        </div>
+      </section>
+    </main>
+  </body>
+  </html>
+
+

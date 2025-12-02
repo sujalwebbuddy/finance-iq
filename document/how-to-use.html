@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>User Guide – Paisable</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a class="active" href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>User Guide</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Complete User Guide:</strong> Learn how to use Paisable v1.0, from setting up your account to managing transactions, budgets, receipts, and analyzing your financial data.
+        </div>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Getting Started</h2>
+
+        <h3>1. Account Creation</h3>
+        <ol>
+          <li><strong>Sign Up:</strong> Click "Get Started" or "Sign Up" on the homepage</li>
+          <li><strong>Choose Method:</strong> Sign up with email/password or Google OAuth</li>
+          <li><strong>Initial Setup:</strong> Complete the setup wizard to choose your default currency</li>
+          <li><strong>Dashboard Access:</strong> Automatically redirected to your dashboard after setup</li>
+        </ol>
+
+        <h3>2. Understanding Subscription Plans</h3>
+        <div class="callout success">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Plan System:</strong>
+          <ul>
+            <li><strong>Free Plan:</strong> 50 transactions, 3 budgets, 2 recurring transactions (no receipt OCR)</li>
+            <li><strong>Basic Plan:</strong> 500 transactions, 10 budgets, 10 recurring transactions, 10 receipt scans</li>
+            <li><strong>Pro Plan:</strong> Unlimited transactions, budgets, recurring transactions, and receipt scans</li>
+            <li><strong>Enterprise Plan:</strong> All Pro features plus SSO and white-label options</li>
+          </ul>
+        </div>
+
+        <h2>💰 Managing Transactions</h2>
+
+        <h3>Adding a Transaction</h3>
+        <ol>
+          <li><strong>Navigate:</strong> Go to the Transactions page from the sidebar</li>
+          <li><strong>Click Add:</strong> Click the "Add Transaction" button</li>
+          <li><strong>Select Type:</strong> Choose Income or Expense</li>
+          <li><strong>Enter Details:</strong>
+            <ul>
+              <li><strong>Amount:</strong> Enter the transaction amount</li>
+              <li><strong>Category:</strong> Select or create a custom category</li>
+              <li><strong>Description:</strong> Add a description (optional)</li>
+              <li><strong>Date:</strong> Select the transaction date</li>
+            </ul>
+          </li>
+          <li><strong>Save:</strong> Click "Save" to add the transaction</li>
+        </ol>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><path d="M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M1 12h2M21 12h2M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41"/><circle cx="12" cy="12" r="5"/></svg> Pro Tip:</strong> Use consistent category names to better track your spending patterns. You can create custom categories for specific needs.
+        </div>
+
+        <h3>Editing and Deleting Transactions</h3>
+        <ul>
+          <li><strong>Edit:</strong> Click on any transaction to open the edit modal</li>
+          <li><strong>Update:</strong> Modify the transaction details and click "Save"</li>
+          <li><strong>Delete:</strong> Click the delete button to remove a transaction permanently</li>
+        </ul>
+
+        <h3>Managing Categories</h3>
+        <ol>
+          <li><strong>Access Categories:</strong> Click "Manage Categories" from the transactions page</li>
+          <li><strong>Add Category:</strong> Enter a new category name and click "Add"</li>
+          <li><strong>Delete Category:</strong> Click the delete icon next to unused categories</li>
+        </ol>
+
+        <h2>📊 Budget Management</h2>
+
+        <h3>Creating a Budget</h3>
+        <ol>
+          <li><strong>Navigate:</strong> Go to the Budgets page from the sidebar</li>
+          <li><strong>Click Add:</strong> Click "Create Budget" or the "+" button</li>
+          <li><strong>Set Budget Details:</strong>
+            <ul>
+              <li><strong>Category:</strong> Select the expense category</li>
+              <li><strong>Amount:</strong> Enter your budget limit</li>
+              <li><strong>Period:</strong> Choose monthly, weekly, or custom period</li>
+            </ul>
+          </li>
+          <li><strong>Save:</strong> Click "Save" to create the budget</li>
+        </ol>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Budget Limits:</strong>
+          <ul>
+            <li>Free plan allows up to 3 budgets</li>
+            <li>Basic plan allows up to 10 budgets</li>
+            <li>Pro and Enterprise plans have unlimited budgets</li>
+          </ul>
+        </div>
+
+        <h3>Tracking Budget Progress</h3>
+        <ul>
+          <li><strong>Visual Progress:</strong> View progress bars showing spending vs. budget</li>
+          <li><strong>Alerts:</strong> Get notified when approaching or exceeding budget limits</li>
+          <li><strong>History:</strong> Review budget performance over time</li>
+        </ul>
+
+        <h2>🧾 Receipt Scanning</h2>
+
+        <h3>Uploading and Scanning Receipts</h3>
+        <ol>
+          <li><strong>Navigate:</strong> Go to the Receipts page from the sidebar</li>
+          <li><strong>Upload Receipt:</strong> Click "Upload Receipt" and select an image file</li>
+          <li><strong>AI Processing:</strong> Google Gemini OCR automatically extracts transaction details</li>
+          <li><strong>Review:</strong> Review the extracted information (amount, date, merchant)</li>
+          <li><strong>Confirm:</strong> Confirm or edit the details and save as a transaction</li>
+        </ol>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><circle cx="12" cy="16" r="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Receipt OCR:</strong> The system uses Google Gemini AI to extract transaction details from receipt images. Supported formats include JPG, PNG, and PDF. Ensure receipts are clear and well-lit for best results.
+        </div>
+
+        <h3>Receipt Limits</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Receipt Scans</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Free</td>
+              <td>0 (Feature not available)</td>
+            </tr>
+            <tr>
+              <td>Basic</td>
+              <td>10 per month</td>
+            </tr>
+            <tr>
+              <td>Pro</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Enterprise</td>
+              <td>Unlimited</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>🔄 Recurring Transactions</h2>
+
+        <h3>Setting Up Recurring Transactions</h3>
+        <ol>
+          <li><strong>Navigate:</strong> Go to the Recurring Transactions page</li>
+          <li><strong>Click Add:</strong> Click "Add Recurring Transaction"</li>
+          <li><strong>Configure:</strong>
+            <ul>
+              <li><strong>Name:</strong> Enter a descriptive name (e.g., "Netflix Subscription")</li>
+              <li><strong>Type:</strong> Select Income or Expense</li>
+              <li><strong>Category:</strong> Choose the appropriate category</li>
+              <li><strong>Amount:</strong> Enter the transaction amount</li>
+              <li><strong>Frequency:</strong> Select daily, weekly, monthly, or annually</li>
+              <li><strong>Start Date:</strong> Choose when the recurring transaction should begin</li>
+            </ul>
+          </li>
+          <li><strong>Save:</strong> Click "Save" to create the recurring transaction</li>
+        </ol>
+
+        <h3>Managing Recurring Transactions</h3>
+        <ul>
+          <li><strong>View All:</strong> See all your recurring transactions in one place</li>
+          <li><strong>Edit:</strong> Modify frequency, amount, or other details</li>
+          <li><strong>Delete:</strong> Remove recurring transactions you no longer need</li>
+          <li><strong>Next Due:</strong> View when each recurring transaction is next due</li>
+        </ul>
+
+        <h2>📈 Analytics & Dashboard</h2>
+
+        <h3>Dashboard Overview</h3>
+        <ul>
+          <li><strong>Financial Summary:</strong> View total income, expenses, and balance</li>
+          <li><strong>Recent Transactions:</strong> Quick access to your latest transactions</li>
+          <li><strong>Charts:</strong> Visual breakdowns of income vs expenses and category spending</li>
+          <li><strong>Budget Status:</strong> See which budgets are on track or exceeded</li>
+        </ul>
+
+        <h3>Available Charts</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Chart Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Income vs Expense</td>
+              <td>Line chart showing income and expense trends over time</td>
+            </tr>
+            <tr>
+              <td>Category Breakdown</td>
+              <td>Pie chart showing spending distribution by category</td>
+            </tr>
+            <tr>
+              <td>Activity Chart</td>
+              <td>Bar chart showing daily transaction activity</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>⚙️ Settings & Account Management</h2>
+
+        <h3>Account Settings</h3>
+        <ul>
+          <li><strong>Profile:</strong> View and update your email and profile information</li>
+          <li><strong>Currency:</strong> Change your default currency preference</li>
+          <li><strong>Subscription:</strong> View your current plan and upgrade options</li>
+          <li><strong>Delete Account:</strong> Permanently delete your account and all data</li>
+        </ul>
+
+        <h3>Currency Support</h3>
+        <p>Paisable supports multiple currencies:</p>
+        <ul>
+          <li>USD (United States Dollar) - $</li>
+          <li>EUR (Euro) - €</li>
+          <li>GBP (British Pound) - £</li>
+          <li>JPY (Japanese Yen) - ¥</li>
+          <li>CAD (Canadian Dollar) - $</li>
+          <li>AUD (Australian Dollar) - $</li>
+          <li>INR (Indian Rupee) - ₹</li>
+        </ul>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Mobile Experience</h2>
+
+        <h3>Mobile Features</h3>
+        <ul>
+          <li><strong>Responsive Design:</strong> Fully optimized for all screen sizes</li>
+          <li><strong>Mobile Receipt Upload:</strong> Easily upload receipts from your phone camera</li>
+          <li><strong>Quick Entry:</strong> Fast transaction entry on mobile devices</li>
+          <li><strong>Touch-Friendly:</strong> All features accessible via touch interface</li>
+        </ul>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Troubleshooting</h2>
+
+        <h3>Common Issues</h3>
+        <div class="callout danger">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Frequent Problems:</strong>
+          <ul>
+            <li><strong>Transaction Limit Reached:</strong> Upgrade your plan to add more transactions</li>
+            <li><strong>Receipt Upload Failed:</strong> Check file size (max 10MB) and format (JPG, PNG)</li>
+            <li><strong>OCR Extraction Failed:</strong> Ensure receipt image is clear and well-lit</li>
+            <li><strong>Budget Limit Reached:</strong> Upgrade plan or delete unused budgets</li>
+            <li><strong>Login Issues:</strong> Clear browser cache and cookies, or try Google OAuth</li>
+          </ul>
+        </div>
+
+        <h3>Error Messages</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Error</th>
+              <th>Cause</th>
+              <th>Solution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transaction Limit Exceeded</td>
+              <td>Reached maximum transactions for your plan</td>
+              <td>Upgrade to a higher plan or wait for monthly reset</td>
+            </tr>
+            <tr>
+              <td>Receipt Upload Failed</td>
+              <td>File too large or invalid format</td>
+              <td>Use JPG or PNG format, max 10MB per file</td>
+            </tr>
+            <tr>
+              <td>OCR Processing Failed</td>
+              <td>Receipt image unclear or unsupported format</td>
+              <td>Upload a clear, well-lit receipt image</td>
+            </tr>
+            <tr>
+              <td>Budget Limit Reached</td>
+              <td>Maximum number of budgets for your plan</td>
+              <td>Upgrade plan or delete unused budgets</td>
+            </tr>
+            <tr>
+              <td>Payment Failed</td>
+              <td>Stripe payment processing error</td>
+              <td>Check payment method and try again</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Best Practices</h3>
+        <div class="callout warning">
+          <strong>💡 Tips for Best Results:</strong>
+          <ul>
+            <li><strong>Consistent Categories:</strong> Use consistent category names for better analytics</li>
+            <li><strong>Regular Updates:</strong> Add transactions regularly to maintain accurate records</li>
+            <li><strong>Clear Receipts:</strong> Take clear, well-lit photos of receipts for better OCR accuracy</li>
+            <li><strong>Budget Review:</strong> Review and adjust budgets monthly based on actual spending</li>
+            <li><strong>Recurring Setup:</strong> Set up recurring transactions for regular bills and income</li>
+          </ul>
+        </div>
+
+        <div class="callout success">
+          <strong>🎉 You're Ready!</strong> You now have all the knowledge needed to effectively manage your finances with Paisable. Start tracking your transactions, creating budgets, and analyzing your financial data!
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="./install-netlify.html" class="btn">Deploy to Netlify →</a>
+          <a href="./pricing-and-validations.html" class="btn secondary">Configure Pricing →</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

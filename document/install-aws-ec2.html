@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Install Backend on AWS EC2 – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>AWS EC2 Installation</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a class="active" href="./install-aws-ec2.html">How to install on AWS EC2</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Backend deployment on AWS EC2</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Install Backend on AWS EC2</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout">
+          <strong>Prerequisite:</strong> Make sure you've completed the <a href="./push-to-github.html">How to push to GitHub</a> before proceeding with backend deployment to AWS EC2.
+        </div>
+
+        <h2>Deploying Backend to AWS EC2</h2>
+        <p>This guide will walk you through deploying the Paisable backend to an AWS EC2 Ubuntu server. This is an alternative to Render for backend hosting.</p>
+
+        <div class="callout info">
+          <strong>Note:</strong> AWS EC2 requires more setup than Render but gives you full control over your server. For a simpler deployment, consider using <a href="./install-render.html">Render</a> instead.
+        </div>
+
+        <h3>Requirements</h3>
+        <ul>
+          <li>AWS Account (free tier eligible)</li>
+          <li>Domain name (optional, can use EC2 public IP)</li>
+          <li>Basic knowledge of Linux commands</li>
+          <li>Web browser (for AWS EC2 Instance Connect - recommended)</li>
+          <li>SSH client (Terminal, PuTTY, or VS Code - optional, for traditional SSH)</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Estimated Cost:</strong> t2.micro instance (free tier) can run this application. For production, consider t3.small or larger.
+        </div>
+
+        <h3>Step 1: Create AWS EC2 Instance</h3>
+        
+        <h4>1.1 Sign up for AWS</h4>
+        <ol class="steps">
+          <li class="step">Go to <a href="https://aws.amazon.com/" target="_blank" rel="noopener">aws.amazon.com</a> and click "Create an AWS Account"</li>
+          <li class="step">Fill in your account details and verify your email/phone</li>
+          <li class="step">Add a payment method (required even for free tier)</li>
+          <li class="step">Choose "Basic Support" (free tier includes this)</li>
+        </ol>
+
+        <h4>1.2 Launch EC2 Instance</h4>
+        <ol class="steps">
+          <li class="step">Sign in to AWS Console and navigate to EC2 service</li>
+          <li class="step">Click "Launch Instance"</li>
+          <li class="step">Choose "Ubuntu Server 24.04 LTS" (free tier eligible)</li>
+          <li class="step">Select "t2.micro" instance type (free tier)</li>
+          <li class="step">Create or select a key pair for SSH access</li>
+          <li class="step">Configure security group with these rules:
+            <div class="code"><pre><code>Type: SSH, Protocol: TCP, Port: 22, Source: My IP
+Type: HTTP, Protocol: TCP, Port: 80, Source: 0.0.0.0/0
+Type: HTTPS, Protocol: TCP, Port: 443, Source: 0.0.0.0/0
+Type: Custom TCP, Protocol: TCP, Port: 5000, Source: 0.0.0.0/0</code></pre></div>
+            <p><strong>Note:</strong> If using AWS EC2 Instance Connect, you don't need to open SSH port 22 to your IP. EC2 Instance Connect handles authentication automatically.</p>
+          </li>
+          <li class="step">Launch the instance and wait for it to be "running"</li>
+        </ol>
+
+        <h3>Step 2: Connect to Your EC2 Instance</h3>
+        
+        <h4>2.1 Using AWS EC2 Instance Connect (Recommended)</h4>
+        <ol class="steps">
+          <li class="step">In EC2 Console, select your running instance</li>
+          <li class="step">Click the "Connect" button at the top</li>
+          <li class="step">Select "EC2 Instance Connect" tab</li>
+          <li class="step">Click "Connect" - this will open a browser-based terminal</li>
+          <li class="step">You're now connected to your instance!</li>
+        </ol>
+
+        <div class="callout">
+          <strong>AWS EC2 Instance Connect:</strong> This method doesn't require downloading key files or configuring SSH clients. It works directly in your browser and is more secure.
+        </div>
+
+        <h4>2.2 Alternative: Traditional SSH (If needed)</h4>
+        <p>If you prefer traditional SSH or need it for specific use cases:</p>
+        <div class="code"><pre><code># Make your key file secure
+chmod 400 /path/to/your-key.pem
+
+# Connect to your instance
+ssh -i /path/to/your-key.pem ubuntu@YOUR_PUBLIC_IP
+
+# Example:
+ssh -i ~/Downloads/my-key.pem ubuntu@3.15.123.45</code></pre></div>
+
+        <h3>Step 3: Install Required Software</h3>
+        
+        <h4>3.1 Update System</h4>
+        <div class="code"><pre><code># Update package list and upgrade system
+sudo apt update && sudo apt upgrade -y
+
+# Install essential packages
+sudo apt install -y curl wget git unzip software-properties-common</code></pre></div>
+
+        <h4>3.2 Install Node.js 18+</h4>
+        <div class="code"><pre><code># Install Node.js using NodeSource repository
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Verify installation
+node --version  # Should show v18.x.x or higher
+npm --version</code></pre></div>
+
+        <h4>3.3 Install PM2 (Process Manager)</h4>
+        <div class="code"><pre><code># Install PM2 globally
+sudo npm install -g pm2
+
+# Configure PM2 to start on boot
+pm2 startup
+# Follow the instructions shown by the command</code></pre></div>
+
+        <h4>3.4 Install Nginx (Reverse Proxy)</h4>
+        <div class="code"><pre><code># Install Nginx
+sudo apt install -y nginx
+
+# Start and enable Nginx
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+# Check status
+sudo systemctl status nginx</code></pre></div>
+
+        <h3>Step 4: Deploy the Application</h3>
+        
+        <h4>4.1 Clone Your Repository</h4>
+        <div class="code"><pre><code># Create application directory
+sudo mkdir -p /var/www
+cd /var/www
+
+# Clone your repository (replace with your actual repo URL)
+sudo git clone https://github.com/yourusername/paisable.git
+sudo chown -R ubuntu:ubuntu paisable
+cd paisable/backend</code></pre></div>
+
+        <h4>4.2 Install Dependencies</h4>
+        <div class="code"><pre><code># Install project dependencies
+npm install</code></pre></div>
+
+        <h4>4.3 Configure Environment Variables</h4>
+        <div class="code"><pre><code># Create environment file
+nano .env
+
+# Add all required environment variables (see env-setup.html)
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/paisable?retryWrites=true&w=majority
+PORT=5000
+NODE_ENV=production
+FRONTEND_URL=https://your-app.netlify.app
+
+JWT_SECRET=your-jwt-secret-key
+SESSION_SECRET=your-session-secret-key
+
+GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://YOUR_PUBLIC_IP/api/auth/google/callback
+
+GEMINI_API_KEY=your-gemini-api-key
+
+STRIPE_SECRET_KEY=sk_live_your_secret_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+STRIPE_PRICE_ID_BASIC=price_your_basic_plan_price_id
+STRIPE_PRICE_ID_PRO=price_your_pro_plan_price_id
+STRIPE_PRICE_ID_ENTERPRISE=price_your_enterprise_plan_price_id</code></pre></div>
+
+        <div class="callout warning">
+          <strong>Important:</strong> Replace all placeholder values with your actual credentials. See <a href="./env-setup.html">Environment Variables</a> for detailed information.
+        </div>
+
+        <h3>Step 5: Configure Nginx</h3>
+        
+        <h4>5.1 Create Nginx Configuration</h4>
+        <div class="code"><pre><code># Create Nginx configuration
+sudo nano /etc/nginx/sites-available/paisable
+
+# Add the following configuration:
+server {
+    listen 80;
+    server_name YOUR_PUBLIC_IP;  # Replace with your domain if you have one
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}</code></pre></div>
+
+        <h4>5.2 Enable the Site</h4>
+        <div class="code"><pre><code># Enable the site
+sudo ln -s /etc/nginx/sites-available/paisable /etc/nginx/sites-enabled/
+
+# Remove default site (optional)
+sudo rm /etc/nginx/sites-enabled/default
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Restart Nginx
+sudo systemctl restart nginx</code></pre></div>
+
+        <h3>Step 6: Start the Application</h3>
+        
+        <h4>6.1 Start with PM2</h4>
+        <div class="code"><pre><code># Navigate to backend directory
+cd /var/www/paisable/backend
+
+# Start the application with PM2
+pm2 start server.js --name "paisable-backend"
+
+# Save PM2 configuration
+pm2 save
+
+# Check status
+pm2 status
+pm2 logs paisable-backend</code></pre></div>
+
+        <h3>Step 7: Configure SSL (Optional but Recommended)</h3>
+        
+        <h4>7.1 Install Certbot</h4>
+        <div class="code"><pre><code># Install Certbot
+sudo apt install -y certbot python3-certbot-nginx
+
+# Get SSL certificate (replace with your domain)
+sudo certbot --nginx -d yourdomain.com
+
+# Test auto-renewal
+sudo certbot renew --dry-run</code></pre></div>
+
+        <div class="callout">
+          <strong>Note:</strong> SSL certificates require a domain name. If you're using just an IP address, skip this step (not recommended for production).
+        </div>
+
+        <h3>Step 8: Configure Firewall</h3>
+        
+        <div class="code"><pre><code># Configure UFW firewall
+sudo ufw allow ssh
+sudo ufw allow 'Nginx Full'
+sudo ufw --force enable
+
+# Check status
+sudo ufw status</code></pre></div>
+
+        <h3>Step 9: Update Stripe Webhook URL</h3>
+        
+        <ol class="steps">
+          <li class="step">Go to Stripe Dashboard → Webhooks</li>
+          <li class="step">Update your webhook endpoint URL to: <code>http://YOUR_PUBLIC_IP/api/stripe/webhook</code> (or <code>https://yourdomain.com/api/stripe/webhook</code> if using SSL)</li>
+          <li class="step">Select events: <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code></li>
+          <li class="step">Test the webhook using the test endpoint</li>
+        </ol>
+
+        <h3>Step 10: Verify Installation</h3>
+        
+        <div class="code"><pre><code># Check if the application is running
+curl http://localhost:5000/api/health
+
+# Check Nginx status
+sudo systemctl status nginx
+
+# Check PM2 status
+pm2 status
+
+# View application logs
+pm2 logs paisable-backend</code></pre></div>
+
+        <h3>Useful Commands</h3>
+        
+        <h4>Application Management</h4>
+        <div class="code"><pre><code># Restart application
+pm2 restart paisable-backend
+
+# Stop application
+pm2 stop paisable-backend
+
+# View logs
+pm2 logs paisable-backend
+
+# Monitor resources
+pm2 monit
+
+# View detailed info
+pm2 show paisable-backend</code></pre></div>
+
+        <h4>Nginx Management</h4>
+        <div class="code"><pre><code># Restart Nginx
+sudo systemctl restart nginx
+
+# Reload Nginx configuration
+sudo systemctl reload nginx
+
+# Check Nginx status
+sudo systemctl status nginx
+
+# View Nginx logs
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log</code></pre></div>
+
+        <h4>System Updates</h4>
+        <div class="code"><pre><code># Update system packages
+sudo apt update && sudo apt upgrade -y
+
+# Update application
+cd /var/www/paisable/backend
+git pull origin main
+npm install
+pm2 restart paisable-backend</code></pre></div>
+
+        <h3>Troubleshooting</h3>
+        
+        <h4>Common Issues</h4>
+        <ul>
+          <li><strong>EC2 Instance Connect not working:</strong> Ensure your instance has the EC2 Instance Connect agent installed (pre-installed on Ubuntu 18.04+)</li>
+          <li><strong>Port 5000 not accessible:</strong> Check security group rules and firewall settings. Ensure port 5000 is open in security group.</li>
+          <li><strong>Application not starting:</strong> Check PM2 logs with <code>pm2 logs paisable-backend</code>. Verify environment variables are set correctly.</li>
+          <li><strong>Nginx 502 error:</strong> Ensure the application is running on port 5000. Check PM2 status and logs.</li>
+          <li><strong>Environment variables not working:</strong> Verify .env file exists in backend directory and has correct values. Restart PM2 after changing .env.</li>
+          <li><strong>MongoDB connection failed:</strong> Check MONGO_URI in .env file. Ensure MongoDB Atlas allows connections from your EC2 IP address.</li>
+          <li><strong>Stripe webhook not working:</strong> Verify webhook URL is correct and accessible. Check Stripe webhook logs in dashboard.</li>
+        </ul>
+
+        <h4>Log Locations</h4>
+        <div class="code"><pre><code># Application logs
+pm2 logs paisable-backend
+
+# Nginx logs
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
+
+# System logs
+sudo journalctl -u nginx
+sudo journalctl -u pm2-ubuntu</code></pre></div>
+
+        <div class="callout warning">
+          <strong>Security Note:</strong> For production use, consider:
+          <ul style="margin-top: 0.5rem;">
+            <li>Setting up a proper domain name</li>
+            <li>Configuring SSL certificates</li>
+            <li>Implementing additional security measures like fail2ban</li>
+            <li>Restricting security group access to specific IPs where possible</li>
+            <li>Regularly updating system packages</li>
+          </ul>
+        </div>
+
+        <h3>Cost Optimization</h3>
+        <ul>
+          <li>Use t2.micro for development (free tier eligible for 12 months)</li>
+          <li>Consider Reserved Instances for production (up to 75% savings)</li>
+          <li>Set up CloudWatch alarms for monitoring</li>
+          <li>Use S3 for file storage if needed</li>
+          <li>Consider using Application Load Balancer for high traffic</li>
+          <li>Monitor your usage to avoid unexpected charges</li>
+        </ul>
+
+        <h3>Next Steps</h3>
+        <ol>
+          <li>Update your frontend environment variables with the backend URL</li>
+          <li>Test all API endpoints to ensure everything is working</li>
+          <li>Set up monitoring and alerts</li>
+          <li>Configure automated backups if needed</li>
+          <li>Set up a domain name and SSL certificate for production</li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>

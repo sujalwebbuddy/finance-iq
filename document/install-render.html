@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Install on Render – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Installation</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a class="active" href="./install-render.html">How to install on Render</a>
+        <a href="./install-aws-ec2.html">How to install on AWS EC2</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables </a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Install Backend on Render</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout">
+          <strong>Prerequisite:</strong> Make sure you've completed the <a href="./push-to-github.html">How to push to GitHub</a> before proceeding with backend deployment to Render.
+        </div>
+
+        <h2>Deploying Backend to Render</h2>
+
+        <div class="steps">
+          <div class="step"><strong>1.</strong> Ensure your project is pushed to GitHub (see <a href="./push-to-github.html">How to push to GitHub guide</a>).</div>
+          <div class="step"><strong>2.</strong> Sign up or log in to <a href="https://render.com/" target="_blank">Render</a>.</div>
+          <div class="step"><strong>3.</strong> Click <em>New → Web Service</em>.</div>
+          <div class="step"><strong>4.</strong> Connect to GitHub and select your repository.</div>
+          <div class="step"><strong>5.</strong> Configure service settings:
+            <ul>
+              <li><strong>Name:</strong> paisable-backend (or your preferred name)</li>
+              <li><strong>Region:</strong> Choose closest to your users</li>
+              <li><strong>Branch:</strong> main (or your default branch)</li>
+              <li><strong>Root Directory:</strong> backend</li>
+              <li><strong>Runtime:</strong> Node</li>
+              <li><strong>Build Command:</strong> <code>npm install</code></li>
+              <li><strong>Start Command:</strong> <code>npm start</code></li>
+              <li><strong>Instance Type:</strong> Free (for testing) or Paid (for production)</li>
+            </ul>
+          </div>
+          <div class="step"><strong>6.</strong> Add environment variables (see <a href="./env-setup.html">Environment Variables</a>):
+            <ul>
+              <li><code>MONGO_URI</code> - MongoDB connection string</li>
+              <li><code>PORT</code> - 10000 (Render's default, or leave empty)</li>
+              <li><code>JWT_SECRET</code> - Your JWT secret key</li>
+              <li><code>SESSION_SECRET</code> - Your session secret key</li>
+              <li><code>FRONTEND_URL</code> - Your frontend URL (e.g., https://your-app.netlify.app)</li>
+              <li><code>GEMINI_API_KEY</code> - Google Gemini API key (for receipt OCR)</li>
+              <li><code>STRIPE_SECRET_KEY</code> - Stripe secret key</li>
+              <li><code>STRIPE_WEBHOOK_SECRET</code> - Stripe webhook secret</li>
+              <li><code>STRIPE_PRICE_ID_BASIC</code> - Stripe price ID for Basic plan</li>
+              <li><code>STRIPE_PRICE_ID_PRO</code> - Stripe price ID for Pro plan</li>
+              <li><code>STRIPE_PRICE_ID_ENTERPRISE</code> - Stripe price ID for Enterprise plan</li>
+              <li><code>GOOGLE_CLIENT_ID</code> - Google OAuth client ID (optional)</li>
+              <li><code>GOOGLE_CLIENT_SECRET</code> - Google OAuth client secret (optional)</li>
+              <li><code>GOOGLE_CALLBACK_URL</code> - https://your-backend.onrender.com/api/auth/google/callback</li>
+              <li><code>KEEP_ALIVE_URL</code> - https://your-backend.onrender.com (for free tier keep-alive)</li>
+            </ul>
+          </div>
+          <div class="step"><strong>7.</strong> Click <em>Create Web Service</em>.</div>
+          <div class="step"><strong>8.</strong> Wait for deployment to complete (first deployment may take a few minutes).</div>
+        </div>
+
+        <h3>Configuration Details</h3>
+        <ul>
+          <li><strong>Runtime:</strong> Node.js (Render auto-detects from package.json)</li>
+          <li><strong>Build Command:</strong> <code>npm install</code> (installs dependencies)</li>
+          <li><strong>Start Command:</strong> <code>npm start</code> (runs server.js)</li>
+          <li><strong>Port:</strong> Render automatically assigns PORT environment variable</li>
+          <li><strong>Root Directory:</strong> Set to <code>backend</code> since backend code is in a subdirectory</li>
+        </ul>
+
+        <h3>Environment Variables</h3>
+        <p>Add all required environment variables in Render Dashboard → Environment:</p>
+        <div class="code"><pre><code># Database
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/paisable?retryWrites=true&w=majority
+
+# Server
+PORT=10000
+NODE_ENV=production
+FRONTEND_URL=https://your-app.netlify.app
+
+# Authentication
+JWT_SECRET=your-jwt-secret-key
+SESSION_SECRET=your-session-secret-key
+
+# Google OAuth (Optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=https://your-backend.onrender.com/api/auth/google/callback
+
+# Gemini API
+GEMINI_API_KEY=your-gemini-api-key
+
+# Stripe
+STRIPE_SECRET_KEY=sk_live_your_secret_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+STRIPE_PRICE_ID_BASIC=price_your_basic_plan_price_id
+STRIPE_PRICE_ID_PRO=price_your_pro_plan_price_id
+STRIPE_PRICE_ID_ENTERPRISE=price_your_enterprise_plan_price_id
+
+# Keep Alive (for free tier)
+KEEP_ALIVE_URL=https://your-backend.onrender.com</code></pre></div>
+
+        <h3>Stripe Webhook Configuration</h3>
+        <ol>
+          <li>After deployment, copy your Render backend URL (e.g., <code>https://paisable-backend.onrender.com</code>)</li>
+          <li>Go to Stripe Dashboard → Developers → Webhooks</li>
+          <li>Add endpoint: <code>https://your-backend.onrender.com/api/stripe/webhook</code></li>
+          <li>Select events: <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code></li>
+          <li>Copy the webhook signing secret and add it to Render environment variables as <code>STRIPE_WEBHOOK_SECRET</code></li>
+        </ol>
+
+        <h3>Free Tier Considerations</h3>
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Free Tier Limitations:</strong>
+          <ul>
+            <li>Services spin down after 15 minutes of inactivity</li>
+            <li>First request after spin-down may be slow (cold start)</li>
+            <li>Use <code>KEEP_ALIVE_URL</code> with a cron job to keep service alive (see backend/server.js)</li>
+            <li>For production, consider upgrading to a paid plan for better performance</li>
+          </ul>
+        </div>
+
+        <h3>Custom Domain (Optional)</h3>
+        <ol>
+          <li>Go to Render Dashboard → Your Service → Settings</li>
+          <li>Scroll to "Custom Domains" section</li>
+          <li>Click "Add Custom Domain"</li>
+          <li>Enter your domain name</li>
+          <li>Follow DNS configuration instructions</li>
+          <li>Update <code>GOOGLE_CALLBACK_URL</code> and webhook URLs with your custom domain</li>
+        </ol>
+
+        <h3>Auto-Deploy</h3>
+        <ul>
+          <li>Render automatically deploys on every push to your main branch</li>
+          <li>You can disable auto-deploy in service settings</li>
+          <li>Manual deployments can be triggered from the Render dashboard</li>
+        </ul>
+
+        <h3>Monitoring & Logs</h3>
+        <ul>
+          <li>View real-time logs in Render Dashboard → Your Service → Logs</li>
+          <li>Monitor service health and metrics</li>
+          <li>Set up alerts for service failures</li>
+        </ul>
+
+        <h3>Notes</h3>
+        <ul>
+          <li>Backend runs on Express.js and serves API routes</li>
+          <li>Make sure MongoDB Atlas network access allows Render IPs</li>
+          <li>Update frontend <code>VITE_API_URL</code> with your Render backend URL</li>
+          <li>Test all API endpoints after deployment</li>
+          <li>Verify Stripe webhooks are working correctly</li>
+        </ul>
+
+        <div class="callout info">
+          <strong>📝 Note:</strong> Paisable uses a separate frontend (React + Vite on Netlify) and backend (Express on Render). Make sure both are deployed and configured with correct environment variables pointing to each other.
+        </div>
+
+        <div class="callout success">
+          <strong>✅ Deployment Complete!</strong> Your backend is now live on Render. Make sure your frontend is also deployed to Netlify and both are configured with the correct environment variables.
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="./install-netlify.html" class="btn">Deploy Frontend to Netlify →</a>
+          <a href="./env-setup.html" class="btn secondary">Environment Setup →</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+

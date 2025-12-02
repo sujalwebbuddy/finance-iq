@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pricing & Validations Configuration – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a class="active" href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Pricing & Validations Configuration</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Subscription-Based System:</strong> Paisable uses a subscription-based pricing model with different tiers (Free, Basic, Pro, Enterprise). Each plan has specific limits on transactions, budgets, receipts, and recurring transactions. Plan limits are enforced through middleware.
+        </div>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Subscription Plans Overview</h2>
+
+        <h3>Plan Structure</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Transactions</th>
+              <th>Budgets</th>
+              <th>Recurring</th>
+              <th>Receipts</th>
+              <th>Features</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Free</td>
+              <td>50</td>
+              <td>3</td>
+              <td>2</td>
+              <td>0 (Disabled)</td>
+              <td>Basic Analytics</td>
+            </tr>
+            <tr>
+              <td>Basic</td>
+              <td>500</td>
+              <td>10</td>
+              <td>10</td>
+              <td>10/month</td>
+              <td>Receipt OCR</td>
+            </tr>
+            <tr>
+              <td>Pro</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+              <td>Advanced Analytics, API Access</td>
+            </tr>
+            <tr>
+              <td>Enterprise</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+              <td>All Pro + SSO, White Label</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>⚙️ Configuration Files</h2>
+
+        <h3>Backend Plan Limits Configuration</h3>
+        <p>Plan limits are defined in <code>backend/config/planLimits.js</code>. This file exports the PLAN_LIMITS object that defines limits for each subscription tier:</p>
+
+        <pre><code>// backend/config/planLimits.js
+const PLAN_LIMITS = {
+  free: {
+    transactions: 50,
+    receipts: 0,
+    budgets: 3,
+    recurringTransactions: 2,
+    exports: 0,
+    apiRequests: 100,
+    features: {
+      receiptOcr: false,
+      advancedAnalytics: false,
+      apiAccess: false,
+      prioritySupport: false,
+    },
+  },
+  basic: {
+    transactions: 500,
+    receipts: 10,
+    budgets: 10,
+    recurringTransactions: 10,
+    exports: 5,
+    apiRequests: 1000,
+    features: {
+      receiptOcr: true,
+      advancedAnalytics: false,
+      apiAccess: false,
+      prioritySupport: false,
+    },
+  },
+  pro: {
+    transactions: -1, // -1 means unlimited
+    receipts: -1,
+    budgets: -1,
+    recurringTransactions: -1,
+    exports: -1,
+    apiRequests: 10000,
+    features: {
+      receiptOcr: true,
+      advancedAnalytics: true,
+      apiAccess: true,
+      prioritySupport: true,
+    },
+  },
+  enterprise: {
+    transactions: -1,
+    receipts: -1,
+    budgets: -1,
+    recurringTransactions: -1,
+    exports: -1,
+    apiRequests: -1,
+    features: {
+      receiptOcr: true,
+      advancedAnalytics: true,
+      apiAccess: true,
+      prioritySupport: true,
+      sso: true,
+      whiteLabel: true,
+    },
+  },
+};</code></pre>
+
+        <p>Update the limits in this file to change plan restrictions. Use <code>-1</code> to indicate unlimited access for a metric.</p>
+
+        <h3>Stripe Price IDs Configuration</h3>
+        <p>Stripe subscription price IDs are configured in your backend <code>.env</code> file:</p>
+
+        <pre><code>STRIPE_PRICE_ID_BASIC=price_your_basic_plan_price_id
+STRIPE_PRICE_ID_PRO=price_your_pro_plan_price_id
+STRIPE_PRICE_ID_ENTERPRISE=price_your_enterprise_plan_price_id</code></pre>
+
+        <p>Create products and prices in Stripe Dashboard, then copy the Price IDs to your environment variables.</p>
+
+        <h2>🔒 Plan Limit Validation</h2>
+
+        <h3>Usage Limit Middleware</h3>
+        <p>Plan limits are enforced using middleware in <code>backend/middleware/usageLimitMiddleware.js</code>:</p>
+        
+        <pre><code>// backend/middleware/usageLimitMiddleware.js
+const { createUsageLimitMiddleware } = require('./usageLimitMiddleware');
+
+// Apply to routes that need limit checking
+router.post('/transactions', 
+  authMiddleware, 
+  createUsageLimitMiddleware('transactions', 'monthly'),
+  transactionController.createTransaction
+);
+
+router.post('/budgets',
+  authMiddleware,
+  createUsageLimitMiddleware('budgets', 'monthly'),
+  budgetController.createBudget
+);</code></pre>
+
+        <h3>Feature Access Middleware</h3>
+        <p>Feature access is checked using middleware in <code>backend/middleware/featureAccessMiddleware.js</code>:</p>
+
+        <pre><code>// backend/middleware/featureAccessMiddleware.js
+const { createFeatureAccessMiddleware } = require('./featureAccessMiddleware');
+
+// Apply to routes that require specific features
+router.post('/receipts/upload',
+  authMiddleware,
+  createFeatureAccessMiddleware('receiptOcr'),
+  receiptController.uploadReceipt
+);</code></pre>
+
+        <h2>💰 Stripe Subscription Integration</h2>
+
+        <h3>Checkout Session</h3>
+        <p>The subscription checkout process creates a Stripe checkout session:</p>
+
+        <pre><code>// backend/services/stripeService.js
+async function createCheckoutSession(planId, userId, email) {
+  const priceId = getPriceIdForPlan(planId); // Gets from env vars
+  
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: [
+      {
+        price: priceId, // Stripe Price ID
+        quantity: 1,
+      },
+    ],
+    mode: 'subscription', // Subscription mode, not one-time payment
+    success_url: `${process.env.FRONTEND_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.FRONTEND_URL}/pricing`,
+    customer_email: email,
+    metadata: {
+      userId,
+      planId,
+    },
+  });
+
+  return session;
+}</code></pre>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Customizing Plan Limits</h2>
+
+        <h3>Modify Plan Limits</h3>
+        <p>Update limits in <code>backend/config/planLimits.js</code>:</p>
+
+        <pre><code>// backend/config/planLimits.js
+const PLAN_LIMITS = {
+  free: {
+    transactions: 50,      // Change this number
+    receipts: 0,
+    budgets: 3,            // Change this number
+    recurringTransactions: 2,
+    // ...
+  },
+  basic: {
+    transactions: 500,      // Change this number
+    receipts: 10,
+    budgets: 10,           // Change this number
+    // ...
+  },
+  // ... other plans
+};</code></pre>
+
+        <h3>Add New Plan</h3>
+        <p>Add a new plan object to <code>PLAN_LIMITS</code>:</p>
+
+        <pre><code>const PLAN_LIMITS = {
+  // ... existing plans
+  premium: {
+    transactions: 2000,
+    receipts: 50,
+    budgets: 25,
+    recurringTransactions: 25,
+    exports: 20,
+    apiRequests: 50000,
+    features: {
+      receiptOcr: true,
+      advancedAnalytics: true,
+      apiAccess: true,
+      prioritySupport: true,
+    },
+  },
+};</code></pre>
+
+        <h2>💳 Updating Subscription Plans</h2>
+
+        <h3>Keeping Stripe and Backend in Sync</h3>
+        <ol>
+          <li>Update plan limits in <code>backend/config/planLimits.js</code></li>
+          <li>Create matching subscription products and prices in Stripe Dashboard</li>
+          <li>Copy Price IDs to backend <code>.env</code> file</li>
+          <li>Update frontend pricing page components if needed</li>
+          <li>Deploy changes to production</li>
+        </ol>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Plan-Based Feature Access</h2>
+
+        <h3>Usage Limit Validation</h3>
+        <p>Usage limits are checked before operations:</p>
+
+        <h4>Transaction Creation</h4>
+        <pre><code>// Usage limit middleware checks before transaction creation
+router.post('/transactions',
+  authMiddleware,
+  createUsageLimitMiddleware('transactions', 'monthly'),
+  transactionController.createTransaction
+);
+
+// Middleware automatically:
+// 1. Gets user's plan
+// 2. Checks current usage
+// 3. Validates against plan limit
+// 4. Returns error if limit exceeded</code></pre>
+
+        <h4>Receipt Upload</h4>
+        <pre><code>// Feature access middleware checks receipt OCR feature
+router.post('/receipts/upload',
+  authMiddleware,
+  createFeatureAccessMiddleware('receiptOcr'),
+  createUsageLimitMiddleware('receipts', 'monthly'),
+  receiptController.uploadReceipt
+);
+
+// Middleware checks:
+// 1. User's plan has receiptOcr feature enabled
+// 2. User hasn't exceeded receipt limit for the month</code></pre>
+
+        <h2>📊 Plan Comparison</h2>
+
+        <h3>Plan Features</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Free</th>
+              <th>Basic</th>
+              <th>Pro</th>
+              <th>Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Transactions</td>
+              <td>50</td>
+              <td>500</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Budgets</td>
+              <td>3</td>
+              <td>10</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Recurring Transactions</td>
+              <td>2</td>
+              <td>10</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Receipt OCR</td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+            </tr>
+            <tr>
+              <td>Advanced Analytics</td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+            </tr>
+            <tr>
+              <td>API Access</td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+            </tr>
+            <tr>
+              <td>Priority Support</td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+            </tr>
+            <tr>
+              <td>SSO</td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></td>
+              <td><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>🔐 Subscription Management Logic</h2>
+
+        <h3>User Plan Check</h3>
+        <p>Plan validation is done via middleware and services:</p>
+
+        <pre><code>// backend/services/subscriptionService.js
+async function getUserPlan(userId) {
+  const user = await User.findById(userId);
+  const subscription = await Subscription.findOne({ user: userId });
+  
+  if (subscription && subscription.status === 'active') {
+    return subscription.plan; // 'basic', 'pro', 'enterprise'
+  }
+  
+  return 'free'; // Default to free plan
+}</code></pre>
+
+        <h3>Subscription Activation on Payment</h3>
+        <p>Subscriptions are activated via Stripe webhook in <code>backend/controllers/stripeController.js</code>:</p>
+
+        <pre><code>// backend/controllers/stripeController.js
+async function handleWebhook(req, res) {
+  const sig = req.headers['stripe-signature'];
+  const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const userId = session.metadata.userId;
+    const planId = session.metadata.planId;
+    
+    // Create or update subscription
+    await Subscription.findOneAndUpdate(
+      { user: userId },
+      {
+        user: userId,
+        plan: planId,
+        status: 'active',
+        stripeCustomerId: session.customer,
+        stripeSubscriptionId: session.subscription,
+      },
+      { upsert: true, new: true }
+    );
+  }
+  
+  // Handle subscription updates and cancellations
+  // ...
+}</code></pre>
+
+        <h2>🚨 Troubleshooting</h2>
+
+        <h3>Common Issues</h3>
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Plan Limit Issues:</strong>
+          <ul>
+            <li><strong>Limit Not Enforced:</strong> Check middleware is applied to routes and plan limits are configured correctly</li>
+            <li><strong>User Can Exceed Limits:</strong> Verify usage limit middleware is checking before operations</li>
+            <li><strong>Feature Not Available:</strong> Check feature access middleware is applied and plan has feature enabled</li>
+            <li><strong>Subscription Not Activating:</strong> Verify Stripe webhook is configured correctly and receiving events</li>
+            <li><strong>Stripe Checkout Not Working:</strong> Check Stripe keys and price IDs are set correctly in .env</li>
+          </ul>
+        </div>
+
+        <h3>Plan Validation Testing</h3>
+        <div class="code"><pre><code>// Test subscription system
+// 1. Create account (defaults to free plan)
+// 2. Try to create transaction (should work up to limit)
+// 3. Try to upload receipt (should fail - feature not available on free plan)
+// 4. Subscribe to Basic plan via Stripe checkout
+// 5. Verify subscription is activated
+// 6. Try to upload receipt (should succeed)
+// 7. Verify usage limits are enforced</code></pre></div>
+
+        <h3>Stripe Testing</h3>
+        <div class="code"><pre><code>// Use Stripe test mode
+// Test cards:
+// 4242424242424242 - Success
+// 4000000000000002 - Decline
+// 4000000000009995 - Insufficient funds
+
+// Test webhook events:
+// - checkout.session.completed (activates subscription)
+// - customer.subscription.updated (updates subscription)
+// - customer.subscription.deleted (cancels subscription)</code></pre></div>
+
+        <h2>📝 Best Practices</h2>
+
+        <div class="callout success">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><path d="M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M1 12h2M21 12h2M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41"/><circle cx="12" cy="12" r="5"/></svg> Configuration Tips:</strong>
+          <ul>
+            <li>Always validate plan limits on the backend, never trust frontend-only checks</li>
+            <li>Use middleware to enforce limits consistently across all routes</li>
+            <li>Check feature access before allowing feature usage</li>
+            <li>Provide clear error messages when limits are exceeded or features unavailable</li>
+            <li>Test subscription purchases and plan upgrades thoroughly</li>
+            <li>Monitor Stripe webhook events for subscription changes</li>
+            <li>Keep plan limits consistent between backend configuration and frontend display</li>
+            <li>Track usage metrics for analytics and plan optimization</li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="./stripe-keys.html" class="btn">Stripe Configuration →</a>
+          <a href="./env-setup.html" class="btn secondary">Environment Setup →</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

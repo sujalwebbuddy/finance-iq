@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Backend Customization – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a class="active" href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Backend Customization</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M6 6l-2 2M18 6l2 2M12 22v-4M6 18l-2-2M18 18l2-2M2 12h4M18 12h4"/></svg> Backend Customization Guide:</strong> Learn how to customize the Paisable backend, including API routes, middleware, models, services, and business logic.
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> Backend Structure</h2>
+
+        <p>The backend is built with Node.js and Express. All code is located in the <code>backend/</code> directory:</p>
+
+        <div class="code"><pre><code>backend/
+├── package.json              # Dependencies and scripts
+├── server.js                 # Express server entry point
+├── config/                   # Configuration files
+│   ├── db.js                 # MongoDB connection
+│   └── planLimits.js         # Subscription plan limits
+├── controllers/              # Route controllers
+│   ├── authController.js
+│   ├── transactionController.js
+│   ├── budgetController.js
+│   ├── receiptController.js
+│   ├── recurringTransactionController.js
+│   ├── subscriptionController.js
+│   ├── stripeController.js
+│   └── userController.js
+├── middleware/               # Express middleware
+│   ├── authMiddleware.js     # JWT authentication
+│   ├── usageLimitMiddleware.js # Plan limit enforcement
+│   ├── featureAccessMiddleware.js # Feature access control
+│   ├── validationMiddleware.js # Input validation
+│   ├── sanitizeMiddleware.js # XSS protection
+│   └── uploadMiddleware.js   # File upload handling
+├── models/                   # Mongoose models
+│   ├── User.js
+│   ├── IncomeExpense.js      # Transaction model
+│   ├── Budget.js
+│   ├── Receipt.js
+│   ├── RecurringTransactions.js
+│   ├── Subscription.js
+│   └── Usage.js
+├── routes/                   # API routes
+│   ├── authRoutes.js
+│   ├── transactionRoutes.js
+│   ├── budgetRoutes.js
+│   ├── receiptRoutes.js
+│   ├── recurringTransactionRoutes.js
+│   ├── subscriptionRoutes.js
+│   ├── stripeRoutes.js
+│   └── userRoutes.js
+├── services/                 # Business logic services
+│   ├── subscriptionService.js
+│   ├── usageService.js
+│   ├── stripeService.js
+│   ├── googleOAuthService.js
+│   └── errors/
+│       └── SubscriptionError.js
+├── utils.js                  # Utility functions
+├── cron.js                   # Scheduled tasks
+└── uploads/                  # File upload directory</code></pre></div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> API Routes</h2>
+
+        <h3>Authentication Routes</h3>
+        <p>Located in <code>backend/routes/authRoutes.js</code>:</p>
+        <ul>
+          <li><code>POST /api/auth/signup</code> - User registration</li>
+          <li><code>POST /api/auth/login</code> - User login</li>
+          <li><code>GET /api/auth/google</code> - Google OAuth initiation</li>
+          <li><code>GET /api/auth/google/callback</code> - Google OAuth callback</li>
+          <li><code>GET /api/auth/me</code> - Get current user</li>
+        </ul>
+
+        <h3>Transaction Routes</h3>
+        <p>Located in <code>backend/routes/transactionRoutes.js</code>:</p>
+        <ul>
+          <li><code>GET /api/transactions</code> - Get all transactions</li>
+          <li><code>POST /api/transactions</code> - Create transaction</li>
+          <li><code>PUT /api/transactions/:id</code> - Update transaction</li>
+          <li><code>DELETE /api/transactions/:id</code> - Delete transaction</li>
+          <li><code>DELETE /api/transactions/bulk</code> - Bulk delete</li>
+          <li><code>GET /api/transactions/summary</code> - Get summary</li>
+          <li><code>GET /api/transactions/charts</code> - Get chart data</li>
+          <li><code>GET /api/transactions/export</code> - Export transactions</li>
+        </ul>
+
+        <h3>Budget Routes</h3>
+        <p>Located in <code>backend/routes/budgetRoutes.js</code>:</p>
+        <ul>
+          <li><code>GET /api/budgets</code> - Get all budgets</li>
+          <li><code>POST /api/budgets</code> - Create budget</li>
+          <li><code>PUT /api/budgets/:id</code> - Update budget</li>
+          <li><code>DELETE /api/budgets/:id</code> - Delete budget</li>
+        </ul>
+
+        <h3>Receipt Routes</h3>
+        <p>Located in <code>backend/routes/receiptRoutes.js</code>:</p>
+        <ul>
+          <li><code>GET /api/receipts</code> - Get all receipts</li>
+          <li><code>POST /api/receipts/upload</code> - Upload receipt (with OCR)</li>
+          <li><code>DELETE /api/receipts/:id</code> - Delete receipt</li>
+        </ul>
+
+        <h3>Subscription Routes</h3>
+        <p>Located in <code>backend/routes/subscriptionRoutes.js</code>:</p>
+        <ul>
+          <li><code>GET /api/subscriptions</code> - Get user subscription</li>
+          <li><code>POST /api/subscriptions/checkout</code> - Create checkout session</li>
+          <li><code>POST /api/subscriptions/cancel</code> - Cancel subscription</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Middleware</h2>
+
+        <h3>Authentication Middleware</h3>
+        <p>Located in <code>backend/middleware/authMiddleware.js</code>:</p>
+        <div class="code"><pre><code>// Protects routes with JWT authentication
+const { protect } = require('../middleware/authMiddleware');
+
+router.get('/transactions', protect, getTransactions);</code></pre></div>
+
+        <h3>Usage Limit Middleware</h3>
+        <p>Located in <code>backend/middleware/usageLimitMiddleware.js</code>:</p>
+        <div class="code"><pre><code>// Enforces subscription plan limits
+const { createUsageLimitMiddleware } = require('../middleware/usageLimitMiddleware');
+
+router.post('/transactions', 
+  protect, 
+  createUsageLimitMiddleware('transactions', 'monthly'),
+  addTransaction
+);</code></pre></div>
+
+        <h3>Feature Access Middleware</h3>
+        <p>Located in <code>backend/middleware/featureAccessMiddleware.js</code>:</p>
+        <div class="code"><pre><code>// Checks if user's plan has feature access
+const { createFeatureAccessMiddleware } = require('../middleware/featureAccessMiddleware');
+
+router.post('/receipts/upload',
+  protect,
+  createFeatureAccessMiddleware('receiptOcr'),
+  uploadReceipt
+);</code></pre></div>
+
+        <h3>Validation Middleware</h3>
+        <p>Located in <code>backend/middleware/validationMiddleware.js</code>:</p>
+        <ul>
+          <li>Email validation with DNS MX record check</li>
+          <li>Password strength validation</li>
+          <li>Input sanitization</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M6 6l-2 2M18 6l2 2M12 22v-4M6 18l-2-2M18 18l2-2M2 12h4M18 12h4"/></svg> Models (Mongoose Schemas)</h2>
+
+        <h3>User Model</h3>
+        <p>Located in <code>backend/models/User.js</code>:</p>
+        <ul>
+          <li>Email, password (hashed with bcrypt)</li>
+          <li>Google OAuth ID (optional)</li>
+          <li>Default currency</li>
+          <li>Setup completion status</li>
+        </ul>
+
+        <h3>Transaction Model</h3>
+        <p>Located in <code>backend/models/IncomeExpense.js</code>:</p>
+        <ul>
+          <li>Type (income/expense)</li>
+          <li>Amount, category, description</li>
+          <li>Date, user reference</li>
+        </ul>
+
+        <h3>Budget Model</h3>
+        <p>Located in <code>backend/models/Budget.js</code>:</p>
+        <ul>
+          <li>Category, limit amount</li>
+          <li>Period (monthly/yearly)</li>
+          <li>User reference</li>
+        </ul>
+
+        <h3>Receipt Model</h3>
+        <p>Located in <code>backend/models/Receipt.js</code>:</p>
+        <ul>
+          <li>File path, OCR extracted data</li>
+          <li>Transaction reference (if linked)</li>
+          <li>User reference</li>
+        </ul>
+
+        <h3>Subscription Model</h3>
+        <p>Located in <code>backend/models/Subscription.js</code>:</p>
+        <ul>
+          <li>Plan type (free/basic/pro/enterprise)</li>
+          <li>Stripe customer ID, subscription ID</li>
+          <li>Status, start/end dates</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Services</h2>
+
+        <h3>Subscription Service</h3>
+        <p>Located in <code>backend/services/subscriptionService.js</code>:</p>
+        <ul>
+          <li>Get user's current plan</li>
+          <li>Check feature access</li>
+          <li>Update subscription status</li>
+        </ul>
+
+        <h3>Usage Service</h3>
+        <p>Located in <code>backend/services/usageService.js</code>:</p>
+        <ul>
+          <li>Track usage metrics</li>
+          <li>Check usage limits</li>
+          <li>Get usage statistics</li>
+        </ul>
+
+        <h3>Stripe Service</h3>
+        <p>Located in <code>backend/services/stripeService.js</code>:</p>
+        <ul>
+          <li>Create checkout sessions</li>
+          <li>Handle webhook events</li>
+          <li>Manage subscriptions</li>
+        </ul>
+
+        <h3>Google OAuth Service</h3>
+        <p>Located in <code>backend/services/googleOAuthService.js</code>:</p>
+        <ul>
+          <li>Initialize Passport Google strategy</li>
+          <li>Handle OAuth callbacks</li>
+          <li>Create/update user from Google profile</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Common Customizations</h2>
+
+        <h3>Add New API Route</h3>
+        <ol>
+          <li>Create controller in <code>backend/controllers/</code></li>
+          <li>Create route file in <code>backend/routes/</code></li>
+          <li>Register route in <code>backend/server.js</code></li>
+          <li>Apply middleware (auth, validation, etc.)</li>
+        </ol>
+
+        <h3>Modify Plan Limits</h3>
+        <p>Update <code>backend/config/planLimits.js</code>:</p>
+        <div class="code"><pre><code>const PLAN_LIMITS = {
+  free: {
+    transactions: 50,  // Change this
+    receipts: 0,
+    budgets: 3,        // Change this
+    // ...
+  },
+  // ... other plans
+};</code></pre></div>
+
+        <h3>Add New Model</h3>
+        <ol>
+          <li>Create schema in <code>backend/models/</code></li>
+          <li>Define fields and validation</li>
+          <li>Export model for use in controllers</li>
+        </ol>
+
+        <h3>Customize Receipt OCR</h3>
+        <p>The receipt OCR uses Google Gemini AI. Customize in <code>backend/controllers/receiptController.js</code>:</p>
+        <ul>
+          <li>Modify OCR prompt for better extraction</li>
+          <li>Add custom field parsing</li>
+          <li>Enhance error handling</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Server Configuration</h2>
+
+        <h3>Server Entry Point</h3>
+        <p>Located in <code>backend/server.js</code>:</p>
+        <ul>
+          <li>Express app initialization</li>
+          <li>Middleware setup (CORS, body parser, session)</li>
+          <li>Route registration</li>
+          <li>Error handling</li>
+          <li>Server startup</li>
+        </ul>
+
+        <h3>Database Connection</h3>
+        <p>Located in <code>backend/config/db.js</code>:</p>
+        <div class="code"><pre><code>// MongoDB connection using Mongoose
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('MongoDB connected');
+  } catch (error) {
+    console.error('Database connection error:', error);
+    process.exit(1);
+  }
+};</code></pre></div>
+
+        <h3>Cron Jobs</h3>
+        <p>Located in <code>backend/cron.js</code>:</p>
+        <ul>
+          <li>Scheduled tasks (e.g., keep-alive for free tier)</li>
+          <li>Recurring transaction processing</li>
+          <li>Usage limit resets</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Troubleshooting</h2>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Common Issues:</strong>
+          <ul>
+            <li><strong>Database Connection Failed:</strong> Check MONGO_URI is set correctly in .env</li>
+            <li><strong>JWT Token Invalid:</strong> Verify JWT_SECRET is set and matches between token creation and verification</li>
+            <li><strong>CORS Errors:</strong> Ensure FRONTEND_URL is set correctly in backend .env</li>
+            <li><strong>Stripe Webhook Not Working:</strong> Verify webhook secret and endpoint URL</li>
+            <li><strong>File Upload Issues:</strong> Check uploads/ directory permissions</li>
+            <li><strong>Plan Limits Not Enforced:</strong> Verify middleware is applied to routes</li>
+          </ul>
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Next Steps</h2>
+
+        <div class="callout success">
+          <strong><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Customization Complete!</strong> After making backend changes:
+          <ul>
+            <li>Test changes in development mode (<code>npm run dev</code>)</li>
+            <li>Check for errors in the console</li>
+            <li>Test API endpoints with Postman or similar tool</li>
+            <li>Deploy to Render for production</li>
+            <li>Update environment variables in production</li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="./pricing-and-validations.html" class="btn">Configure Pricing →</a>
+          <a href="./env-setup.html" class="btn secondary">Environment Setup →</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+

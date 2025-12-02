@@ -6,19 +6,19 @@ const FooterNavigation = () => {
     {
       title: 'About',
       links: [
-        { label: 'About us', to: '/about' },
-        { label: 'Features', to: '/features' },
-        { label: 'Blog', to: '/blog' },
+        { label: 'About us', to: '/' },
+        { label: 'Features', to: '/' },
+        { label: 'Blog', to: '/' },
         { label: 'Pricing', to: '/pricing' },
       ],
     },
     {
       title: 'Company',
       links: [
-        { label: 'How we work', to: '/how-we-work' },
-        { label: 'Press Room', to: '/press' },
-        { label: 'Jobs', to: '/jobs' },
-        { label: 'Community', to: '/community' },
+        { label: 'How we work', to: '/' },
+        { label: 'Press Room', to: '/' },
+        { label: 'Jobs', to: '/' },
+        { label: 'Community', to: '/' },
       ],
     },
     {
@@ -26,8 +26,6 @@ const FooterNavigation = () => {
       links: [
         { label: 'Terms of use', to: '/terms' },
         { label: 'Privacy Policy', to: '/privacy' },
-        { label: 'Security Policy', to: '/security' },
-        { label: 'Cookie Settings', to: '/cookies' },
       ],
     },
   ];

@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Frontend Customization – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a class="active" href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Frontend Customization</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M6 6l-2 2M18 6l2 2M12 22v-4M6 18l-2-2M18 18l2-2M2 12h4M18 12h4"/></svg> Frontend Customization Guide:</strong> Learn how to customize the Paisable frontend, including branding, styling, components, pages, and configuration options.
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> Frontend Structure</h2>
+
+        <p>The frontend is built with React 19 and Vite. All code is located in the <code>frontend/src/</code> directory:</p>
+
+        <div class="code"><pre><code>frontend/
+├── package.json              # Dependencies and scripts
+├── vite.config.js            # Vite configuration
+├── tailwind.config.js        # Tailwind CSS configuration
+├── index.html                # HTML entry point
+├── src/
+│   ├── main.jsx              # React entry point
+│   ├── App.jsx               # Main App component with routes
+│   ├── index.css             # Global styles
+│   ├── pages/                # Page components
+│   │   ├── LandingPage.jsx          # Homepage
+│   │   ├── LoginPage.jsx            # Login page
+│   │   ├── RegisterPage.jsx         # Registration page
+│   │   ├── DashboardPage.jsx        # Main dashboard
+│   │   ├── TransactionsPage.jsx     # Transactions page
+│   │   ├── Budgets.jsx              # Budgets page
+│   │   ├── ReceiptsPage.jsx         # Receipts page
+│   │   ├── RecurringTransactions.jsx # Recurring transactions
+│   │   ├── SettingsPage.jsx         # Settings page
+│   │   ├── PricingPage.jsx         # Pricing page
+│   │   └── ContactUs.jsx            # Contact page
+│   ├── components/           # React components
+│   │   ├── auth/             # Authentication components
+│   │   ├── dashboard/        # Dashboard components
+│   │   ├── transactions/     # Transaction components
+│   │   ├── budgets/          # Budget components
+│   │   ├── receipts/         # Receipt components
+│   │   ├── recurring/        # Recurring transaction components
+│   │   ├── pricing/          # Pricing components
+│   │   ├── layout/           # Layout components
+│   │   └── ...               # Other components
+│   ├── contexts/             # React contexts
+│   │   ├── AuthContext.jsx   # Authentication context
+│   │   ├── CurrencyContext.jsx # Currency context
+│   │   └── ThemeContext.jsx  # Theme context
+│   ├── hooks/                # Custom React hooks
+│   │   ├── useAuth.js        # Authentication hook
+│   │   ├── useCurrency.js    # Currency hook
+│   │   └── useTheme.js       # Theme hook
+│   ├── services/             # API service functions
+│   │   ├── authService.js
+│   │   ├── transactionsService.js
+│   │   ├── budgetsService.js
+│   │   └── ...
+│   ├── config/               # Configuration files
+│   │   ├── app.js            # App configuration
+│   │   ├── chartColors.js    # Chart color configuration
+│   │   └── currencies.js     # Currency configuration
+│   └── utils/                # Utility functions
+│       ├── authUtils.js
+│       ├── errorHandler.js
+│       └── transactions.js
+└── public/                   # Static assets
+    ├── favicon.ico
+    └── ...</code></pre></div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M6 6l-2 2M18 6l2 2M12 22v-4M6 18l-2-2M18 18l2-2M2 12h4M18 12h4"/></svg> Branding & Customization</h2>
+
+        <h3>1. App Configuration</h3>
+        <p>Update app metadata and branding in <code>src/config/app.js</code>:</p>
+        
+        <div class="code"><pre><code>export const appConfig = {
+  name: "Paisable",
+  description: "Personal finance management application",
+  // ... more configuration
+};</code></pre></div>
+
+        <h3>2. Logo and Images</h3>
+        <ul>
+          <li><strong>Logo:</strong> Update logo in <code>public/</code> directory</li>
+          <li><strong>Favicon:</strong> Update <code>public/favicon.ico</code> and related icon files</li>
+          <li><strong>Images:</strong> Add custom images to <code>public/</code> directory</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Key Pages</h2>
+
+        <h3>Landing Page</h3>
+        <ul>
+          <li><strong>File:</strong> <code>src/pages/LandingPage.jsx</code></li>
+          <li><strong>Components:</strong>
+            <ul>
+              <li><code>LandingHeader</code> - Header with navigation</li>
+              <li><code>HeroSection</code> - Hero section with main CTA</li>
+              <li><code>FeatureCards</code> - Feature showcase</li>
+              <li><code>TestimonialsSection</code> - Customer testimonials</li>
+              <li><code>BlogSection</code> - Blog section</li>
+              <li><code>LandingFooter</code> - Footer</li>
+            </ul>
+          </li>
+          <li><strong>Customization:</strong> Update hero text, features, testimonials, and call-to-action sections</li>
+        </ul>
+
+        <h3>Authentication Pages</h3>
+        <ul>
+          <li><strong>Login:</strong> <code>src/pages/LoginPage.jsx</code></li>
+          <li><strong>Register:</strong> <code>src/pages/RegisterPage.jsx</code></li>
+          <li><strong>Components:</strong> <code>src/components/auth/</code> contains form components</li>
+          <li><strong>Customization:</strong> Update form styling, validation messages, and Google OAuth button</li>
+        </ul>
+
+        <h3>Dashboard Pages</h3>
+        <ul>
+          <li><strong>Dashboard:</strong> <code>src/pages/DashboardPage.jsx</code>
+            <ul>
+              <li>Financial summary cards</li>
+              <li>Income vs Expense charts</li>
+              <li>Category breakdown charts</li>
+              <li>Recent transactions list</li>
+            </ul>
+          </li>
+          <li><strong>Transactions:</strong> <code>src/pages/TransactionsPage.jsx</code>
+            <ul>
+              <li>Transaction list with filters</li>
+              <li>Add/edit transaction modal</li>
+              <li>Category management</li>
+            </ul>
+          </li>
+          <li><strong>Budgets:</strong> <code>src/pages/Budgets.jsx</code>
+            <ul>
+              <li>Budget list and creation</li>
+              <li>Budget progress tracking</li>
+            </ul>
+          </li>
+          <li><strong>Receipts:</strong> <code>src/pages/ReceiptsPage.jsx</code>
+            <ul>
+              <li>Receipt upload interface</li>
+              <li>OCR result display</li>
+            </ul>
+          </li>
+          <li><strong>Recurring Transactions:</strong> <code>src/pages/RecurringTransactions.jsx</code>
+            <ul>
+              <li>Recurring transaction management</li>
+            </ul>
+          </li>
+          <li><strong>Settings:</strong> <code>src/pages/SettingsPage.jsx</code>
+            <ul>
+              <li>User profile settings</li>
+              <li>Subscription management</li>
+              <li>Account deletion</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>Pricing Page</h3>
+        <ul>
+          <li><strong>File:</strong> <code>src/pages/PricingPage.jsx</code></li>
+          <li><strong>Components:</strong>
+            <ul>
+              <li><code>PricingHero</code> - Pricing page header</li>
+              <li><code>PricingPlans</code> - Subscription plan cards</li>
+              <li><code>FeatureComparisonTable</code> - Plan comparison table</li>
+              <li><code>PricingFAQ</code> - Frequently asked questions</li>
+              <li><code>PricingCTA</code> - Call-to-action section</li>
+            </ul>
+          </li>
+          <li><strong>Customization:</strong> Update plan prices, features, and styling</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Component Structure</h2>
+
+        <h3>Dashboard Components</h3>
+        <p>Located in <code>src/components/dashboard/</code>:</p>
+        <ul>
+          <li><strong>SummaryCard</strong> - Financial summary cards</li>
+          <li><strong>LineChartCard</strong> - Income vs Expense line chart</li>
+          <li><strong>CategoryChartCard</strong> - Category breakdown pie chart</li>
+          <li><strong>ActivityChartCard</strong> - Activity bar chart</li>
+          <li><strong>RecentTransactions</strong> - Recent transactions list</li>
+        </ul>
+
+        <h3>Transaction Components</h3>
+        <p>Located in <code>src/components/transactions/</code>:</p>
+        <ul>
+          <li><strong>TransactionModal</strong> - Add/edit transaction modal</li>
+          <li><strong>TransactionDetailModal</strong> - Transaction detail view</li>
+          <li><strong>TransactionList</strong> - Transaction list display</li>
+          <li><strong>TransactionFilters</strong> - Filter controls</li>
+        </ul>
+
+        <h3>Budget Components</h3>
+        <p>Located in <code>src/components/budgets/</code>:</p>
+        <ul>
+          <li><strong>BudgetModal</strong> - Create/edit budget modal</li>
+          <li><strong>BudgetTable</strong> - Budget list table</li>
+          <li><strong>BudgetProgressBar</strong> - Budget progress visualization</li>
+        </ul>
+
+        <h3>Layout Components</h3>
+        <p>Located in <code>src/components/layout/</code>:</p>
+        <ul>
+          <li><strong>DashboardHeader</strong> - Dashboard page header</li>
+          <li><strong>DashboardNav</strong> - Sidebar navigation</li>
+          <li><strong>MobileBottomNav</strong> - Mobile bottom navigation</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M6 6l-2 2M18 6l2 2M12 22v-4M6 18l-2-2M18 18l2-2M2 12h4M18 12h4"/></svg> Styling & Theming</h2>
+
+        <h3>Tailwind CSS Configuration</h3>
+        <p>The project uses Tailwind CSS for styling. Configure in <code>tailwind.config.js</code>:</p>
+        
+        <div class="code"><pre><code>/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        // Custom color palette
+        primary: '...',
+        secondary: '...',
+        // ... more colors
+      },
+    },
+  },
+  plugins: [],
+}</code></pre></div>
+
+        <h3>Global Styles</h3>
+        <ul>
+          <li><strong>Global CSS:</strong> <code>src/index.css</code> - Tailwind directives and custom styles</li>
+          <li><strong>Theme Support:</strong> Dark mode support via <code>ThemeContext</code></li>
+          <li><strong>Custom Styles:</strong> Add custom CSS classes and utilities as needed</li>
+        </ul>
+
+        <h3>Currency Configuration</h3>
+        <p>Supported currencies are configured in <code>src/config/currencies.js</code>:</p>
+        
+        <div class="code"><pre><code>export const supportedCurrencies = [
+  { code: 'USD', name: 'United States Dollar', symbol: '$', flag: '🇺🇸' },
+  { code: 'EUR', name: 'Euro', symbol: '€', flag: '🇪🇺' },
+  { code: 'GBP', name: 'British Pound', symbol: '£', flag: '🇬🇧' },
+  // ... more currencies
+];</code></pre></div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Routing Configuration</h2>
+
+        <h3>React Router Setup</h3>
+        <p>Routes are configured in <code>src/App.jsx</code>:</p>
+        
+        <div class="code"><pre><code>import { Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
+
+function App() {
+  return (
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      
+      {/* Protected Routes */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      {/* ... more routes */}
+    </Routes>
+  );
+}</code></pre></div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Responsive Design</h2>
+
+        <h3>Mobile Optimization</h3>
+        <ul>
+          <li><strong>Responsive Classes:</strong> Uses Tailwind responsive utilities (sm:, md:, lg:, xl:)</li>
+          <li><strong>Mobile Navigation:</strong> <code>MobileBottomNav</code> component for mobile menu</li>
+          <li><strong>Touch Interactions:</strong> Optimized for touch gestures</li>
+          <li><strong>Mobile Forms:</strong> Mobile-friendly form inputs and buttons</li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Common Customizations</h2>
+
+        <h3>Change Brand Colors</h3>
+        <ol>
+          <li>Update Tailwind color palette in <code>tailwind.config.js</code></li>
+          <li>Modify CSS variables in <code>src/index.css</code></li>
+          <li>Update component-specific colors as needed</li>
+        </ol>
+
+        <h3>Modify Navigation</h3>
+        <ul>
+          <li><strong>Header:</strong> Update links in <code>src/components/LandingHeader.jsx</code></li>
+          <li><strong>Footer:</strong> Update links in <code>src/components/LandingFooter.jsx</code></li>
+          <li><strong>Dashboard Nav:</strong> Update navigation in <code>src/components/layout/DashboardNav.jsx</code></li>
+        </ul>
+
+        <h3>Update Landing Page Sections</h3>
+        <ul>
+          <li><strong>Hero Section:</strong> Edit <code>src/components/HeroSection.jsx</code></li>
+          <li><strong>Features:</strong> Edit <code>src/components/FeatureCards.jsx</code></li>
+          <li><strong>Testimonials:</strong> Edit <code>src/components/TestimonialsSection.jsx</code></li>
+          <li><strong>Blog:</strong> Edit <code>src/components/BlogSection.jsx</code></li>
+        </ul>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Build and Deployment</h2>
+
+        <h3>Development</h3>
+        <p>Run the development server:</p>
+        <div class="code"><pre><code>cd frontend
+npm run dev
+
+# The application runs on http://localhost:5173
+# API calls are made to backend at http://localhost:5000/api</code></pre></div>
+
+        <h3>Production Build</h3>
+        <div class="code"><pre><code>cd frontend
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# The build output is in the dist/ directory</code></pre></div>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Note:</strong> This is a React + Vite application. The frontend is separate from the backend and communicates via REST API. Build output is static files that can be deployed to Netlify, Vercel, or any static hosting service.
+        </div>
+
+        <h3>Environment Variables</h3>
+        <p>Create <code>.env</code> in the frontend directory:</p>
+        
+        <div class="code"><pre><code># Frontend Environment Variables (in frontend/.env)
+VITE_API_URL=http://localhost:5000/api
+
+# App Configuration (Optional)
+VITE_APP_NAME=Paisable
+VITE_APP_DESCRIPTION=Personal finance management</code></pre></div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Troubleshooting</h2>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Common Issues:</strong>
+          <ul>
+            <li><strong>API Connection Failed:</strong> Check VITE_API_URL is set correctly in frontend/.env</li>
+            <li><strong>Build Errors:</strong> Check for JavaScript/JSX errors and missing dependencies</li>
+            <li><strong>Styling Issues:</strong> Ensure Tailwind classes are included in content paths in tailwind.config.js</li>
+            <li><strong>Route Not Working:</strong> Verify React Router routes are configured correctly</li>
+            <li><strong>Authentication Issues:</strong> Check AuthContext and token storage</li>
+            <li><strong>CORS Errors:</strong> Ensure backend CORS is configured to allow frontend origin</li>
+          </ul>
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Next Steps</h2>
+
+        <div class="callout success">
+          <strong><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Customization Complete!</strong> After making frontend changes:
+          <ul>
+            <li>Test changes in development mode (<code>npm run dev</code>)</li>
+            <li>Check for JavaScript errors in the console</li>
+            <li>Build for production to check for errors (<code>npm run build</code>)</li>
+            <li>Deploy to your hosting platform (Netlify recommended)</li>
+            <li>Update environment variables in production</li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="./pricing-and-validations.html" class="btn">Configure Pricing →</a>
+          <a href="./env-setup.html" class="btn secondary">Environment Setup →</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -7,7 +7,7 @@ const FeaturedBlogPost = () => {
       <div
         className="relative h-[450px] lg:h-[550px] xl:h-[600px] bg-cover bg-center"
         style={{
-          backgroundImage: "url('/placeholder-blog-image.jpg')",
+          backgroundImage: "url('/blog-image.jpg')",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />

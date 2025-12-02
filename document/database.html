@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Authentication Setup – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a class="active" href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Authentication Setup</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout info">
+          <strong>🔐 Authentication System:</strong> Paisable uses JWT (JSON Web Tokens) for authentication with Express.js backend. Users can register and login with email/password or use Google OAuth. Mongoose is used with MongoDB to store user accounts and session data.
+        </div>
+
+        <h2>Authentication Methods</h2>
+
+        <h3>1. JWT Authentication (Required)</h3>
+        <p>Paisable uses JWT tokens for secure authentication. Users receive a JWT token upon successful login, which is used to authenticate API requests.</p>
+        
+        <h4>Setup JWT Authentication</h4>
+        <ol class="steps">
+          <li class="step">Configure JWT secret in your backend <code>.env</code> file:
+            <div class="code"><pre><code>JWT_SECRET=your-super-secret-jwt-key-change-this-in-production</code></pre></div>
+          </li>
+          <li class="step">Generate a strong random secret key (run: <code>openssl rand -base64 32</code>)</li>
+          <li class="step">The JWT secret is used to sign and verify tokens</li>
+          <li class="step">Tokens are sent in the Authorization header: <code>Bearer &lt;token&gt;</code></li>
+        </ol>
+
+        <h3>2. Google OAuth Integration (Optional)</h3>
+        <p>Allow users to sign in with their Google accounts using Passport.js with Google OAuth strategy.</p>
+        
+        <h4>Setup Google Sign-In</h4>
+        <ol class="steps">
+          <li class="step">Go to <a href="https://console.cloud.google.com" target="_blank" rel="noopener">Google Cloud Console</a></li>
+          <li class="step">Create a new project or select an existing one</li>
+          <li class="step">Configure OAuth consent screen:
+            <ul>
+              <li>Navigate to "APIs & Services" → "OAuth consent screen"</li>
+              <li>Choose "External" (unless you have a Google Workspace)</li>
+              <li>Fill in app name, user support email, and developer contact</li>
+              <li>Add scopes: <code>email</code> and <code>profile</code></li>
+              <li>Save and continue</li>
+            </ul>
+          </li>
+          <li class="step">Create OAuth 2.0 credentials:
+            <ul>
+              <li>Go to "APIs & Services" → "Credentials"</li>
+              <li>Click "Create Credentials" → "OAuth client ID"</li>
+              <li>Choose "Web application"</li>
+              <li>Add authorized JavaScript origins:
+                <div class="code"><pre><code>http://localhost:5000
+https://your-backend-domain.com</code></pre></div>
+              </li>
+              <li>Add authorized redirect URIs (for OAuth callback):
+                <div class="code"><pre><code>http://localhost:5000/api/auth/google/callback
+https://your-backend-domain.com/api/auth/google/callback</code></pre></div>
+              </li>
+            </ul>
+          </li>
+          <li class="step">Copy the Client ID and Client Secret</li>
+          <li class="step">Add to your backend <code>.env</code> file:
+            <div class="code"><pre><code>GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback</code></pre></div>
+          </li>
+        </ol>
+
+        <div class="callout info">
+          <strong>📝 Note:</strong> Passport.js handles the complete OAuth flow. Users are redirected to Google for authentication, then redirected back to your application with an authenticated session.
+        </div>
+
+        <h3>3. Password Security</h3>
+        <p>User passwords are securely hashed using bcrypt before storing in MongoDB. Passwords must meet security requirements.</p>
+        
+        <div class="callout success">
+          <strong>🔒 Security Features:</strong>
+          <ul>
+            <li><strong>bcrypt Hashing:</strong> Passwords are hashed with bcrypt before storage</li>
+            <li><strong>JWT Tokens:</strong> Secure token-based authentication</li>
+            <li><strong>Token Expiration:</strong> Configurable token expiration time</li>
+            <li><strong>Protected Routes:</strong> Routes protected with JWT middleware</li>
+            <li><strong>CORS Protection:</strong> Configured CORS for frontend-backend communication</li>
+          </ul>
+        </div>
+
+        <h2>Where Authentication is Used</h2>
+
+        <h3>Backend Authentication Files</h3>
+        <ul>
+          <li><code>backend/middleware/authMiddleware.js</code> – JWT authentication middleware</li>
+          <li><code>backend/controllers/authController.js</code> – Authentication controllers (login, signup)</li>
+          <li><code>backend/routes/authRoutes.js</code> – Authentication routes</li>
+          <li><code>backend/services/googleOAuthService.js</code> – Google OAuth service</li>
+          <li><code>backend/models/User.js</code> – User model with Mongoose</li>
+        </ul>
+
+        <h3>Frontend Authentication Files</h3>
+        <ul>
+          <li><code>frontend/src/contexts/AuthContext.jsx</code> – Authentication context</li>
+          <li><code>frontend/src/hooks/useAuth.js</code> – Authentication hook</li>
+          <li><code>frontend/src/services/authService.js</code> – Authentication API service</li>
+          <li><code>frontend/src/components/auth/</code> – Login and registration components</li>
+          <li><code>frontend/src/components/ProtectedRoute.jsx</code> – Protected route wrapper</li>
+        </ul>
+
+        <h2>API Authentication</h2>
+        
+        <h3>Protected Routes</h3>
+        <p>Most API routes require authentication. JWT middleware validates tokens:</p>
+        
+        <div class="code"><pre><code>// Example: Using JWT middleware in Express route
+const authMiddleware = require('./middleware/authMiddleware');
+
+router.get('/transactions', authMiddleware, async (req, res) => {
+  // req.user contains the authenticated user
+  const userId = req.user.id;
+  // ... your protected route logic
+});</code></pre></div>
+
+        <h3>Authentication Endpoints</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Endpoint</th>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/api/auth/signup</code></td>
+              <td>POST</td>
+              <td>Register new user</td>
+            </tr>
+            <tr>
+              <td><code>/api/auth/login</code></td>
+              <td>POST</td>
+              <td>Login user and get JWT token</td>
+            </tr>
+            <tr>
+              <td><code>/api/auth/google</code></td>
+              <td>GET</td>
+              <td>Initiate Google OAuth flow</td>
+            </tr>
+            <tr>
+              <td><code>/api/auth/google/callback</code></td>
+              <td>GET</td>
+              <td>Google OAuth callback handler</td>
+            </tr>
+            <tr>
+              <td><code>/api/auth/me</code></td>
+              <td>GET</td>
+              <td>Get current authenticated user</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Environment Variables</h2>
+        
+        <div class="code"><pre><code># Backend .env Configuration (Required)
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+SESSION_SECRET=your-session-secret-key-change-in-production
+
+# Google OAuth (Optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+
+# Database (Required)
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/paisable?retryWrites=true&w=majority
+
+# Frontend Environment Variables (.env)
+VITE_API_URL=http://localhost:5000/api</code></pre></div>
+
+        <h2>Troubleshooting</h2>
+        
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Common Issues:</strong>
+          <ul>
+            <li><strong>Token Invalid:</strong> Check JWT_SECRET is set correctly and matches between token creation and verification</li>
+            <li><strong>Google OAuth Not Working:</strong> Verify GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set correctly</li>
+            <li><strong>Redirect URI Mismatch:</strong> Ensure redirect URI in Google Console matches <code>/api/auth/google/callback</code></li>
+            <li><strong>Database Connection:</strong> Verify MONGO_URI is correct and database is accessible</li>
+            <li><strong>Token Expired:</strong> User needs to login again to get a new token</li>
+            <li><strong>Email Already Exists:</strong> User with this email already registered</li>
+            <li><strong>CORS Errors:</strong> Ensure FRONTEND_URL is set correctly in backend .env</li>
+          </ul>
+        </div>
+
+        <h3>Token Management</h3>
+        <p>JWT tokens are stored in localStorage on the frontend and sent with each API request in the Authorization header.</p>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><path d="M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M1 12h2M21 12h2M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41"/><circle cx="12" cy="12" r="5"/></svg> Token Management:</strong>
+          <ul>
+            <li>Tokens are automatically stored in localStorage after login</li>
+            <li>Tokens are sent in Authorization header: <code>Bearer &lt;token&gt;</code></li>
+            <li>AuthContext manages token storage and retrieval</li>
+            <li>Protected routes check for valid tokens</li>
+            <li>Tokens expire after a set time (configurable)</li>
+          </ul>
+        </div>
+
+        <div class="callout success">
+          <strong><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Authentication is now configured!</strong> Users can register, login, and use Google OAuth to access Paisable. All protected routes require valid JWT tokens.
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

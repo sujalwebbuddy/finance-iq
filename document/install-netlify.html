@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Install on Netlify – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Installation</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a class="active" href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./install-aws-ec2.html">How to install on AWS EC2</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables </a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Install Frontend on Netlify</h2>
+      </header>
+      <section class="prose">
+        <div class="callout">
+          <strong>Prerequisite:</strong> Make sure you've completed the <a href="./push-to-github.html">How to push to GitHub</a> and deployed your backend to Render (see <a href="./install-render.html">How to install on Render</a>) before deploying the frontend.
+        </div>
+
+        <h2>Deploying Frontend to Netlify</h2>
+
+        <div class="steps">
+          <div class="step"><strong>1.</strong> Ensure your project is pushed to GitHub (see <a href="./push-to-github.html">How to push to GitHub guide</a>).</div>
+          <div class="step"><strong>2.</strong> Sign up or log in to <a href="https://www.netlify.com/" target="_blank">Netlify</a>.</div>
+          <div class="step"><strong>3.</strong> Click <em>Add new site → Import an existing project</em>.</div>
+          <div class="step"><strong>4.</strong> Connect to GitHub and select your repository.</div>
+          <div class="step"><strong>5.</strong> Configure build settings:
+            <ul>
+              <li><strong>Base directory:</strong> <code>frontend</code></li>
+              <li><strong>Build command:</strong> <code>npm run build</code></li>
+              <li><strong>Publish directory:</strong> <code>frontend/dist</code></li>
+            </ul>
+          </div>
+          <div class="step"><strong>6.</strong> Add environment variables:
+            <ul>
+              <li><code>VITE_API_URL</code> - Your backend API URL (e.g., <code>https://your-backend.onrender.com/api</code>)</li>
+              <li><code>VITE_APP_NAME</code> - App name (optional)</li>
+              <li><code>VITE_APP_DESCRIPTION</code> - App description (optional)</li>
+            </ul>
+          </div>
+          <div class="step"><strong>7.</strong> Click <em>Deploy site</em>.</div>
+          <div class="step"><strong>8.</strong> After deployment, update your backend <code>FRONTEND_URL</code> environment variable with your Netlify domain.</div>
+        </div>
+
+        <h3>Configuration Details</h3>
+        <ul>
+          <li><strong>Framework:</strong> Vite (detected automatically by Netlify)</li>
+          <li><strong>Build Command:</strong> <code>npm run build</code> (runs from frontend directory)</li>
+          <li><strong>Output Directory:</strong> <code>dist</code> (Vite's default build output)</li>
+          <li><strong>Node Version:</strong> Netlify automatically detects from <code>package.json</code></li>
+        </ul>
+
+        <h3>Environment Variables</h3>
+        <p>Add these in Netlify Dashboard → Site settings → Environment variables:</p>
+        <div class="code"><pre><code>VITE_API_URL=https://your-backend.onrender.com/api
+VITE_APP_NAME=Paisable
+VITE_APP_DESCRIPTION=Personal finance management</code></pre></div>
+
+        <h3>Custom Domain (Optional)</h3>
+        <ol>
+          <li>Go to Site settings → Domain management</li>
+          <li>Click "Add custom domain"</li>
+          <li>Enter your domain name</li>
+          <li>Follow DNS configuration instructions</li>
+        </ol>
+
+        <h3>Notes</h3>
+        <ul>
+          <li>Netlify automatically builds and deploys on every push to your main branch</li>
+          <li>Preview deployments are created for pull requests</li>
+          <li>Make sure your backend is deployed and accessible before deploying frontend</li>
+          <li>Update <code>FRONTEND_URL</code> in backend environment variables after frontend deployment</li>
+        </ul>
+
+        <div class="callout info">
+          <strong>📝 Note:</strong> Paisable uses a separate frontend (React + Vite) and backend (Express). The frontend is deployed to Netlify as static files, while the backend runs on Render. Make sure both are deployed and configured correctly.
+        </div>
+
+        <div class="callout success">
+          <strong>✅ Deployment Complete!</strong> Your frontend is now live on Netlify. Make sure your backend is also deployed to Render and both are configured with the correct environment variables.
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="./install-render.html" class="btn">Deploy Backend to Render →</a>
+          <a href="./env-setup.html" class="btn secondary">Environment Setup →</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
+

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MongoDB Setup – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a class="active" href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Database configuration guide</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>MongoDB Database Setup</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout">
+          <strong>🗄️ About MongoDB:</strong> Paisable uses MongoDB with Mongoose to store all core entities: users, transactions, budgets, receipts, recurring transactions, subscriptions, and usage tracking. Use MongoDB Atlas for a managed cloud deployment or self-host MongoDB locally.
+        </div>
+
+        <h3>Why MongoDB?</h3>
+        <ul>
+          <li><strong>Flexible schema:</strong> Handles transaction data, budgets, receipts, and user subscriptions without rigid migrations.</li>
+          <li><strong>Great DX:</strong> Works seamlessly with Mongoose ODM in Node.js/Express backend.</li>
+          <li><strong>Scalable:</strong> Atlas free tier (M0) is perfect for development; scale to larger clusters for production workloads.</li>
+          <li><strong>JSON documents:</strong> Records mirror the data shapes consumed by the dashboard and API routes.</li>
+        </ul>
+
+        <h2>Option 1 · MongoDB Atlas (Recommended)</h2>
+
+        <h3>1. Create an Atlas cluster</h3>
+        <ol class="steps">
+          <li class="step">Visit <a href="https://www.mongodb.com/atlas" target="_blank" rel="noopener">mongodb.com/atlas</a> and create an account.</li>
+          <li class="step">Pick the free M0 tier, choose AWS as the provider, and select a nearby region.</li>
+          <li class="step">Click “Create” and wait for Atlas to provision your cluster.</li>
+        </ol>
+
+        <h3>2. Add a database user</h3>
+        <ol class="steps">
+          <li class="step">Atlas sidebar → <strong>Database Access</strong> → “Add New Database User”.</li>
+          <li class="step">Authentication method = Password. Provide a strong username and password.</li>
+          <li class="step">Grant “Read and write to any database” (you can scope to a single DB later).</li>
+        </ol>
+
+        <h3>3. Configure network access</h3>
+        <ol class="steps">
+          <li class="step">Atlas sidebar → <strong>Network Access</strong> → “Add IP Address”.</li>
+          <li class="step">During development you can temporarily allow <code>0.0.0.0/0</code>.</li>
+          <li class="step">For production, whitelist only your server or Render IP ranges.</li>
+        </ol>
+
+        <h3>4. Grab the connection URI</h3>
+        <ol class="steps">
+          <li class="step">Atlas sidebar → <strong>Database</strong> → “Connect” → “Connect your application”.</li>
+          <li class="step">Copy the SRV URI and replace <code>&lt;username&gt;</code>, <code>&lt;password&gt;</code>, and the database name.</li>
+        </ol>
+
+        <div class="code"><pre><code>mongodb+srv://dbUser:dbPassword@cluster0.xzy.mongodb.net/paisable?retryWrites=true&w=majority</code></pre></div>
+
+        <div class="callout success">
+          <strong>✅ Tip:</strong> Use <code>paisable</code> as the default database name.
+        </div>
+
+        <h3>5. Add the URI to backend <code>.env</code></h3>
+        <div class="code"><pre><code># backend/.env
+MONGO_URI=mongodb+srv://dbUser:dbPassword@cluster0.xzy.mongodb.net/paisable?retryWrites=true&w=majority</code></pre></div>
+
+        <h2>Option 2 · Local MongoDB</h2>
+        <ol class="steps">
+          <li class="step">Install MongoDB Community Server (macOS: <code>brew install mongodb-community</code>).</li>
+          <li class="step">Start the daemon (<code>brew services start mongodb-community</code> or systemd).</li>
+          <li class="step">Create the <code>paisable</code> database via Compass or <code>mongosh</code>.</li>
+        </ol>
+        <div class="code"><pre><code>MONGO_URI=mongodb://localhost:27017/paisable</code></pre></div>
+
+        <h2>Collections Created by Mongoose Models</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Collection</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>users</code></td>
+              <td>User profiles, email, password hash, default currency, setup status.</td>
+            </tr>
+            <tr>
+              <td><code>transactions</code></td>
+              <td>Income and expense transactions with categories, amounts, dates.</td>
+            </tr>
+            <tr>
+              <td><code>budgets</code></td>
+              <td>Budget limits by category with spending tracking.</td>
+            </tr>
+            <tr>
+              <td><code>receipts</code></td>
+              <td>Receipt images and OCR-extracted transaction data.</td>
+            </tr>
+            <tr>
+              <td><code>recurringtransactions</code></td>
+              <td>Recurring income and expense schedules.</td>
+            </tr>
+            <tr>
+              <td><code>subscriptions</code></td>
+              <td>User subscription plans and Stripe subscription IDs.</td>
+            </tr>
+            <tr>
+              <td><code>usages</code></td>
+              <td>Usage tracking for plan limit enforcement.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout info">
+          <strong>🔍 Inspect data quickly:</strong> Connect with MongoDB Compass using your connection URI, or use <code>mongosh</code> command-line tool.
+        </div>
+
+        <h2>Testing the Connection</h2>
+        <ol class="steps">
+          <li class="step">Navigate to backend directory: <code>cd backend</code>.</li>
+          <li class="step">Install dependencies: <code>npm install</code>.</li>
+          <li class="step">Set <code>MONGO_URI</code> in <code>.env</code> file.</li>
+          <li class="step">Start dev mode: <code>npm run dev</code>.</li>
+          <li class="step">Create an account in the app — you should see new documents inside the <code>users</code> collection.</li>
+        </ol>
+
+        <h2>Troubleshooting</h2>
+        <div class="callout warning">
+          <strong>Common issues:</strong>
+          <ul>
+            <li><strong>Authentication failed:</strong> Double-check the username/password embedded in <code>MONGO_URI</code>.</li>
+            <li><strong>IP not allowed:</strong> Update Network Access in Atlas so your server/Render IP can connect.</li>
+            <li><strong>Connection timeout:</strong> Verify MongoDB Atlas cluster is running and network access is configured.</li>
+            <li><strong>Timeouts:</strong> Attempt to connect with <code>mongosh</code> locally to ensure DNS + firewall rules are correct.</li>
+          </ul>
+        </div>
+
+        <h2>Backups & Security</h2>
+        <ul>
+          <li>Enable Atlas snapshots or schedule <code>mongodump</code> exports for self-hosted deployments.</li>
+          <li>Rotate database user passwords and avoid embedding secrets directly in source code.</li>
+          <li>Restrict Network Access to trusted IP ranges before going live.</li>
+        </ul>
+
+        <div class="callout success">
+          <strong>🎉 All set!</strong> Your MongoDB cluster is ready. Continue with the <a href="./env-setup.html">Environment Variables</a> or <a href="./database.html">Authentication</a> guide to finish the backend setup.
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

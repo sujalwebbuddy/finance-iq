@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paisable – Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a class="active" href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./install-aws-ec2.html">How to install on AWS EC2</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Welcome to Paisable</h2>
+      </header>
+
+      <section class="prose">
+        <div class="version-info">
+          <div class="version">Version 1.0</div>
+          <div class="date">Updated November 2025</div>
+        </div>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Welcome to Paisable v1.0!</strong> This comprehensive documentation will guide you through setting up and deploying your personal finance management application. Track income, expenses, budgets, receipts, and visualize your financial data with powerful analytics.
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Overview</h2>
+        
+        <p><strong>Paisable</strong> is a comprehensive personal finance management application that helps you track income, expenses, budgets, and receipts. With AI-powered receipt scanning, recurring transaction management, and detailed analytics, Paisable makes financial management simple and intuitive.</p>
+        
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Transaction Management</h3>
+            <p>Track income and expenses with custom categories. Add, edit, and delete transactions with ease. View your financial summary at a glance.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> AI Receipt Scanning</h3>
+            <p>Upload receipts and automatically extract expense details using Google Gemini OCR. Create transactions instantly from receipt images.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-4M8 7H4M16 17h-4M8 17H4M12 7v10M7 12h10"/></svg> Budget Management</h3>
+            <p>Create and manage budgets for different categories. Track spending against budgets and get alerts when limits are exceeded.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M6 6l-2 2M18 6l2 2M12 22v-4M6 18l-2-2M18 18l2-2M2 12h4M18 12h4"/></svg> Recurring Transactions</h3>
+            <p>Set up recurring income and expenses with daily, weekly, monthly, or annual frequencies. Never miss a payment or income again.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> Analytics & Charts</h3>
+            <p>Visualize your financial data with interactive charts. View category breakdowns, income vs expense trends, and spending patterns.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg> Multi-Currency Support</h3>
+            <p>Support for multiple currencies including USD, EUR, GBP, JPY, CAD, AUD, and INR. Switch currencies seamlessly.</p>
+          </div>
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> System Architecture</h2>
+        
+        <div class="callout success">
+          <strong>Tech Stack:</strong>
+          <ul>
+            <li><strong>Frontend:</strong> React 19 with Vite</li>
+            <li><strong>Styling:</strong> Tailwind CSS</li>
+            <li><strong>Charts:</strong> Chart.js with react-chartjs-2</li>
+            <li><strong>Backend:</strong> Node.js with Express</li>
+            <li><strong>Database:</strong> MongoDB with Mongoose (MongoDB Atlas recommended)</li>
+            <li><strong>Authentication:</strong> JWT with Google OAuth (Passport.js)</li>
+            <li><strong>Payments:</strong> Stripe (Subscription-based system)</li>
+            <li><strong>AI Integration:</strong> Google Gemini API for OCR receipt scanning</li>
+            <li><strong>File Upload:</strong> Multer for receipt image uploads</li>
+            <li><strong>Deployment:</strong> Frontend on Netlify, Backend on Render</li>
+          </ul>
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Key Features</h2>
+
+        <h3>Core Functionality</h3>
+        <ul>
+          <li><strong>Transaction Management:</strong> Add, edit, and delete income and expense transactions with custom categories</li>
+          <li><strong>Receipt Scanning:</strong> Upload receipt images and automatically extract transaction details using Google Gemini OCR</li>
+          <li><strong>Budget Tracking:</strong> Create budgets for categories and track spending against limits</li>
+          <li><strong>Recurring Transactions:</strong> Set up recurring income and expenses with flexible frequency options</li>
+          <li><strong>Financial Analytics:</strong> View income vs expense charts, category breakdowns, and spending trends</li>
+          <li><strong>Multi-Currency Support:</strong> Support for USD, EUR, GBP, JPY, CAD, AUD, and INR</li>
+        </ul>
+
+        <h3>Advanced Features</h3>
+        <ul>
+          <li><strong>Subscription Plans:</strong> Free, Basic, Pro, and Enterprise tiers with different feature access</li>
+          <li><strong>Usage Limits:</strong> Plan-based limits on transactions, receipts, budgets, and recurring transactions</li>
+          <li><strong>Dashboard Overview:</strong> Comprehensive financial summary with charts and recent transactions</li>
+          <li><strong>Category Management:</strong> Create and manage custom transaction categories</li>
+          <li><strong>User Settings:</strong> Manage profile, currency preferences, and account deletion</li>
+          <li><strong>Mobile Responsive:</strong> Fully responsive design for all devices</li>
+        </ul>
+
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Prerequisites</h2>
+        
+        <div class="callout warning">
+          <strong>Before you begin, ensure you have:</strong>
+          <ul>
+            <li>Node.js 18+ installed</li>
+            <li>MongoDB database - MongoDB Atlas recommended (free tier available)</li>
+            <li>Google Gemini API key (for receipt OCR scanning)</li>
+            <li>Stripe account for subscription payments</li>
+            <li>Google OAuth credentials (optional, for Google login)</li>
+          </ul>
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Quick Start</h2>
+        
+        <ol>
+          <li><strong>Clone:</strong> Get the repository from GitHub</li>
+          <li><strong>Backend Setup:</strong> Navigate to <code>backend/</code> folder, run <code>npm install</code>, and configure <code>.env</code> file</li>
+          <li><strong>Frontend Setup:</strong> Navigate to <code>frontend/</code> folder, run <code>npm install</code>, and configure <code>.env</code> file</li>
+          <li><strong>Database:</strong> Set up MongoDB Atlas connection string</li>
+          <li><strong>Start Backend:</strong> Run <code>npm run dev</code> in backend folder (runs on port 5000)</li>
+          <li><strong>Start Frontend:</strong> Run <code>npm run dev</code> in frontend folder (runs on port 5173)</li>
+          <li><strong>Deploy:</strong> Follow deployment guides for Netlify (frontend) and Render (backend)</li>
+        </ol>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Pro Tip:</strong> For production use, Netlify is recommended for frontend deployment with automatic builds. Render is recommended for backend deployment with free tier available.
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Subscription Plans</h2>
+
+        <h3>Free Plan</h3>
+        <div class="callout">
+          <ul>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 50 Transactions</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 3 Budgets</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 2 Recurring Transactions</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Basic Analytics</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> No Receipt OCR</li>
+          </ul>
+        </div>
+
+        <h3>Basic Plan</h3>
+        <div class="callout success">
+          <ul>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 500 Transactions</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 10 Budgets</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 10 Recurring Transactions</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 10 Receipt Scans</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Receipt OCR Enabled</li>
+          </ul>
+        </div>
+
+        <h3>Pro Plan</h3>
+        <div class="callout success">
+          <ul>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Unlimited Transactions</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Unlimited Budgets</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Unlimited Recurring Transactions</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Unlimited Receipt Scans</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Advanced Analytics & API Access</li>
+          </ul>
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Documentation Sections</h2>
+        
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> User Guide</h3>
+            <p>Complete end-user documentation for managing transactions, budgets, receipts, and using all features.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Deployment</h3>
+            <p>Step-by-step guides for deploying frontend to Netlify and backend to Render or AWS EC2.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/></svg> Configuration</h3>
+            <p>Environment setup, API integration, and system configuration options.</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Customization</h3>
+            <p>Frontend modifications, theming, and feature customization guides.</p>
+          </div>
+        </div>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Support & Resources</h2>
+        
+        <div class="callout">
+          <strong>Need Help?</strong>
+          <ul>
+            <li><strong>Documentation:</strong> Comprehensive guides for all features</li>
+            <li><strong>README:</strong> Check the main README.md for detailed information</li>
+            <li><strong>Issues:</strong> Report issues on GitHub</li>
+            <li><strong>Support:</strong> Check GitHub issues or contact the maintainers</li>
+          </ul>
+        </div>
+
+        <p><strong>Ready to get started?</strong> Follow our step-by-step deployment guides. Each section includes detailed instructions, code examples, and troubleshooting tips.</p>
+
+        <h2><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Copyright & Image Attribution</h2>
+        
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Important Notice:</strong>
+          <p style="margin-top: 0.75rem; margin-bottom: 0.75rem;">
+            All images used in this application are for <strong>demo purposes only</strong>. These images have been sourced from various platforms including:
+          </p>
+          <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            <li>Pinterest</li>
+            <li>Google Images</li>
+            <li>Other competitive platforms and image repositories</li>
+          </ul>
+          <p style="margin-top: 0.75rem; margin-bottom: 0;">
+            <strong>No developer or content creator is harmed by the use of these images.</strong> These images are used solely for demonstration and testing purposes to showcase the application's functionality and user interface. If you plan to use this application in production, please replace all demo images with your own licensed or royalty-free images.
+          </p>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <a href="./how-to-use.html" class="btn">Start with User Guide →</a>
+          <a href="./install-netlify.html" class="btn secondary">Deploy to Netlify →</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

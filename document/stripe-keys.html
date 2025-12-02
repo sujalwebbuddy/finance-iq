@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stripe Keys – Paisable Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a href="./env-setup.html">Environment Variables </a>
+        <a class="active" href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Stripe Keys & Webhooks</h2>
+      </header>
+
+      <section class="prose">
+        <h3>1) API Keys</h3>
+        <ol class="steps">
+          <li class="step">In Stripe Dashboard → Developers → API keys</li>
+          <li class="step">Copy <code>Secret key</code> → Set as <code>STRIPE_SECRET_KEY</code> in backend .env</li>
+          <li class="step">Note: Frontend doesn't need Stripe public key for subscription checkout (handled server-side)</li>
+        </ol>
+
+        <h3>2) Products & Prices (Subscription Plans)</h3>
+        <p>Paisable uses subscription-based pricing. Create subscription products and prices in Stripe:</p>
+        <ol class="steps">
+          <li class="step">Stripe Dashboard → Products → Create product</li>
+          <li class="step">Create products for each plan:
+            <ul>
+              <li><strong>Basic Plan</strong> - Set up recurring subscription (monthly/yearly)</li>
+              <li><strong>Pro Plan</strong> - Set up recurring subscription (monthly/yearly)</li>
+              <li><strong>Enterprise Plan</strong> - Set up recurring subscription (monthly/yearly)</li>
+            </ul>
+          </li>
+          <li class="step">For each product, create a Price:
+            <ul>
+              <li>Choose "Recurring" billing</li>
+              <li>Set billing period (monthly or yearly)</li>
+              <li>Set the price amount</li>
+            </ul>
+          </li>
+          <li class="step">Copy the Price IDs (they start with <code>price_</code>)</li>
+          <li class="step">Add Price IDs to backend <code>.env</code>:
+            <div class="code"><pre><code>STRIPE_PRICE_ID_BASIC=price_your_basic_plan_price_id
+STRIPE_PRICE_ID_PRO=price_your_pro_plan_price_id
+STRIPE_PRICE_ID_ENTERPRISE=price_your_enterprise_plan_price_id</code></pre></div>
+          </li>
+        </ol>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><path d="M5.64 5.64l1.41 1.41M16.95 16.95l1.41 1.41M1 12h2M21 12h2M5.64 18.36l1.41-1.41M16.95 7.05l1.41-1.41"/><circle cx="12" cy="12" r="5"/></svg> Note:</strong> Paisable uses subscription-based payments, not one-time credit purchases. Users subscribe to a plan and get access based on their plan limits.
+        </div>
+
+        <h3>3) Webhook</h3>
+        <ol class="steps">
+          <li class="step">Stripe Dashboard → Developers → Webhooks → Add endpoint</li>
+          <li class="step">Endpoint URL: <code>https://YOUR_BACKEND_DOMAIN/api/stripe/webhook</code> (for Render deployment)</li>
+          <li class="step">Events to listen for:
+            <ul>
+              <li><code>checkout.session.completed</code> - Subscription checkout completed (activate subscription)</li>
+              <li><code>customer.subscription.updated</code> - Subscription updated (plan change, renewal)</li>
+              <li><code>customer.subscription.deleted</code> - Subscription cancelled (downgrade to free)</li>
+              <li><code>invoice.payment_succeeded</code> - Payment succeeded (renewal)</li>
+              <li><code>invoice.payment_failed</code> - Payment failed</li>
+            </ul>
+          </li>
+          <li class="step">Copy <code>Signing secret</code> → Set as <code>STRIPE_WEBHOOK_SECRET</code> in backend .env</li>
+        </ol>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Important:</strong> The webhook endpoint must be accessible from the internet. For local testing, use Stripe CLI to forward webhooks to your local server.
+        </div>
+      </section>
+    </main>
+  </body>
+  </html>
+
+

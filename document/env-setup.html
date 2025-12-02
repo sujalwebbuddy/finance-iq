@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Environment Variables Setup – Paisable</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./screenshots/logo.svg" alt="Paisable Logo" />
+        <div>
+          <h1>Paisable</h1>
+          <p>Documentation v1.0</p>
+        </div>
+      </div>
+      <nav>
+        <a href="./index.html">Welcome</a>
+        <a href="./how-to-use.html">User Guide</a>
+        <a href="./push-to-github.html">How to push to GitHub</a>
+        <a href="./install-netlify.html">How to install on Netlify</a>
+        <a href="./install-render.html">How to install on Render</a>
+        <a href="./database.html">How to setup Authentication</a>
+        <a href="./mongodb-setup.html">How to create MongoDB Database</a>
+        <a class="active" href="./env-setup.html">Environment Variables</a>
+        <a href="./stripe-keys.html">How to get Stripe keys</a>
+        <a href="./frontend-updates.html">Frontend Customization</a>
+        <a href="./backend-updates.html">Backend Customization</a>
+        <a href="./pricing-and-validations.html">Edit pricing & validations</a>
+      </nav>
+      <footer>
+        <small>Built with React & Express</small>
+      </footer>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2>Environment Variables Setup</h2>
+      </header>
+
+      <section class="prose">
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Environment Configuration:</strong> Set up all required environment variables for Paisable v1.0. This includes database connections, API keys, and service configurations.
+        </div>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Backend .env Template</h2>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Security Note:</strong> Never commit your .env file to version control. Add it to your .gitignore file to keep your secrets safe.
+        </div>
+
+        <pre><code># -----------------------------------------------------------------------------
+# Database Configuration
+# -----------------------------------------------------------------------------
+MONGO_URI=your_mongodb_connection_string
+
+# -----------------------------------------------------------------------------
+# Server Configuration
+# -----------------------------------------------------------------------------
+PORT=5000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
+
+# -----------------------------------------------------------------------------
+# JWT Configuration
+# Generate a JWT_SECRET: openssl rand -base64 32
+# -----------------------------------------------------------------------------
+JWT_SECRET=your_jwt_secret_key_change_in_production
+
+# -----------------------------------------------------------------------------
+# Session Configuration (for OAuth)
+# Generate a SESSION_SECRET: openssl rand -base64 32
+# -----------------------------------------------------------------------------
+SESSION_SECRET=your_session_secret_key_change_in_production
+
+# -----------------------------------------------------------------------------
+# Backend URL (used for OAuth callback configuration)
+# -----------------------------------------------------------------------------
+SERVER_URL=http://localhost:5000
+
+# -----------------------------------------------------------------------------
+# Google OAuth Configuration (Optional)
+# Redirect URI: http://localhost:5000/api/auth/google/callback
+# -----------------------------------------------------------------------------
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+
+# -----------------------------------------------------------------------------
+# Gemini API (for receipt OCR processing)
+# Get your API key from: https://makersuite.google.com/app/apikey
+# -----------------------------------------------------------------------------
+GEMINI_API_KEY=your_gemini_api_key
+
+# -----------------------------------------------------------------------------
+# Keep Alive URL (optional, for server keep-alive pings)
+# Used for free hosting services that spin down inactive servers
+# -----------------------------------------------------------------------------
+KEEP_ALIVE_URL=
+
+# -----------------------------------------------------------------------------
+# Stripe Configuration (for subscription payments)
+# Get your keys from: https://dashboard.stripe.com/apikeys
+# -----------------------------------------------------------------------------
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+STRIPE_PRICE_ID_BASIC=price_your_basic_plan_price_id
+STRIPE_PRICE_ID_PRO=price_your_pro_plan_price_id
+STRIPE_PRICE_ID_ENTERPRISE=price_your_enterprise_plan_price_id
+
+# -----------------------------------------------------------------------------
+# Frontend URL (for Stripe redirects)
+# -----------------------------------------------------------------------------
+FRONTEND_URL=http://localhost:5173
+</code></pre>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Frontend .env Template</h2>
+
+        <pre><code># -----------------------------------------------------------------------------
+# API Configuration
+# -----------------------------------------------------------------------------
+VITE_API_URL=http://localhost:5000/api
+
+# -----------------------------------------------------------------------------
+# App Configuration (Optional)
+# -----------------------------------------------------------------------------
+VITE_APP_NAME=FinanceIQ
+VITE_APP_DESCRIPTION=The best AI financial manager
+</code></pre>
+
+        <h2>🔑 Required vs Optional Variables</h2>
+
+        <h3><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Required for Basic Functionality</h3>
+        <div class="callout danger">
+          <strong>Critical Variables:</strong> The application will not function without these
+          <ul>
+            <li><code>MONGO_URI</code> - MongoDB connection string (MongoDB Atlas recommended)</li>
+            <li><code>PORT</code> - Server port (default: 5000)</li>
+            <li><code>JWT_SECRET</code> - Secret used to sign JWT tokens (generate with: <code>openssl rand -base64 32</code>)</li>
+            <li><code>SESSION_SECRET</code> - Secret for session management (generate with: <code>openssl rand -base64 32</code>)</li>
+            <li><code>FRONTEND_URL</code> - Frontend URL for CORS and redirects (http://localhost:5173 in development)</li>
+            <li><code>VITE_API_URL</code> - Backend API URL for frontend (http://localhost:5000/api in development)</li>
+          </ul>
+        </div>
+
+        <h3><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Optional for Enhanced Features</h3>
+        <ul>
+          <li><code>GOOGLE_CLIENT_ID</code> - Enables Google OAuth sign-in</li>
+          <li><code>GOOGLE_CLIENT_SECRET</code> - Paired secret for Google OAuth</li>
+          <li><code>GOOGLE_CALLBACK_URL</code> - OAuth callback URL (defaults to /api/auth/google/callback)</li>
+          <li><code>GEMINI_API_KEY</code> - Enables receipt OCR scanning feature</li>
+          <li><code>STRIPE_SECRET_KEY</code> - Enables subscription payments</li>
+          <li><code>STRIPE_WEBHOOK_SECRET</code> - Validates Stripe webhook signatures</li>
+          <li><code>STRIPE_PRICE_ID_*</code> - Stripe price IDs for subscription plans</li>
+          <li><code>KEEP_ALIVE_URL</code> - URL for server keep-alive pings (useful for free hosting)</li>
+          <li><code>SERVER_URL</code> - Backend server URL (used for OAuth callbacks)</li>
+        </ul>
+
+        <h2><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><circle cx="12" cy="16" r="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Google Gemini API Setup</h2>
+
+        <h3>Gemini API Setup for Receipt OCR</h3>
+        <ol>
+          <li><strong>Visit:</strong> <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></li>
+          <li><strong>Sign In:</strong> Sign in with your Google account</li>
+          <li><strong>Get API Key:</strong>
+            <ul>
+              <li>Click "Get API Key"</li>
+              <li>Create a new project or select existing</li>
+              <li>Copy the generated API key</li>
+            </ul>
+          </li>
+          <li><strong>Add to .env:</strong> Set as <code>GEMINI_API_KEY</code> in backend .env file</li>
+        </ol>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><circle cx="12" cy="16" r="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Gemini Features:</strong>
+          <ul>
+            <li><strong>Receipt OCR:</strong> Automatically extract transaction details from receipt images</li>
+            <li><strong>AI-Powered:</strong> Uses Google's advanced AI models for text recognition</li>
+            <li><strong>Fast Processing:</strong> Quick extraction of amounts, dates, and merchant names</li>
+            <li><strong>Free Tier:</strong> Generous free tier available for testing</li>
+          </ul>
+        </div>
+
+        <h2>💳 Stripe Payment Setup</h2>
+
+        <h3>Stripe Configuration</h3>
+        <ol>
+          <li><strong>Create Stripe Account:</strong> Sign up at <a href="https://stripe.com/" target="_blank">Stripe</a></li>
+          <li><strong>Get API Keys:</strong>
+            <ul>
+              <li>Go to Developers → API Keys</li>
+              <li>Copy "Secret key" → Set as <code>STRIPE_SECRET_KEY</code></li>
+            </ul>
+          </li>
+          <li><strong>Create Products and Prices:</strong>
+            <ul>
+              <li>Go to Products → Create product</li>
+              <li>Create products for Basic, Pro, and Enterprise plans</li>
+              <li>Copy the Price IDs (starts with <code>price_</code>)</li>
+              <li>Set as <code>STRIPE_PRICE_ID_BASIC</code>, <code>STRIPE_PRICE_ID_PRO</code>, <code>STRIPE_PRICE_ID_ENTERPRISE</code></li>
+            </ul>
+          </li>
+          <li><strong>Set Up Webhooks:</strong>
+            <ul>
+              <li>Go to Developers → Webhooks</li>
+              <li>Add endpoint: <code>https://your-backend-url.com/api/stripe/webhook</code></li>
+              <li>Select events: <code>checkout.session.completed</code>, <code>customer.subscription.updated</code>, <code>customer.subscription.deleted</code></li>
+              <li>Copy webhook signing secret → Set as <code>STRIPE_WEBHOOK_SECRET</code></li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="callout info">
+          <strong>💳 Stripe Features:</strong>
+          <ul>
+            <li><strong>Subscription System:</strong> Monthly/yearly subscription-based pricing</li>
+            <li><strong>Secure Payments:</strong> PCI-compliant payment processing</li>
+            <li><strong>Webhooks:</strong> Real-time subscription event handling</li>
+            <li><strong>Test Mode:</strong> Use test keys for development</li>
+          </ul>
+        </div>
+
+        <h2>🔐 Authentication Setup</h2>
+
+        <h3>JWT Configuration</h3>
+        <ol>
+          <li><strong>Generate Secret:</strong>
+            <ul>
+              <li>Run: <code>openssl rand -base64 32</code> in terminal</li>
+              <li>Or use: <a href="https://generate-secret.vercel.app/32" target="_blank">Online Generator</a></li>
+              <li>Copy the generated secret</li>
+            </ul>
+          </li>
+          <li><strong>Add to .env:</strong> Set as <code>JWT_SECRET</code></li>
+          <li><strong>Generate Session Secret:</strong> Repeat the process for <code>SESSION_SECRET</code></li>
+        </ol>
+
+        <h3>Google OAuth Setup (Optional)</h3>
+        <ol>
+          <li><strong>Visit:</strong> <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+          <li><strong>Create Project:</strong> Create a new project or select existing</li>
+          <li><strong>Enable APIs:</strong> Enable Google+ API</li>
+          <li><strong>Create OAuth Credentials:</strong>
+            <ul>
+              <li>Go to APIs & Services → Credentials</li>
+              <li>Click "Create Credentials" → OAuth client ID</li>
+              <li>Application type: Web application</li>
+              <li>Authorized redirect URIs: <code>http://localhost:5000/api/auth/google/callback</code> (for development)</li>
+              <li>For production: <code>https://your-backend-url.com/api/auth/google/callback</code></li>
+              <li>Copy Client ID and Client Secret</li>
+            </ul>
+          </li>
+          <li><strong>Add to .env:</strong>
+            <ul>
+              <li>Set <code>GOOGLE_CLIENT_ID</code> with your client ID</li>
+              <li>Set <code>GOOGLE_CLIENT_SECRET</code> with your client secret</li>
+              <li>Set <code>GOOGLE_CALLBACK_URL</code> with your callback URL</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h2>🗄️ MongoDB Database Setup</h2>
+
+        <h3>MongoDB Atlas Configuration</h3>
+        <ol>
+          <li><strong>Create MongoDB Atlas Account:</strong> Sign up at <a href="https://www.mongodb.com/cloud/atlas" target="_blank">MongoDB Atlas</a></li>
+          <li><strong>Create Cluster:</strong>
+            <ul>
+              <li>Choose a free tier (M0) for development</li>
+              <li>Select your preferred cloud provider and region</li>
+              <li>Wait for cluster creation (takes a few minutes)</li>
+            </ul>
+          </li>
+          <li><strong>Configure Database Access:</strong>
+            <ul>
+              <li>Go to Database Access → Add New Database User</li>
+              <li>Create a username and password</li>
+              <li>Set user privileges to "Atlas admin" or "Read and write to any database"</li>
+            </ul>
+          </li>
+          <li><strong>Configure Network Access:</strong>
+            <ul>
+              <li>Go to Network Access → Add IP Address</li>
+              <li>For development: Add <code>0.0.0.0/0</code> (allows all IPs - use only for testing)</li>
+              <li>For production: Add specific IP addresses or your hosting provider's IP ranges</li>
+            </ul>
+          </li>
+          <li><strong>Get Connection String:</strong>
+            <ul>
+              <li>Go to Clusters → Connect → Connect your application</li>
+              <li>Copy the connection string</li>
+              <li>Replace <code>&lt;password&gt;</code> with your database user password</li>
+              <li>Replace <code>&lt;dbname&gt;</code> with your database name (e.g., "paisable")</li>
+              <li>Set as <code>MONGO_URI</code> in your .env file</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Security Best Practices:</strong>
+          <ul>
+            <li>Use strong passwords for database users</li>
+            <li>Restrict network access to specific IPs in production</li>
+            <li>Never commit connection strings to version control</li>
+            <li>Use environment variables for all sensitive data</li>
+          </ul>
+        </div>
+
+        <h2><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Verification Checklist</h2>
+
+        <div class="callout success">
+          <strong>Before starting the application, verify:</strong>
+          <ul>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> All required environment variables are set in backend/.env</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> MongoDB connection string is valid and accessible</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> <code>JWT_SECRET</code> and <code>SESSION_SECRET</code> are generated securely</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Frontend .env has correct <code>VITE_API_URL</code></li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Google Gemini API key is set (if using receipt OCR)</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Stripe keys are configured (if using subscriptions)</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Google OAuth credentials are set (if using Google login)</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> <code>FRONTEND_URL</code> matches your frontend deployment URL</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> All API keys are from the correct environment (test vs production)</li>
+          </ul>
+        </div>
+
+      </section>
+    </main>
+  </body>
+</html>
