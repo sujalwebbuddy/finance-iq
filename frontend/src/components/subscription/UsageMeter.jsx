@@ -1,6 +1,25 @@
 import React from 'react';
 
 const UsageMeter = ({ label, current, limit, unit = '' }) => {
+  // If limit is 0, feature is not available for this plan
+  if (limit === 0) {
+    return (
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {label}
+          </span>
+          <span className="text-sm font-semibold text-gray-400 dark:text-gray-500">
+            Not Available
+          </span>
+        </div>
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+          <div className="h-2 rounded-full bg-gray-300 dark:bg-gray-600" style={{ width: '100%' }} />
+        </div>
+      </div>
+    );
+  }
+
   const isUnlimited = limit === -1;
   const percentage = isUnlimited ? 0 : Math.min(100, (current / limit) * 100);
   const isNearLimit = !isUnlimited && percentage >= 80;

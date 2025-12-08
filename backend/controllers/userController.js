@@ -18,7 +18,7 @@ const deleteAccount = async (req, res) => {
 
     res.status(200).json({ message: 'Account deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'We couldn\'t delete your account. Please try again later.', error: error.message });
   }
 };
 

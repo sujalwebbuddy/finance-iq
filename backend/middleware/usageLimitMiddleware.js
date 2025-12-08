@@ -23,7 +23,7 @@ function createUsageLimitMiddleware(metric, period = 'monthly') {
       }
       
       return res.status(500).json({
-        message: 'Error checking usage limit',
+        message: 'Something went wrong while checking your usage limit. Please try again later.',
         error: error.message,
       });
     }

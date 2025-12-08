@@ -4,6 +4,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const authService = require('../services/authService');
 
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
@@ -21,14 +22,14 @@ const signup = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: 'Please enter all fields' });
+    return res.status(400).json({ message: 'Please provide both email and password to create an account.' });
   }
 
   try {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: 'An account with this email already exists. Please sign in instead.' });
     }
 
     const user = await User.create({
@@ -43,10 +44,10 @@ const signup = async (req, res) => {
         token: generateToken(user._id),
       });
     } else {
-      res.status(400).json({ message: 'Invalid user data' });
+      res.status(400).json({ message: 'Unable to create account. Please check your information and try again.' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -60,7 +61,7 @@ const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'The email or password you entered is incorrect. Please try again.' });
     }
 
     if (!user.password) {
@@ -69,7 +70,7 @@ const login = async (req, res) => {
           message: 'This account uses Google Sign-In. Please sign in with Google.' 
         });
       }
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({ message: 'The email or password you entered is incorrect. Please try again.' });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -86,7 +87,7 @@ const login = async (req, res) => {
       res.status(401).json({ message: 'Invalid email or password' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -105,7 +106,7 @@ const completeSetup = async (req, res) => {
   const { defaultCurrency } = req.body;
 
   if (!defaultCurrency) {
-    return res.status(400).json({ message: 'Default currency is required' });
+      return res.status(400).json({ message: 'Please select a default currency for your account.' });
   }
 
   try {
@@ -119,7 +120,7 @@ const completeSetup = async (req, res) => {
     );
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'Your account could not be found. Please sign in again.' });
     }
 
     res.status(200).json({
@@ -129,7 +130,7 @@ const completeSetup = async (req, res) => {
       isSetupComplete: user.isSetupComplete,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -176,11 +177,57 @@ const googleSuccess = async (req, res) => {
   }
 };
 
+// @desc    Request password reset
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const result = await authService.initiatePasswordReset(email);
+    res.status(200).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    const response = {
+      message: error.message,
+    };
+
+    if (error.code) {
+      response.code = error.code;
+    }
+
+    res.status(statusCode).json(response);
+  }
+};
+
+// @desc    Reset password with token
+// @route   POST /api/auth/reset-password
+// @access  Public
+const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    const result = await authService.resetPassword(token, password);
+    res.status(200).json(result);
+  } catch (error) {
+    const statusCode = error.statusCode || 500;
+    const response = {
+      message: error.message,
+    };
+
+    if (error.code) {
+      response.code = error.code;
+    }
+
+    res.status(statusCode).json(response);
+  }
+};
+
 module.exports = {
   signup,
   login,
   getMe,
   completeSetup,
+  forgotPassword,
+  resetPassword,
   googleAuth,
   googleCallback,
   googleSuccess,

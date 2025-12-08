@@ -28,13 +28,13 @@ function fileToGenerativePart(path, mimeType) {
 // @access  Private
 const uploadReceipt = async (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ message: "Please upload a file" });
+    return res.status(400).json({ message: "Please select a receipt image to upload." });
   }
 
   try {
     const userId = req.user.id;
     const plan = await subscriptionService.getUserPlan(userId);
-    
+
     await subscriptionService.requireFeatureAccess(userId, 'receiptOcr');
     await usageService.checkUsageLimit(userId, plan, 'receipts', 'monthly');
     const prompt = `
@@ -96,7 +96,7 @@ const uploadReceipt = async (req, res) => {
       });
     }
     res.status(500).json({
-      message: "Failed to process receipt with AI",
+      message: "We couldn't process your receipt. Please make sure the image is clear and try again.",
       error: error.message,
     });
   } finally {
@@ -114,19 +114,19 @@ const saveTransactionFromReceipt = async (req, res) => {
 
     // Validate required fields
     if (!receiptId || !transactionData) {
-      return res.status(400).json({ message: 'Receipt ID and transaction data are required' });
+      return res.status(400).json({ message: 'Please provide all required information to save this transaction.' });
     }
 
     // Verify the receipt belongs to the user
     const receipt = await Receipt.findOne({ _id: receiptId, user: req.user.id });
     if (!receipt) {
-      return res.status(404).json({ message: 'Receipt not found' });
+      return res.status(404).json({ message: 'This receipt could not be found.' });
     }
 
     // Validate and parse the date
     const transactionDate = new Date(transactionData.addedOn);
     if (isNaN(transactionDate.getTime())) {
-      return res.status(400).json({ message: 'Invalid date format provided' });
+      return res.status(400).json({ message: 'The date format is invalid. Please use a valid date.' });
     }
 
     // Create the transaction with user-confirmed data
@@ -158,7 +158,7 @@ const saveTransactionFromReceipt = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ message: 'Failed to save transaction', error: error.message });
+    res.status(500).json({ message: 'We couldn\'t save your transaction. Please try again.', error: error.message });
   }
 };
 

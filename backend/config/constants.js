@@ -1,0 +1,28 @@
+'use strict';
+
+const RESET_TOKEN_EXPIRY_MINUTES = 10;
+const RESET_TOKEN_BYTES = 32;
+const DEFAULT_EMAIL_PORT = 587;
+const DEFAULT_EMAIL_FROM_NAME = 'FinanceIQ Team';
+const PASSWORD_RESET_EMAIL_SUBJECT = 'Reset Your FinanceIQ Password - Action Required';
+
+const SUCCESS_MESSAGES = {
+  PASSWORD_RESET_INITIATED: 'If an account with that email exists, a reset link has been sent.',
+  PASSWORD_RESET_SUCCESS: 'Password reset successfully',
+};
+
+const ERROR_CODES = {
+  EMAIL_SEND_FAILED: 'EMAIL_SEND_FAILED',
+  INVALID_RESET_TOKEN: 'INVALID_RESET_TOKEN',
+  MAIL_ERROR: 'MAIL_ERROR',
+};
+
+module.exports = {
+  RESET_TOKEN_EXPIRY_MINUTES,
+  RESET_TOKEN_BYTES,
+  DEFAULT_EMAIL_PORT,
+  DEFAULT_EMAIL_FROM_NAME,
+  PASSWORD_RESET_EMAIL_SUBJECT,
+  SUCCESS_MESSAGES,
+  ERROR_CODES,
+};

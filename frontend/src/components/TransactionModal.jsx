@@ -172,22 +172,22 @@ const TransactionModal = ({
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[51] p-2 sm:p-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white pr-2">
               {transaction ? 'Edit' : 'Add'} {isIncomeTransaction ? 'Income' : 'Expense'}
             </h2>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="p-2 -mr-2 sm:mr-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors touch-manipulation"
               aria-label="Close modal"
             >
-              <CloseIcon className="h-5 w-5" />
+              <CloseIcon className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-5">
             {!isIncomeTransaction && (
               <FormField label="Name" id="name" error={errors.name} required>
                 <FormInput
@@ -199,7 +199,8 @@ const TransactionModal = ({
                   placeholder="Enter transaction name"
                   error={errors.name}
                   required
-                  className={!errors.name ? 'pl-4' : ''}
+                  className={`text-sm sm:text-base ${!errors.name ? 'pl-3 sm:pl-4' : ''}`}
+                  style={{ fontSize: '16px' }}
                 />
               </FormField>
             )}
@@ -211,7 +212,7 @@ const TransactionModal = ({
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-xl border bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-all duration-200 appearance-none ${
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-all duration-200 appearance-none touch-manipulation ${
                     errors.category
                       ? 'border-red-500 focus:ring-red-500'
                       : 'border-gray-300 dark:border-gray-600 focus:ring-teal-500 focus:border-transparent'
@@ -230,8 +231,8 @@ const TransactionModal = ({
                     + Add New Category
                   </option>
                 </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 dark:text-gray-300">
-                  <ChevronDownIcon className="h-5 w-5" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 text-gray-700 dark:text-gray-300">
+                  <ChevronDownIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
               </div>
             </FormField>
@@ -248,7 +249,8 @@ const TransactionModal = ({
                 step="0.01"
                 error={errors.cost}
                 required
-                className={!errors.cost ? 'pl-4' : ''}
+                className={`text-sm sm:text-base ${!errors.cost ? 'pl-3 sm:pl-4' : ''}`}
+                style={{ fontSize: '16px' }}
               />
             </FormField>
 
@@ -261,7 +263,8 @@ const TransactionModal = ({
                 onChange={handleChange}
                 error={errors.addedOn}
                 required
-                className={!errors.addedOn ? 'pl-4' : ''}
+                className={`text-sm sm:text-base ${!errors.addedOn ? 'pl-3 sm:pl-4' : ''}`}
+                style={{ fontSize: '16px' }}
               />
             </FormField>
 
@@ -272,30 +275,31 @@ const TransactionModal = ({
                 value={formData.note}
                 onChange={handleChange}
                 rows={3}
-                className="block w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 resize-y"
+                className="block w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 resize-y"
                 placeholder="E.g., Dinner at favorite restaurant, January salary"
               />
             </FormField>
 
-            <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700 gap-3 sm:gap-0">
               <button
                 type="button"
                 onClick={isIncomeTransaction ? handleSwitchToExpense : handleSwitchToIncome}
-                className="text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors"
+                className="text-xs sm:text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 transition-colors text-center sm:text-left py-2 sm:py-0 touch-manipulation"
               >
                 Switch to {isIncomeTransaction ? 'Expense' : 'Income'}
               </button>
 
-              <div className="flex justify-end gap-3">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+                  className="px-4 py-2.5 sm:py-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium touch-manipulation"
                 >
                   Cancel
                 </button>
-                <FormButton type="submit" className="w-auto">
-                  {transaction ? 'Update Transaction' : 'Save Transaction'}
+                <FormButton type="submit" className="w-full sm:w-auto text-sm sm:text-base py-2.5 sm:py-3.5">
+                  <span className="hidden sm:inline">{transaction ? 'Update Transaction' : 'Save Transaction'}</span>
+                  <span className="sm:hidden">{transaction ? 'Update' : 'Save'}</span>
                 </FormButton>
               </div>
             </div>

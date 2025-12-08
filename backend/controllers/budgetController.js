@@ -29,7 +29,7 @@ const createBudget = async (req, res) => {
                 context: error.context,
             });
         }
-        res.status(500).json({ message: 'Server Error', error: error.message });
+        res.status(500).json({ message: 'Something went wrong while processing your budget. Please try again later.', error: error.message });
     }
 };
 
@@ -72,7 +72,7 @@ const getBudgets = async (req, res) => {
         res.status(200).json(budgetsWithSpent);
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error: error.message });
+        res.status(500).json({ message: 'Something went wrong while processing your budget. Please try again later.', error: error.message });
     }
 };
 
@@ -80,13 +80,16 @@ const deleteBudget = async (req, res) => {
     try {
         const budget = await Budget.findOne({ _id: req.params.id, user: req.user.id });
         if (!budget) {
-            return res.status(404).json({ message: 'Budget not found' });
+            return res.status(404).json({ message: 'This budget could not be found.' });
         }
 
         await budget.deleteOne();
+        
+        await usageService.decrementUsage(req.user.id, 'budgets', 'monthly', 1);
+        
         res.json({ message: 'Budget deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error', error: error.message });
+        res.status(500).json({ message: 'Something went wrong while processing your budget. Please try again later.', error: error.message });
     }
 };
 

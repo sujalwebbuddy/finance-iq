@@ -41,7 +41,7 @@ const addTransaction = async (req, res) => {
         context: error.context,
       });
     }
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -78,7 +78,7 @@ const getTransactions = async (req, res) => {
       currentPage: page,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -90,12 +90,12 @@ const updateTransaction = async (req, res) => {
     const transaction = await IncomeExpense.findById(req.params.id);
 
     if (!transaction) {
-      return res.status(404).json({ message: 'Transaction not found' });
+      return res.status(404).json({ message: 'This transaction could not be found.' });
     }
 
     // Check if the transaction belongs to the user
     if (transaction.user.toString() !== req.user.id) {
-      return res.status(401).json({ message: 'User not authorized' });
+      return res.status(401).json({ message: 'You do not have permission to perform this action.' });
     }
 
     const { name, category, cost, addedOn, isIncome, note } = req.body;
@@ -109,7 +109,7 @@ const updateTransaction = async (req, res) => {
     const updatedTransaction = await transaction.save();
     res.json(updatedTransaction);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -121,11 +121,11 @@ const deleteTransaction = async (req, res) => {
     const transaction = await IncomeExpense.findById(req.params.id);
 
     if (!transaction) {
-      return res.status(404).json({ message: 'Transaction not found' });
+      return res.status(404).json({ message: 'This transaction could not be found.' });
     }
 
     if (transaction.user.toString() !== req.user.id) {
-      return res.status(401).json({ message: 'User not authorized' });
+      return res.status(401).json({ message: 'You do not have permission to perform this action.' });
     }
 
     transaction.isDeleted = true;
@@ -133,7 +133,7 @@ const deleteTransaction = async (req, res) => {
 
     res.json({ message: 'Transaction removed successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -145,7 +145,7 @@ const bulkDeleteTransactions = async (req, res) => {
     const { transactionIds } = req.body;
 
     if (!transactionIds || !Array.isArray(transactionIds) || transactionIds.length === 0) {
-      return res.status(400).json({ message: 'Transaction IDs array is required' });
+      return res.status(400).json({ message: 'Please select at least one transaction to delete.' });
     }
 
     // Verify all transactions belong to the user and exist
@@ -157,7 +157,7 @@ const bulkDeleteTransactions = async (req, res) => {
 
     if (transactions.length !== transactionIds.length) {
       return res.status(404).json({ 
-        message: 'Some transactions not found or not authorized' 
+        message: 'Some selected transactions could not be found or you do not have permission to delete them.' 
       });
     }
 
@@ -175,7 +175,7 @@ const bulkDeleteTransactions = async (req, res) => {
       deletedCount: result.modifiedCount
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -209,7 +209,7 @@ const getTransactionSummary = async (req, res) => {
     // Add recentTransactions to the JSON response
     res.json({ totalIncome, totalExpenses, balance, recentTransactions });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -273,7 +273,7 @@ const getChartData = async (req, res) => {
 
     res.json({ expensesByCategory, incomeByCategory, expensesOverTime, incomeOverTime });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -303,7 +303,7 @@ const getExpenseCategories = async (req, res) => {
 
     res.json(combinedCategories);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -332,7 +332,7 @@ const getIncomeCategories = async (req, res) => {
 
     res.json(combinedCategories);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -343,7 +343,7 @@ const deleteCategory = async (req, res) => {
   const { categoryToDelete } = req.body;
 
   if (!categoryToDelete) {
-    return res.status(400).json({ message: 'Category name is required' });
+    return res.status(400).json({ message: 'Please provide a category name to delete.' });
   }
 
   try {
@@ -355,7 +355,7 @@ const deleteCategory = async (req, res) => {
 
     res.json({ message: `Category '${categoryToDelete}' deleted successfully. Associated transactions moved to 'Miscellaneous'.` });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 
@@ -393,7 +393,7 @@ const exportTransactions = async (req, res) => {
         context: error.context,
       });
     }
-    res.status(500).json({ message: 'Server Error', error: error.message });
+    res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
   }
 };
 

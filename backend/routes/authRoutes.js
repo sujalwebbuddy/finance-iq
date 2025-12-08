@@ -2,20 +2,28 @@
 
 const express = require('express');
 const router = express.Router();
-const { 
-  signup, 
-  login, 
-  getMe, 
+const {
+  signup,
+  login,
+  getMe,
   completeSetup,
+  forgotPassword,
+  resetPassword,
   googleAuth,
   googleCallback,
   googleSuccess,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
-const { validateRegistration } = require('../middleware/validationMiddleware');
+const {
+  validateRegistration,
+  validateForgotPassword,
+  validateResetPassword,
+} = require('../middleware/validationMiddleware');
 
 router.post('/signup', validateRegistration, signup);
 router.post('/login', login);
+router.post('/forgot-password', validateForgotPassword, forgotPassword);
+router.post('/reset-password', validateResetPassword, resetPassword);
 router.get('/me', protect, getMe);
 router.put('/setup', protect, completeSetup);
 

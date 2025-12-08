@@ -47,6 +47,27 @@ export const authService = {
   },
 
   /**
+   * Request password reset
+   * @param {string} email - User email
+   * @returns {Promise<Object>} Response data
+   */
+  forgotPassword: async (email) => {
+    const response = await api.post('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  /**
+   * Reset password with token
+   * @param {string} token - Reset token
+   * @param {string} password - New password
+   * @returns {Promise<Object>} Response data
+   */
+  resetPassword: async (token, password) => {
+    const response = await api.post('/auth/reset-password', { token, password });
+    return response.data;
+  },
+
+  /**
    * Get Google OAuth URL
    * @returns {string} Google OAuth URL
    */

@@ -101,11 +101,14 @@ const SubscriptionCard = ({ subscription, usage, onUpgrade, loading }) => {
             current={usage.transactions?.current || 0}
             limit={usage.transactions?.limit || -1}
           />
-          <UsageMeter
-            label="Receipt Uploads"
-            current={usage.receipts?.current || 0}
-            limit={usage.receipts?.limit || -1}
-          />
+          {/* Only show Receipt Uploads if limit > 0 or unlimited */}
+          {usage.receipts && (usage.receipts.limit > 0 || usage.receipts.limit === -1) && (
+            <UsageMeter
+              label="Receipt Uploads"
+              current={usage.receipts.current || 0}
+              limit={usage.receipts.limit || -1}
+            />
+          )}
           <UsageMeter
             label="Budgets"
             current={usage.budgets?.current || 0}
@@ -116,11 +119,12 @@ const SubscriptionCard = ({ subscription, usage, onUpgrade, loading }) => {
             current={usage.recurring_transactions?.current || 0}
             limit={usage.recurring_transactions?.limit || -1}
           />
-          {usage.exports && (
+          {/* Only show Exports if limit > 0 or unlimited */}
+          {usage.exports && (usage.exports.limit > 0 || usage.exports.limit === -1) && (
             <UsageMeter
               label="Exports"
-              current={usage.exports?.current || 0}
-              limit={usage.exports?.limit || -1}
+              current={usage.exports.current || 0}
+              limit={usage.exports.limit || -1}
             />
           )}
         </div>

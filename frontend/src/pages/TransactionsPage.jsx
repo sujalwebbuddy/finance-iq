@@ -396,6 +396,7 @@ const TransactionsPage = () => {
         expenseCategories={expenseCategories}
         incomeCategories={incomeCategories}
         onDelete={handleDeleteCategory}
+        onNewCategory={handleNewCategory}
       />
 
       <TransactionDetailModal

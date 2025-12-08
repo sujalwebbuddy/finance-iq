@@ -103,6 +103,15 @@ const LoginPage = () => {
             />
           </FormField>
 
+          <div className="text-right">
+            <Link
+              to="/forgot-password"
+              className="text-sm text-teal-600 dark:text-teal-400 hover:text-teal-700 dark:hover:text-teal-300 font-semibold transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+
           <FormButton isLoading={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign In'}
           </FormButton>

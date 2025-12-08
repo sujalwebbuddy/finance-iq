@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const RecurringTransactions = require('./models/RecurringTransactions');
 const IncomeExpense = require('./models/IncomeExpense');
-const { calculateNextDueDate } = require('./utils');
+const { calculateNextDueDate } = require('./utils/calculateNextDueDate');
 
 cron.schedule('0 0 * * *', async () => {
     console.info('=== Running Recurring Transactions Cron ===');

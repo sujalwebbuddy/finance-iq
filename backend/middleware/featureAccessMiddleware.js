@@ -19,7 +19,7 @@ function createFeatureAccessMiddleware(feature) {
       }
       
       return res.status(500).json({
-        message: 'Error checking feature access',
+        message: 'Something went wrong while checking your plan access. Please try again later.',
         error: error.message,
       });
     }

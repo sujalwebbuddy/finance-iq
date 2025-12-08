@@ -4,7 +4,7 @@ const dns = require('dns');
 const validateRegistration = [
   (req, res, next) => {
     if (!req.body.email || !req.body.password) {
-      return res.status(400).json({ message: "Please enter all fields" });
+      return res.status(400).json({ message: "Please provide both email and password to register." });
     }
     next();
   },
@@ -57,6 +57,45 @@ const validateRegistration = [
   },
 ];
 
+const validateForgotPassword = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Please enter a valid email address')
+    .normalizeEmail(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+  },
+];
+
+const validateResetPassword = [
+  body('token')
+    .trim()
+    .notEmpty()
+    .withMessage('Reset token is required'),
+  body('password')
+    .trim()
+    .notEmpty()
+    .withMessage('Password is required')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters long'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+  },
+];
+
 module.exports = {
   validateRegistration,
+  validateForgotPassword,
+  validateResetPassword,
 };

@@ -22,7 +22,7 @@ async function createCustomer(email, userId) {
     return customer;
   } catch (error) {
     throw new SubscriptionError(
-      'Failed to create Stripe customer',
+      'We couldn\'t set up your payment account. Please try again or contact support.',
       {
         originalError: error,
         statusCode: 500,
@@ -55,7 +55,7 @@ async function createCheckoutSession(customerId, priceId, userId) {
     return session;
   } catch (error) {
     throw new SubscriptionError(
-      'Failed to create checkout session',
+      'We couldn\'t process your subscription upgrade. Please try again.',
       {
         originalError: error,
         statusCode: 500,
@@ -74,7 +74,7 @@ async function createSubscription(customerId, priceId) {
     return subscription;
   } catch (error) {
     throw new SubscriptionError(
-      'Failed to create subscription',
+      'We couldn\'t activate your subscription. Please try again or contact support.',
       {
         originalError: error,
         statusCode: 500,
@@ -96,7 +96,7 @@ async function cancelStripeSubscription(subscriptionId, cancelAtPeriodEnd = true
     return true;
   } catch (error) {
     throw new SubscriptionError(
-      'Failed to cancel Stripe subscription',
+      'We couldn\'t cancel your subscription. Please try again or contact support.',
       {
         originalError: error,
         statusCode: 500,
@@ -114,7 +114,7 @@ async function reactivateStripeSubscription(subscriptionId) {
     return true;
   } catch (error) {
     throw new SubscriptionError(
-      'Failed to reactivate Stripe subscription',
+      'We couldn\'t reactivate your subscription. Please try again or contact support.',
       {
         originalError: error,
         statusCode: 500,

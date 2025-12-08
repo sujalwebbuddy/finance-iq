@@ -84,6 +84,28 @@ export const AuthProvider = ({ children }) => {
     window.location.href = authService.getGoogleAuthUrl();
   }, []);
 
+  const forgotPassword = useCallback(async (email) => {
+    try {
+      const result = await authService.forgotPassword(email);
+      setPendingToast({ type: 'success', message: result.message });
+      return result;
+    } catch (error) {
+      handleAuthError(error, setPendingToast, 'Failed to send reset email. Please try again.');
+      throw error;
+    }
+  }, []);
+
+  const resetPassword = useCallback(async (token, password) => {
+    try {
+      const result = await authService.resetPassword(token, password);
+      setPendingToast({ type: 'success', message: result.message });
+      return result;
+    } catch (error) {
+      handleAuthError(error, setPendingToast, 'Failed to reset password. Please try again.');
+      throw error;
+    }
+  }, []);
+
   const handleGoogleCallback = useCallback((data) => {
     const { token: newToken, userId, email, isSetupComplete, defaultCurrency } = data;
     const userData = {
@@ -96,14 +118,16 @@ export const AuthProvider = ({ children }) => {
   }, [navigate]);
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      token, 
-      loading, 
-      login, 
-      signup, 
-      logout, 
+    <AuthContext.Provider value={{
+      user,
+      token,
+      loading,
+      login,
+      signup,
+      logout,
       setup,
+      forgotPassword,
+      resetPassword,
       initiateGoogleAuth,
       handleGoogleCallback,
     }}>

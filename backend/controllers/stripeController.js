@@ -11,20 +11,20 @@ async function createCheckoutSession(req, res) {
     
     if (!plan || !['basic', 'pro', 'enterprise'].includes(plan)) {
       return res.status(400).json({
-        message: 'Invalid plan. Must be one of: basic, pro, enterprise',
+        message: 'Please select a valid plan: Basic, Pro, or Enterprise.',
       });
     }
     
     const priceId = stripeService.PLAN_PRICE_IDS[plan];
     if (!priceId) {
       return res.status(400).json({
-        message: `Price ID not configured for plan: ${plan}`,
+        message: 'This plan is currently unavailable. Please contact support for assistance.',
       });
     }
     
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'Your account could not be found. Please sign in again.' });
     }
     
     const subscription = await subscriptionService.getUserSubscription(userId);
@@ -51,7 +51,7 @@ async function createCheckoutSession(req, res) {
   } catch (error) {
     const statusCode = error.statusCode || 500;
     res.status(statusCode).json({
-      message: error.message || 'Error creating checkout session',
+      message: error.message || 'We couldn\'t process your subscription upgrade. Please try again.',
       error: error.message,
     });
   }
@@ -68,7 +68,7 @@ async function handleWebhook(req, res) {
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (error) {
     return res.status(400).json({
-      message: `Webhook signature verification failed: ${error.message}`,
+      message: 'Payment verification failed. Please contact support if this issue persists.',
     });
   }
   
@@ -78,7 +78,7 @@ async function handleWebhook(req, res) {
   } catch (error) {
     const statusCode = error.statusCode || 500;
     res.status(statusCode).json({
-      message: error.message || 'Error processing webhook',
+      message: error.message || 'We couldn\'t process your payment. Please try again.',
       error: error.message,
     });
   }

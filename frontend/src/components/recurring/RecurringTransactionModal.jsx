@@ -108,22 +108,22 @@ const RecurringTransactionModal = ({
   const allCategories = formData.isIncome ? incomeCategories : expenseCategories;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-lg">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[51] p-2 sm:p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-xl w-full max-w-lg max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white pr-2">
             {transaction ? 'Edit Recurring Transaction' : 'Add Recurring Transaction'}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            className="p-2 -mr-2 sm:mr-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors touch-manipulation"
             aria-label="Close modal"
           >
-            <CloseIcon className="h-5 w-5" />
+            <CloseIcon className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-5">
           <FormField label="Name" id="name" error={errors.name} required>
             <FormInput
               type="text"
@@ -134,7 +134,8 @@ const RecurringTransactionModal = ({
               placeholder="Enter transaction name"
               error={errors.name}
               required
-              className={!errors.name ? 'pl-4' : ''}
+              className={`text-sm sm:text-base ${!errors.name ? 'pl-3 sm:pl-4' : ''}`}
+              style={{ fontSize: '16px' }}
             />
           </FormField>
 
@@ -145,9 +146,9 @@ const RecurringTransactionModal = ({
                 name="isIncome"
                 checked={formData.isIncome}
                 onChange={handleChange}
-                className="w-5 h-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-400 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                className="w-5 h-5 text-teal-600 border-gray-300 rounded focus:ring-teal-500 dark:focus:ring-teal-400 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 touch-manipulation"
               />
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300">
                 This is an income transaction
               </span>
             </label>
@@ -160,7 +161,7 @@ const RecurringTransactionModal = ({
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-xl border bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-all duration-200 appearance-none ${
+                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-all duration-200 appearance-none touch-manipulation ${
                   errors.category
                     ? 'border-red-500 focus:ring-red-500'
                     : 'border-gray-300 dark:border-gray-600 focus:ring-teal-500 focus:border-transparent'
@@ -176,8 +177,8 @@ const RecurringTransactionModal = ({
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 dark:text-gray-300">
-                <ChevronDownIcon className="h-5 w-5" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 text-gray-700 dark:text-gray-300">
+                <ChevronDownIcon className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
             </div>
           </FormField>
@@ -194,7 +195,8 @@ const RecurringTransactionModal = ({
               step="0.01"
               error={errors.amount}
               required
-              className={!errors.amount ? 'pl-4' : ''}
+              className={`text-sm sm:text-base ${!errors.amount ? 'pl-3 sm:pl-4' : ''}`}
+              style={{ fontSize: '16px' }}
             />
           </FormField>
 
@@ -205,7 +207,7 @@ const RecurringTransactionModal = ({
                 name="frequency"
                 value={formData.frequency}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 appearance-none"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200 appearance-none touch-manipulation"
                 required
               >
                 {frequencyOptions.map((option) => (
@@ -214,8 +216,8 @@ const RecurringTransactionModal = ({
                   </option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700 dark:text-gray-300">
-                <ChevronDownIcon className="h-5 w-5" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 text-gray-700 dark:text-gray-300">
+                <ChevronDownIcon className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
             </div>
           </FormField>
@@ -229,23 +231,25 @@ const RecurringTransactionModal = ({
               onChange={handleChange}
               error={errors.startDate}
               required
-              className={!errors.startDate ? 'pl-4' : ''}
+              className={`text-sm sm:text-base ${!errors.startDate ? 'pl-3 sm:pl-4' : ''}`}
+              style={{ fontSize: '16px' }}
             />
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
               Next Due Date will be calculated automatically based on this start date and frequency.
             </p>
           </FormField>
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+              className="px-4 py-2.5 sm:py-2 text-sm sm:text-base text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium touch-manipulation w-full sm:w-auto"
             >
               Cancel
             </button>
-            <FormButton isLoading={isSubmitting} className="w-auto">
-              {transaction ? 'Update Recurring Transaction' : 'Create Recurring Transaction'}
+            <FormButton isLoading={isSubmitting} className="w-full sm:w-auto text-sm sm:text-base py-2.5 sm:py-3.5">
+              <span className="hidden sm:inline">{transaction ? 'Update Recurring Transaction' : 'Create Recurring Transaction'}</span>
+              <span className="sm:hidden">{transaction ? 'Update' : 'Create'}</span>
             </FormButton>
           </div>
         </form>

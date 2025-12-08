@@ -1,7 +1,7 @@
 'use strict';
 
 const Subscription = require('../models/Subscription');
-const { SubscriptionError } = require('./errors/SubscriptionError');
+const { SubscriptionError, FeatureNotAvailableError } = require('./errors/SubscriptionError');
 const { hasFeatureAccess } = require('../config/planLimits');
 
 async function getOrCreateSubscription(userId) {
@@ -49,20 +49,20 @@ async function checkFeatureAccess(userId, feature) {
 
 async function requireFeatureAccess(userId, feature) {
   const hasAccess = await checkFeatureAccess(userId, feature);
-  
+
   if (!hasAccess) {
     const plan = await getUserPlan(userId);
-    throw new SubscriptionError(
-      `Feature '${feature}' is not available on your current plan (${plan})`,
-      {
-        code: 'FEATURE_NOT_AVAILABLE',
-        statusCode: 403,
-        feature,
-        plan,
-      }
-    );
+    // Provide user-friendly message for receipt OCR feature
+    const message = feature === 'receiptOcr'
+      ? 'Please upgrade your plan to use this feature'
+      : `Feature '${feature}' is not available on your current plan (${plan})`;
+
+    throw new FeatureNotAvailableError(message, {
+      feature,
+      plan,
+    });
   }
-  
+
   return true;
 }
 
