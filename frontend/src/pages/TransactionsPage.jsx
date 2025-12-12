@@ -353,7 +353,10 @@ const TransactionsPage = () => {
           setDateTo(e.target.value);
           setPage(1);
         }}
-        onClearFilters={clearAllFilters}
+        onClearFilters={() => {
+          clearAllFilters();
+          setError(null);
+        }}
         onRemoveFilter={handleRemoveFilter}
       />
 

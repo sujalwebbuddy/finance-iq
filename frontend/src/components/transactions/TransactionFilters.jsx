@@ -21,6 +21,7 @@ const TransactionFilters = ({
   onRemoveFilter,
 }) => {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [dateError, setDateError] = useState('');
   const isMobile = useResize(1024);
   const filters = {
     searchTerm,
@@ -31,6 +32,24 @@ const TransactionFilters = ({
   };
 
   const hasActiveFilters = searchTerm || typeFilter !== 'all' || categoryFilter !== 'all' || dateFrom || dateTo;
+
+  const validateAndSetDateFrom = (value) => {
+    if (value && dateTo && new Date(value) > new Date(dateTo)) {
+      setDateError('From date cannot be after To date');
+      return;
+    }
+    setDateError('');
+    onDateFromChange({ target: { value } });
+  };
+
+  const validateAndSetDateTo = (value) => {
+    if (value && dateFrom && new Date(value) < new Date(dateFrom)) {
+      setDateError('To date cannot be before From date');
+      return;
+    }
+    setDateError('');
+    onDateToChange({ target: { value } });
+  };
 
   const FilterInputs = ({ showLabels = false }) => (
     <>
@@ -74,7 +93,8 @@ const TransactionFilters = ({
             <input
               type="date"
               value={dateFrom}
-              onChange={onDateFromChange}
+              onChange={(e) => validateAndSetDateFrom(e.target.value)}
+              max={dateTo || undefined}
               className="w-full px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
             />
           </div>
@@ -85,7 +105,8 @@ const TransactionFilters = ({
             <input
               type="date"
               value={dateTo}
-              onChange={onDateToChange}
+              onChange={(e) => validateAndSetDateTo(e.target.value)}
+              min={dateFrom || undefined}
               className="w-full px-4 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
             />
           </div>
@@ -130,7 +151,8 @@ const TransactionFilters = ({
             <input
               type="date"
               value={dateFrom}
-              onChange={onDateFromChange}
+              onChange={(e) => validateAndSetDateFrom(e.target.value)}
+              max={dateTo || undefined}
               className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
             />
           </div>
@@ -141,7 +163,8 @@ const TransactionFilters = ({
             <input
               type="date"
               value={dateTo}
-              onChange={onDateToChange}
+              onChange={(e) => validateAndSetDateTo(e.target.value)}
+              min={dateFrom || undefined}
               className="w-full pl-10 pr-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
             />
           </div>
@@ -184,6 +207,11 @@ const TransactionFilters = ({
             <FilterInputs showLabels={false} />
           )}
         </div>
+        {dateError && (
+          <div className="mt-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg border border-red-200 dark:border-red-800">
+            {dateError}
+          </div>
+        )}
         <FilterBadges filters={filters} onClear={onClearFilters} onRemoveFilter={onRemoveFilter} />
       </div>
 

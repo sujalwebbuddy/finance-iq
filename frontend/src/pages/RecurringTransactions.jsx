@@ -14,18 +14,21 @@ const RecurringTransactions = () => {
   const [loading, setLoading] = useState(true);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [expenseCategories, setExpenseCategories] = useState([]);
+  const [incomeCategories, setIncomeCategories] = useState([]);
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, id: null });
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [recurringData, categoriesData] = await Promise.all([
+      const [recurringData, expenseCategoriesData, incomeCategoriesData] = await Promise.all([
         recurringTransactionsService.getRecurringTransactions(),
         transactionsService.getExpenseCategories(),
+        transactionsService.getIncomeCategories(),
       ]);
       setRecurring(recurringData);
-      setCategories(categoriesData);
+      setExpenseCategories(expenseCategoriesData);
+      setIncomeCategories(incomeCategoriesData);
     } catch (err) {
       const recurringError = handleTransactionError(err, { action: 'fetchRecurringTransactions' });
       toast.error(recurringError.message, { autoClose: 5000 });
@@ -46,6 +49,14 @@ const RecurringTransactions = () => {
   const handleCloseModal = () => {
     setEditingTransaction(null);
     setIsModalOpen(false);
+  };
+
+  const handleNewCategory = (newCategory, isIncome) => {
+    if (isIncome) {
+      setIncomeCategories((prev) => [...prev, newCategory].sort());
+    } else {
+      setExpenseCategories((prev) => [...prev, newCategory].sort());
+    }
   };
 
   const handleFormSubmit = async (formData, id) => {
@@ -106,7 +117,9 @@ const RecurringTransactions = () => {
         onClose={handleCloseModal}
         onSubmit={handleFormSubmit}
         transaction={editingTransaction}
-        categories={categories}
+        expenseCategories={expenseCategories}
+        incomeCategories={incomeCategories}
+        onNewCategory={handleNewCategory}
       />
 
       <ConfirmDialog

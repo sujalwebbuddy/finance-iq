@@ -4,13 +4,16 @@ import FormInput from '../auth/FormInput';
 import FormButton from '../auth/FormButton';
 import CloseIcon from '../icons/CloseIcon';
 import ChevronDownIcon from '../icons/ChevronDownIcon';
+import AddCategoryModal from '../transactions/AddCategoryModal';
 
 const RecurringTransactionModal = ({
   isOpen,
   onClose,
   onSubmit,
   transaction,
-  categories,
+  expenseCategories = [],
+  incomeCategories = [],
+  onNewCategory,
 }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +25,7 @@ const RecurringTransactionModal = ({
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   useEffect(() => {
     if (transaction) {
@@ -50,11 +54,31 @@ const RecurringTransactionModal = ({
     const { name, value, type, checked } = e.target;
     setErrors((prev) => ({ ...prev, [name]: '' }));
 
+    if (name === 'category' && value === '__add_new__') {
+      setIsCategoryModalOpen(true);
+      return;
+    }
+
     if (type === 'checkbox') {
-      setFormData((prev) => ({ ...prev, [name]: checked }));
+      if (name === 'isIncome') {
+        const newCategories = checked ? incomeCategories : expenseCategories;
+        setFormData((prev) => ({
+          ...prev,
+          isIncome: checked,
+          category: newCategories[0] || '',
+        }));
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: checked }));
+      }
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
+  };
+
+  const handleCategoryAdd = (newCategory, isIncome) => {
+    onNewCategory(newCategory, isIncome);
+    setFormData((prev) => ({ ...prev, category: newCategory }));
+    setIsCategoryModalOpen(false);
   };
 
   const validate = () => {
@@ -99,13 +123,7 @@ const RecurringTransactionModal = ({
     { value: 'annually', label: 'Annually' },
   ];
 
-  const expenseCategories = categories
-    .filter((cat) => !cat.isIncome)
-    .map((cat) => cat.name || cat);
-  const incomeCategories = categories
-    .filter((cat) => cat.isIncome)
-    .map((cat) => cat.name || cat);
-  const allCategories = formData.isIncome ? incomeCategories : expenseCategories;
+  const currentCategories = formData.isIncome ? incomeCategories : expenseCategories;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[51] p-2 sm:p-4">
@@ -156,27 +174,30 @@ const RecurringTransactionModal = ({
 
           <FormField label="Category" id="category" error={errors.category} required>
             <div className="relative">
-              <select
-                id="category"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-all duration-200 appearance-none touch-manipulation ${
-                  errors.category
-                    ? 'border-red-500 focus:ring-red-500'
-                    : 'border-gray-300 dark:border-gray-600 focus:ring-teal-500 focus:border-transparent'
-                }`}
-                required
-              >
-                <option value="" className="bg-white dark:bg-gray-800">
-                  Select Category
-                </option>
-                {allCategories.map((cat) => (
-                  <option key={cat} value={cat} className="bg-white dark:bg-gray-800">
-                    {cat}
+                <select
+                  id="category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg sm:rounded-xl border bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 transition-all duration-200 appearance-none touch-manipulation ${
+                    errors.category
+                      ? 'border-red-500 focus:ring-red-500'
+                      : 'border-gray-300 dark:border-gray-600 focus:ring-teal-500 focus:border-transparent'
+                  }`}
+                  required
+                >
+                  <option value="" className="bg-white dark:bg-gray-800">
+                    Select Category
                   </option>
-                ))}
-              </select>
+                  {currentCategories.map((cat) => (
+                    <option key={cat} value={cat} className="bg-white dark:bg-gray-800">
+                      {cat}
+                    </option>
+                  ))}
+                  <option value="__add_new__" className="bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 font-semibold">
+                    + Add New Category
+                  </option>
+                </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 sm:px-3 text-gray-700 dark:text-gray-300">
                 <ChevronDownIcon className="h-4 w-4 sm:h-5 sm:w-5" />
               </div>
@@ -254,6 +275,13 @@ const RecurringTransactionModal = ({
           </div>
         </form>
       </div>
+
+      <AddCategoryModal
+        isOpen={isCategoryModalOpen}
+        onClose={() => setIsCategoryModalOpen(false)}
+        onAdd={handleCategoryAdd}
+        isIncome={formData.isIncome}
+      />
     </div>
   );
 };

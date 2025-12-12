@@ -38,6 +38,7 @@ const sendResetPasswordEmail = async (email, resetToken) => {
       html: generatePasswordResetEmail(resetUrl),
     });
   } catch (error) {
+    console.error(error);
     throw new AuthError('We couldn\'t send the password reset email. Please check your email address and try again.', {
       code: ERROR_CODES.EMAIL_SEND_FAILED,
       statusCode: 500,

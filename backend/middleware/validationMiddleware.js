@@ -63,8 +63,7 @@ const validateForgotPassword = [
     .notEmpty()
     .withMessage('Email is required')
     .isEmail()
-    .withMessage('Please enter a valid email address')
-    .normalizeEmail(),
+    .withMessage('Please enter a valid email address'),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
