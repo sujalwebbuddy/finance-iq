@@ -46,8 +46,6 @@ const subscriptionSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-subscriptionSchema.index({ user: 1 });
-subscriptionSchema.index({ stripeSubscriptionId: 1 });
 subscriptionSchema.index({ status: 1 });
 
 const Subscription = mongoose.model('Subscription', subscriptionSchema);

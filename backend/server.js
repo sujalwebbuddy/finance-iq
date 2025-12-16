@@ -94,20 +94,20 @@ app.use('/api/recurring', require('./routes/recurringTransactionRoutes'));
 app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 app.use('/api/stripe', require('./routes/stripeRoutes'));
 
-// Serve static files from the uploads directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 app.get('/', (req, res) => {
   res.send('API is Running');
 });
 
-let server = null;
+// Export the app for Vercel serverless 
+module.exports = app;
 
+// Only start the server if not running on Vercel
 if (process.env.IS_VERCEL !== 'true') {
-  server = app.listen(PORT, () =>
+  const server = app.listen(PORT, () =>
     console.info(`Server started on port ${PORT}`)
   );
 
+  // Keep-alive cron job for non-Vercel environments
   cron.schedule("*/10 * * * *", async () => {
     const keepAliveUrl = process.env.KEEP_ALIVE_URL;
     if (!keepAliveUrl) {
@@ -124,6 +124,6 @@ if (process.env.IS_VERCEL !== 'true') {
       console.error("Keep-alive FAILED!", error.message);
     }
   });
-}
 
-module.exports = { app, server };
+  module.exports.server = server;
+}

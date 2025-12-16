@@ -11,5 +11,13 @@
         "src": "/(.*)",
         "dest": "server.js"
       }
-    ]
+    ],
+    "env": {
+      "IS_VERCEL": "true"
+    },
+    "functions": {
+      "server.js": {
+        "maxDuration": 30
+      }
+    }
   }

@@ -48,7 +48,17 @@ const uploadReceipt = async (req, res) => {
       {"merchant":"Walmart","amount":42.97,"date":"2025-09-13","category":"Groceries"}
     `;
 
-    const imagePart = fileToGenerativePart(req.file.path, req.file.mimetype);
+    // For S3, we need to fetch the file content from the URL
+    const axios = require('axios');
+    const imageResponse = await axios.get(req.file.location, { responseType: 'arraybuffer' });
+    const imageBuffer = Buffer.from(imageResponse.data);
+
+    const imagePart = {
+      inlineData: {
+        data: imageBuffer.toString("base64"),
+        mimeType: req.file.mimetype,
+      },
+    };
 
     const result = await client.models.generateContent({
       model: "gemini-2.5-flash-lite",
@@ -73,7 +83,7 @@ const uploadReceipt = async (req, res) => {
 
     const newReceipt = new Receipt({
       user: req.user.id,
-      fileUrl: `/uploads/${req.file.filename}`,
+      fileUrl: req.file.location,
       extractedData: {
         amount: extractedData.amount || 0,
         category: extractedData.category || "Miscellaneous",
@@ -99,9 +109,6 @@ const uploadReceipt = async (req, res) => {
       message: "We couldn't process your receipt. Please make sure the image is clear and try again.",
       error: error.message,
     });
-  } finally {
-    // Deleting the temporary file from the server
-    fs.unlinkSync(req.file.path);
   }
 };
 
