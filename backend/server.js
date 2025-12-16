@@ -101,25 +101,29 @@ app.get('/', (req, res) => {
   res.send('API is Running');
 });
 
-const server = app.listen(PORT, () =>
-  console.info(`Server started on port ${PORT}`)
-);
+let server = null;
 
-cron.schedule("*/10 * * * *", async () => {
-  const keepAliveUrl = process.env.KEEP_ALIVE_URL;
-  if (!keepAliveUrl) {
-    console.error(
-      "KEEP_ALIVE_URL environment variable is not set. Skipping keep-alive ping."
-    );
-    return;
-  }
+if (process.env.IS_VERCEL !== 'true') {
+  server = app.listen(PORT, () =>
+    console.info(`Server started on port ${PORT}`)
+  );
 
-  try {
-    await axios.get(keepAliveUrl);
-    console.info("Keep-alive ping sent!");
-  } catch (error) {
-    console.error("Keep-alive FAILED!", error.message);
-  }
-});
+  cron.schedule("*/10 * * * *", async () => {
+    const keepAliveUrl = process.env.KEEP_ALIVE_URL;
+    if (!keepAliveUrl) {
+      console.error(
+        "KEEP_ALIVE_URL environment variable is not set. Skipping keep-alive ping."
+      );
+      return;
+    }
+
+    try {
+      await axios.get(keepAliveUrl);
+      console.info("Keep-alive ping sent!");
+    } catch (error) {
+      console.error("Keep-alive FAILED!", error.message);
+    }
+  });
+}
 
 module.exports = { app, server };
