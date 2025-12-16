@@ -49,6 +49,7 @@ const sendEmail = async (mailOptions) => {
   try {
     await transporter.sendMail(finalOptions);
   } catch (error) {
+    console.error(error);
     const mailError = new Error('Failed to send email');
     mailError.code = ERROR_CODES.MAIL_ERROR;
     mailError.originalError = error;
