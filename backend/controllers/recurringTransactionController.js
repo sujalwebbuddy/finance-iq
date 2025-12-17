@@ -5,16 +5,18 @@ const { calculateNextDueDate } = require('../utils/calculateNextDueDate');
 const subscriptionService = require('../services/subscriptionService');
 const usageService = require('../services/usageService');
 const { UsageLimitExceededError } = require('../services/errors/SubscriptionError');
+const IncomeExpense = require('../models/IncomeExpense');
+const mongoose = require('mongoose');
 
 const createRecurringTransaction = async (req, res) => {
     const { name, category, amount, isIncome, frequency, startDate } = req.body;
+    let session;
 
     try {
-        if (!name || !category || !amount || !frequency || !startDate) {
+        if (!name || !category || amount === null || amount === undefined || !frequency || !startDate) {
             return res.status(400).json({ message: 'Please fill in all required fields: name, category, amount, frequency, and start date.' });
         }
 
-        // Ensure startDate is today or in the future
         const start = new Date(startDate);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -31,6 +33,9 @@ const createRecurringTransaction = async (req, res) => {
         
         await usageService.checkUsageLimit(userId, plan, 'recurring_transactions', 'monthly');
 
+        session = await mongoose.startSession();
+        session.startTransaction();
+
         const nextDueDate = calculateNextDueDate(startDate, frequency);
 
         const recurringTransaction = new RecurringTransaction({
@@ -44,12 +49,28 @@ const createRecurringTransaction = async (req, res) => {
             nextDueDate,
         });
 
-        const createdRecurringTransaction = await recurringTransaction.save();
-        
+        const createdRecurringTransaction = await recurringTransaction.save({ session });
+
+        const transaction = new IncomeExpense({
+            user: userId,
+            name,
+            category,
+            isIncome,
+            note: `Recurring - ${name}`,
+            recurringTransaction: createdRecurringTransaction._id,
+            addedOn: startDate,
+            cost: amount,
+        });
+
+        await transaction.save({ session });
+
+        if (session) await session.commitTransaction();
+
         await usageService.incrementUsage(userId, 'recurring_transactions', 'monthly', 1);
         
         res.status(201).json(createdRecurringTransaction);
     } catch (error) {
+        if (session) await session.abortTransaction();
         if (error instanceof UsageLimitExceededError) {
             return res.status(error.statusCode).json({
                 message: error.message,
@@ -58,6 +79,8 @@ const createRecurringTransaction = async (req, res) => {
             });
         }
         res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
+    } finally {
+        if (session) session.endSession();
     }
 };
 
@@ -78,10 +101,21 @@ const updateRecurringTransaction = async (req, res) => {
 
         const updateData = { name, category, amount, isIncome, frequency, startDate };
 
+        const transaction = await RecurringTransaction.findOne({ _id: req.params.id, user: req.user.id });
+        if (!transaction) {
+            return res.status(404).json({ message: 'This recurring transaction could not be found.' });
+        }
+
         if (startDate || frequency) {
-            const transaction = await RecurringTransaction.findOne({ _id: req.params.id, user: req.user.id });
-            if (!transaction) {
-                return res.status(404).json({ message: 'This recurring transaction could not be found.' });
+            const start = new Date(startDate);
+            const previousStart = new Date(Math.min(new Date(transaction.startDate), new Date()));
+            previousStart.setHours(0, 0, 0, 0);
+            start.setHours(0, 0, 0, 0);
+    
+            if (start < previousStart) {
+                return res.status(400).json({ 
+                    message: 'Recurring transactions can only start on or after the previous start date.' 
+                });
             }
 
             const newStartDate = startDate || transaction.startDate;

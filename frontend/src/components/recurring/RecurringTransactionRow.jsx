@@ -65,6 +65,9 @@ const RecurringTransactionRow = ({ transaction, onEdit, onDelete }) => {
         {formatFrequency(transaction.frequency)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
+        {formatDate(transaction.startDate)}
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
         {formatDate(transaction.nextDueDate)}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
