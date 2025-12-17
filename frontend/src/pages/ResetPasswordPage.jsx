@@ -128,18 +128,6 @@ const ResetPasswordPage = () => {
       linkText="Sign in"
       linkTo="/login"
     >
-      {serverError && (
-        <div className="mb-6 p-5 rounded-2xl bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-900/30 dark:to-rose-900/20 border-2 border-red-200 dark:border-red-800 shadow-sm">
-          <div className="flex items-start space-x-3">
-            <svg className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className="text-sm text-red-700 dark:text-red-300 font-medium leading-relaxed">
-              {serverError}
-            </p>
-          </div>
-        </div>
-      )}
 
       {password && confirmPassword && password === confirmPassword && password.length >= 6 && (
         <div className="mb-6 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">

@@ -1,6 +1,7 @@
 'use strict';
 
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { AuthError } = require('./errors/AuthError');
 const { sendEmail } = require('../utils/mail');
@@ -97,6 +98,17 @@ const resetPassword = async (token, newPassword) => {
   if (!user) {
     throw new AuthError('This password reset link is invalid or has expired. Please request a new password reset.', {
       code: ERROR_CODES.INVALID_RESET_TOKEN,
+      statusCode: 400,
+    });
+  }
+
+  let isSamePassword = false;
+  if( user.password ) {
+    isSamePassword = await bcrypt.compare(newPassword, user.password);
+  }
+  if (isSamePassword) {
+    throw new AuthError('New password cannot be the same as your current password. Please choose a different password.', {
+      code: ERROR_CODES.PASSWORD_SAME_AS_CURRENT,
       statusCode: 400,
     });
   }

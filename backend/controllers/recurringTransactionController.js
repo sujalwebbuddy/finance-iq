@@ -14,6 +14,18 @@ const createRecurringTransaction = async (req, res) => {
             return res.status(400).json({ message: 'Please fill in all required fields: name, category, amount, frequency, and start date.' });
         }
 
+        // Ensure startDate is today or in the future
+        const start = new Date(startDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        start.setHours(0, 0, 0, 0);
+
+        if (start < today) {
+            return res.status(400).json({ 
+                message: 'Recurring transactions can only start today or in the future.' 
+            });
+        }
+
         const userId = req.user.id;
         const plan = await subscriptionService.getUserPlan(userId);
         

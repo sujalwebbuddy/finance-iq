@@ -11,6 +11,12 @@
       "destination": "/server.js"
     }
   ],
+  "crons": [
+    {
+      "path": "/api/cron/recurring-transactions",
+      "schedule": "0 0 * * *"
+    }
+  ],
   "env": {
     "IS_VERCEL": "true"
   }

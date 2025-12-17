@@ -10,7 +10,6 @@ const connectDB = require('./config/db');
 const axios = require('axios');
 const cron = require('node-cron');
 const { initializeGoogleStrategy } = require('./services/googleOAuthService');
-require('./cron');
 
 // import the sanitizeMiddleware
 const { sanitizeMiddleware } = require("./middleware/sanitizeMiddleware");
@@ -93,6 +92,7 @@ app.use('/api/budgets', require('./routes/budgetRoutes'));
 app.use('/api/recurring', require('./routes/recurringTransactionRoutes'));
 app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 app.use('/api/stripe', require('./routes/stripeRoutes'));
+app.use('/api/cron', require('./routes/cronRoutes'));
 
 app.get('/', (req, res) => {
   res.send('API is Running');
@@ -106,6 +106,8 @@ if (process.env.IS_VERCEL !== 'true') {
   const server = app.listen(PORT, () =>
     console.info(`Server started on port ${PORT}`)
   );
+
+  require('./cron');
 
   // Keep-alive cron job for non-Vercel environments
   cron.schedule("*/10 * * * *", async () => {

@@ -252,6 +252,7 @@ const RecurringTransactionModal = ({
               onChange={handleChange}
               error={errors.startDate}
               required
+              min={new Date().toISOString().split('T')[0]}
               className={`text-sm sm:text-base ${!errors.startDate ? 'pl-3 sm:pl-4' : ''}`}
               style={{ fontSize: '16px' }}
             />

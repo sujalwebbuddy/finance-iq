@@ -37,6 +37,11 @@ const incomeExpenseSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  recurringTransaction: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "RecurringTransactions",
+    index: true,
+  },
 }, {
   timestamps: true,
 });
@@ -46,5 +51,6 @@ const incomeExpenseSchema = new mongoose.Schema({
 incomeExpenseSchema.index({ user: 1, isDeleted: 1, isIncome: 1, addedOn: -1 });
 incomeExpenseSchema.index({ user: 1, isDeleted: 1, category: 1 });
 incomeExpenseSchema.index({ user: 1, isDeleted: 1, addedOn: -1 });
+incomeExpenseSchema.index({ recurringTransaction: 1, addedOn: 1 }, { unique: true });
 
 module.exports = mongoose.model('IncomeExpense', incomeExpenseSchema);
