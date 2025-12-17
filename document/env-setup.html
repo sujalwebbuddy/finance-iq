@@ -114,6 +114,27 @@ STRIPE_PRICE_ID_PRO=price_your_pro_plan_price_id
 STRIPE_PRICE_ID_ENTERPRISE=price_your_enterprise_plan_price_id
 
 # -----------------------------------------------------------------------------
+# Email Configuration (for password reset functionality)
+# For Gmail: Use App Password (not regular password)
+# Get App Password: https://myaccount.google.com/apppasswords
+# -----------------------------------------------------------------------------
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+EMAIL_FROM_NAME=FinanceIQ Team
+
+# -----------------------------------------------------------------------------
+# AWS S3 Configuration (for file uploads - receipts)
+# Get your credentials from: https://console.aws.amazon.com/iam/
+# -----------------------------------------------------------------------------
+AWS_ACCESS_KEY_ID=your_aws_access_key_id
+AWS_SECRET_ACCESS_KEY=your_aws_secret_access_key
+AWS_REGION=ap-south-1
+AWS_S3_BUCKET_NAME=your_s3_bucket_name
+
+# -----------------------------------------------------------------------------
 # Frontend URL (for Stripe redirects)
 # -----------------------------------------------------------------------------
 FRONTEND_URL=http://localhost:5173
@@ -157,6 +178,13 @@ VITE_APP_DESCRIPTION=The best AI financial manager
           <li><code>STRIPE_SECRET_KEY</code> - Enables subscription payments</li>
           <li><code>STRIPE_WEBHOOK_SECRET</code> - Validates Stripe webhook signatures</li>
           <li><code>STRIPE_PRICE_ID_*</code> - Stripe price IDs for subscription plans</li>
+          <li><code>AWS_ACCESS_KEY_ID</code> - AWS access key for S3 file storage</li>
+          <li><code>AWS_SECRET_ACCESS_KEY</code> - AWS secret key for S3 file storage</li>
+          <li><code>AWS_REGION</code> - AWS region for S3 bucket (default: ap-south-1)</li>
+          <li><code>AWS_S3_BUCKET_NAME</code> - S3 bucket name for storing receipt files</li>
+          <li><code>EMAIL_HOST</code> - SMTP server for password reset emails</li>
+          <li><code>EMAIL_USER</code> - Email address for sending password reset emails</li>
+          <li><code>EMAIL_PASS</code> - Email password or app password</li>
           <li><code>KEEP_ALIVE_URL</code> - URL for server keep-alive pings (useful for free hosting)</li>
           <li><code>SERVER_URL</code> - Backend server URL (used for OAuth callbacks)</li>
         </ul>
@@ -265,6 +293,145 @@ VITE_APP_DESCRIPTION=The best AI financial manager
           </li>
         </ol>
 
+        <h2>☁️ AWS S3 Setup</h2>
+
+        <h3>Creating an S3 Bucket for File Storage</h3>
+        <ol>
+          <li><strong>Create AWS Account:</strong> Sign up at <a href="https://aws.amazon.com/" target="_blank">AWS</a> if you don't have one</li>
+          <li><strong>Create S3 Bucket:</strong>
+            <ul>
+              <li>Go to <a href="https://console.aws.amazon.com/s3/" target="_blank">S3 Console</a></li>
+              <li>Click "Create bucket"</li>
+              <li>Enter a unique bucket name (e.g., "financeiq-receipts")</li>
+              <li>Select your preferred region (e.g., ap-south-1)</li>
+              <li>Uncheck "Block all public access" (files need to be publicly readable)</li>
+              <li>Or configure bucket policy for public read access</li>
+              <li>Click "Create bucket"</li>
+            </ul>
+          </li>
+          <li><strong>Create IAM User for S3 Access:</strong>
+            <ul>
+              <li>Go to <a href="https://console.aws.amazon.com/iam/" target="_blank">IAM Console</a></li>
+              <li>Click "Users" → "Create user"</li>
+              <li>Enter username (e.g., "financeiq-s3-user")</li>
+              <li>Select "Attach policies directly"</li>
+              <li>Attach policy: <code>AmazonS3FullAccess</code> (or create custom policy with only PutObject, GetObject permissions)</li>
+              <li>Click "Create user"</li>
+            </ul>
+          </li>
+          <li><strong>Generate Access Keys:</strong>
+            <ul>
+              <li>Click on the created user</li>
+              <li>Go to "Security credentials" tab</li>
+              <li>Click "Create access key"</li>
+              <li>Select "Application running outside AWS"</li>
+              <li>Copy the Access Key ID and Secret Access Key</li>
+              <li><strong>Important:</strong> Save the secret key immediately - it won't be shown again</li>
+            </ul>
+          </li>
+          <li><strong>Configure Bucket Policy (for public read access):</strong>
+            <ul>
+              <li>Go to your S3 bucket → "Permissions" tab</li>
+              <li>Click "Bucket policy" → "Edit"</li>
+              <li>Add the following policy (replace <code>YOUR_BUCKET_NAME</code> with your bucket name):</li>
+            </ul>
+            <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*"
+    }
+  ]
+}</code></pre>
+          </li>
+          <li><strong>Add to .env:</strong>
+            <ul>
+              <li>Set <code>AWS_ACCESS_KEY_ID</code> with your access key ID</li>
+              <li>Set <code>AWS_SECRET_ACCESS_KEY</code> with your secret access key</li>
+              <li>Set <code>AWS_REGION</code> with your bucket region (e.g., ap-south-1)</li>
+              <li>Set <code>AWS_S3_BUCKET_NAME</code> with your bucket name</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><circle cx="12" cy="16" r="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> S3 Features:</strong>
+          <ul>
+            <li><strong>Receipt Storage:</strong> All uploaded receipt images are stored in S3</li>
+            <li><strong>Scalable:</strong> S3 provides unlimited storage capacity</li>
+            <li><strong>Reliable:</strong> 99.999999999% (11 9's) durability</li>
+            <li><strong>Cost-Effective:</strong> Pay only for what you use</li>
+            <li><strong>CDN Ready:</strong> Can be integrated with CloudFront for faster delivery</li>
+          </ul>
+        </div>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Security Best Practices:</strong>
+          <ul>
+            <li>Never commit AWS credentials to version control</li>
+            <li>Use IAM users with minimal required permissions (not root account)</li>
+            <li>Consider using IAM roles if deploying on AWS infrastructure</li>
+            <li>Enable S3 bucket versioning for important files</li>
+            <li>Set up lifecycle policies to manage old files</li>
+            <li>Monitor S3 access logs for security auditing</li>
+          </ul>
+        </div>
+
+        <h2>📧 Email Configuration Setup</h2>
+
+        <h3>Gmail SMTP Setup for Password Reset</h3>
+        <ol>
+          <li><strong>Enable 2-Step Verification:</strong>
+            <ul>
+              <li>Go to <a href="https://myaccount.google.com/security" target="_blank">Google Account Security</a></li>
+              <li>Enable "2-Step Verification" if not already enabled</li>
+            </ul>
+          </li>
+          <li><strong>Generate App Password:</strong>
+            <ul>
+              <li>Go to <a href="https://myaccount.google.com/apppasswords" target="_blank">App Passwords</a></li>
+              <li>Select "Mail" and "Other (Custom name)"</li>
+              <li>Enter name: "FinanceIQ"</li>
+              <li>Click "Generate"</li>
+              <li>Copy the 16-character password (spaces don't matter)</li>
+            </ul>
+          </li>
+          <li><strong>Add to .env:</strong>
+            <ul>
+              <li>Set <code>EMAIL_HOST</code> to <code>smtp.gmail.com</code></li>
+              <li>Set <code>EMAIL_PORT</code> to <code>587</code></li>
+              <li>Set <code>EMAIL_SECURE</code> to <code>false</code></li>
+              <li>Set <code>EMAIL_USER</code> to your Gmail address</li>
+              <li>Set <code>EMAIL_PASS</code> to the generated app password (not your regular password)</li>
+              <li>Set <code>EMAIL_FROM_NAME</code> to your desired sender name (e.g., "FinanceIQ Team")</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="callout info">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email Features:</strong>
+          <ul>
+            <li><strong>Password Reset:</strong> Users receive password reset links via email</li>
+            <li><strong>Secure:</strong> Uses SMTP with TLS encryption</li>
+            <li><strong>Reliable:</strong> Gmail SMTP is highly reliable</li>
+            <li><strong>Customizable:</strong> Can configure sender name and email address</li>
+          </ul>
+        </div>
+
+        <div class="callout warning">
+          <strong><svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Important Notes:</strong>
+          <ul>
+            <li>You must use an App Password, not your regular Gmail password</li>
+            <li>App Passwords are only available if 2-Step Verification is enabled</li>
+            <li>For other email providers (Outlook, Yahoo, etc.), use their respective SMTP settings</li>
+            <li>Never commit email passwords to version control</li>
+          </ul>
+        </div>
+
         <h2>🗄️ MongoDB Database Setup</h2>
 
         <h3>MongoDB Atlas Configuration</h3>
@@ -324,6 +491,8 @@ VITE_APP_DESCRIPTION=The best AI financial manager
             <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Google Gemini API key is set (if using receipt OCR)</li>
             <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Stripe keys are configured (if using subscriptions)</li>
             <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Google OAuth credentials are set (if using Google login)</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> AWS S3 credentials are configured (if using file uploads)</li>
+            <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Email configuration is set (if using password reset)</li>
             <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> <code>FRONTEND_URL</code> matches your frontend deployment URL</li>
             <li><svg class="icon-inline" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> All API keys are from the correct environment (test vs production)</li>
           </ul>

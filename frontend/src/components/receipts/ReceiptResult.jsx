@@ -22,7 +22,6 @@ const ReceiptResult = ({ receiptResult, isSaving, onEdit, onSave }) => {
   }
 
   const extractedData = receiptResult.extractedData || {};
-  const receiptImageUrl = `${import.meta.env.VITE_API_URL?.replace('/api', '')}${receiptResult.fileUrl}`;
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -115,7 +114,7 @@ const ReceiptResult = ({ receiptResult, isSaving, onEdit, onSave }) => {
           </h3>
           <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
             <img
-              src={receiptImageUrl}
+              src={receiptResult.fileUrl}
               alt="Uploaded Receipt"
               className="w-full h-auto max-h-96 object-contain bg-gray-50 dark:bg-gray-900"
             />
