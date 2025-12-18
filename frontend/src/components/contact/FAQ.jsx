@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ChevronDownIcon from '../icons/ChevronDownIcon';
+import { useLocation } from 'react-router-dom';
 
 const FAQ = () => {
   const [activeFaq, setActiveFaq] = useState(null);
+  const location = useLocation();
+  const faqRef = useRef(null);
 
   const faqs = [
     {
@@ -41,8 +44,19 @@ const FAQ = () => {
     setActiveFaq(activeFaq === index ? null : index);
   };
 
+  useEffect(() => {
+    if (location.hash === '#faq' && faqRef.current) {
+      setTimeout(() => {
+        if (faqRef.current) {
+          faqRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setActiveFaq(0);
+        }
+      }, 150);
+    }
+  }, [location.hash]);
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+    <div ref={faqRef} id='faq' className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
       <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-6">
         Frequently asked questions
       </h2>

@@ -142,6 +142,14 @@ const PlanSelector = ({ currentPlan, onSelectPlan, loading }) => {
               >
                 {loading ? 'Processing...' : 'Upgrade'}
               </button>
+            ) : plan.id === 'free' ? (
+              <button
+                onClick={() => onSelectPlan(plan.id)}
+                disabled={loading}
+                className="w-full px-4 py-2 bg-gray-600 dark:bg-gray-600 text-white rounded-lg text-sm font-semibold hover:bg-gray-700 dark:hover:bg-gray-700 disabled:opacity-50 transition-colors"
+              >
+                {loading ? 'Processing...' : 'Get Started'}
+              </button>
             ) : (
               <button
                 disabled

@@ -6,19 +6,10 @@ const FooterNavigation = () => {
     {
       title: 'About',
       links: [
-        { label: 'About us', to: '/' },
-        { label: 'Features', to: '/' },
-        { label: 'Blog', to: '/' },
+        { label: 'About us', to: '/contact' },
+        { label: 'FAQ', to: '/contact#faq' },
+        { label: 'Blog', to: '/#blogs' },
         { label: 'Pricing', to: '/pricing' },
-      ],
-    },
-    {
-      title: 'Company',
-      links: [
-        { label: 'How we work', to: '/' },
-        { label: 'Press Room', to: '/' },
-        { label: 'Jobs', to: '/' },
-        { label: 'Community', to: '/' },
       ],
     },
     {

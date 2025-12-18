@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import LandingHeader from '../components/LandingHeader';
 import HeroSection from '../components/HeroSection';
 import PartnerLogos from '../components/PartnerLogos';
@@ -10,6 +11,19 @@ import BlogSection from '../components/BlogSection';
 import LandingFooter from '../components/LandingFooter';
 
 const LandingPage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash === '#blogs') {
+      setTimeout(() => {
+        const blogsSection = document.getElementById('blogs');
+        if (blogsSection) {
+          blogsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location.hash]);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <LandingHeader />

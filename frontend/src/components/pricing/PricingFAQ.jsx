@@ -30,7 +30,7 @@ const PricingFAQ = () => {
     {
       question: 'Do you offer refunds?',
       answer:
-        'We offer a 30-day money-back guarantee on all paid plans. If you\'re not satisfied, contact us for a full refund.',
+        'All payments are non-refundable. We encourage you to review your plan selection carefully before subscribing. If you have any concerns, please contact our support team.',
     },
   ];
 

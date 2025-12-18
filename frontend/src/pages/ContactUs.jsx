@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import LandingHeader from '../components/LandingHeader';
 import LandingFooter from '../components/LandingFooter';
 import ContactHero from '../components/contact/ContactHero';
@@ -7,9 +8,20 @@ import ContactForm from '../components/contact/ContactForm';
 import FAQ from '../components/contact/FAQ';
 
 const ContactUs = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (location.hash === '#faq') {
+      setTimeout(() => {
+        const faqSection = document.getElementById('faq');
+        if (faqSection) {
+          faqSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.hash]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">

@@ -27,7 +27,7 @@ const createRecurringTransaction = async (req, res) => {
                 message: 'Recurring transactions can only start today or in the future.' 
             });
         }
-
+        const isToday = start.getTime() === today.getTime()
         const userId = req.user.id;
         const plan = await subscriptionService.getUserPlan(userId);
         
@@ -36,7 +36,7 @@ const createRecurringTransaction = async (req, res) => {
         session = await mongoose.startSession();
         session.startTransaction();
 
-        const nextDueDate = calculateNextDueDate(startDate, frequency);
+        const nextDueDate = isToday ? calculateNextDueDate(startDate, frequency) : start;
 
         const recurringTransaction = new RecurringTransaction({
             user: userId,
@@ -51,18 +51,21 @@ const createRecurringTransaction = async (req, res) => {
 
         const createdRecurringTransaction = await recurringTransaction.save({ session });
 
-        const transaction = new IncomeExpense({
-            user: userId,
-            name,
-            category,
-            isIncome,
-            note: `Recurring - ${name}`,
-            recurringTransaction: createdRecurringTransaction._id,
-            addedOn: startDate,
-            cost: amount,
-        });
+        if( isToday ) {
 
-        await transaction.save({ session });
+            const transaction = new IncomeExpense({
+                user: userId,
+                name,
+                category,
+                isIncome,
+                note: `Recurring - ${name}`,
+                recurringTransaction: createdRecurringTransaction._id,
+                addedOn: startDate,
+                cost: amount,
+            });
+    
+            await transaction.save({ session });
+        }
 
         if (session) await session.commitTransaction();
 
@@ -96,46 +99,135 @@ const getRecurringTransactions = async (req, res) => {
 
 
 const updateRecurringTransaction = async (req, res) => {
+    let session;
+  
     try {
-        const { name, category, amount, isIncome, frequency, startDate } = req.body;
+        const updateData = {};
+        ['name', 'category', 'amount', 'isIncome', 'frequency', 'startDate']
+        .forEach(k => {
+            if (req.body[k] !== undefined) {
+            updateData[k] = req.body[k];
+            }
+        });
 
-        const updateData = { name, category, amount, isIncome, frequency, startDate };
+        const existingRecurring = await RecurringTransaction.findOne({
+        _id: req.params.id,
+        user: req.user.id
+        });
 
-        const transaction = await RecurringTransaction.findOne({ _id: req.params.id, user: req.user.id });
-        if (!transaction) {
-            return res.status(404).json({ message: 'This recurring transaction could not be found.' });
+        if (!existingRecurring) {
+        return res.status(404).json({
+            message: 'This recurring transaction could not be found.'
+        });
         }
+
+        const frequency = updateData.frequency;
+        const startDate = updateData.startDate;
+
+        let isToday = false;
+        let start;
 
         if (startDate || frequency) {
-            const start = new Date(startDate);
-            const previousStart = new Date(Math.min(new Date(transaction.startDate), new Date()));
-            previousStart.setHours(0, 0, 0, 0);
-            start.setHours(0, 0, 0, 0);
-    
-            if (start < previousStart) {
-                return res.status(400).json({ 
-                    message: 'Recurring transactions can only start on or after the previous start date.' 
-                });
-            }
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-            const newStartDate = startDate || transaction.startDate;
-            const newFrequency = frequency || transaction.frequency;
-            updateData.nextDueDate = calculateNextDueDate(newStartDate, newFrequency);
+        const newStartDate = startDate || existingRecurring.startDate;
+        start = new Date(newStartDate);
+        start.setHours(0, 0, 0, 0);
+
+        if (start < today) {
+            return res.status(400).json({
+            message: 'Recurring transactions can only start today or in the future.'
+            });
         }
 
-        const updated = await RecurringTransaction.findOneAndUpdate(
-            { _id: req.params.id, user: req.user.id },
-            updateData,
-            { new: true }
+        const newFrequency = frequency || existingRecurring.frequency;
+        isToday = start.getTime() === today.getTime();
+
+        updateData.nextDueDate = isToday
+            ? calculateNextDueDate(start, newFrequency)
+            : start;
+        }
+
+        if (isToday) {
+        session = await mongoose.startSession();
+        session.startTransaction();
+
+        const startOfToday = new Date(start);
+        startOfToday.setHours(0, 0, 0, 0);
+
+        const endOfToday = new Date(start);
+        endOfToday.setHours(23, 59, 59, 999);
+
+        const existingIncomeExpense = await IncomeExpense.findOne(
+            {
+            recurringTransaction: existingRecurring._id,
+            addedOn: { $gte: startOfToday, $lte: endOfToday }
+            },
+            null,
+            { session }
         );
 
-        if (!updated) {
-            return res.status(404).json({ message: 'Recurring transaction not found' });
+        const updatedRecurring = await RecurringTransaction.findOneAndUpdate(
+            { _id: existingRecurring._id, user: req.user.id },
+            updateData,
+            { new: true, session }
+        );
+
+        if (!updatedRecurring) {
+            await session.abortTransaction();
+            await session.endSession();
+            return res.status(404).json({
+            message: 'Recurring transaction not found.'
+            });
         }
 
-        res.json(updated);
+        if (!existingIncomeExpense) {
+            await IncomeExpense.create(
+            [{
+                user: req.user.id,
+                name: updatedRecurring.name,
+                category: updatedRecurring.category,
+                isIncome: updatedRecurring.isIncome,
+                note: `Recurring - ${updatedRecurring.name}`,
+                recurringTransaction: updatedRecurring._id,
+                addedOn: start,
+                cost: updatedRecurring.amount
+            }],
+            { session }
+            );
+        }
+
+        await session.commitTransaction();
+        await session.endSession();
+
+        return res.json(updatedRecurring);
+        }
+
+        const updatedRecurring = await RecurringTransaction.findOneAndUpdate(
+        { _id: existingRecurring._id, user: req.user.id },
+        updateData,
+        { new: true }
+        );
+
+        if (!updatedRecurring) {
+        return res.status(404).json({
+            message: 'Recurring transaction not found.'
+        });
+        }
+
+        res.json(updatedRecurring);
+
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong. Please try again later.', error: error.message });
+        if (session) {
+        await session.abortTransaction();
+        await session.endSession();
+        }
+
+        res.status(500).json({
+        message: 'Something went wrong. Please try again later.',
+        error: error.message
+        });
     }
 };
 
