@@ -4,7 +4,9 @@ const { calculateNextDueDate } = require("../utils/calculateNextDueDate");
 
 exports.runRecurringTransactions = async (req, res) => {
   // Protect endpoint – only Vercel cron
-  if (req.headers["x-vercel-cron"] !== "1") {
+  console.info('Running recurring transactions cron');
+  if (req.query.secret !== process.env.CRON_SECRET) {
+    console.info("Unauthorized cron attempt");
     return res.status(401).json({ error: "Unauthorized" });
   }
 
@@ -41,6 +43,8 @@ exports.runRecurringTransactions = async (req, res) => {
         console.error(`Failed processing recurring ${item._id}:`, err.message);
       }
     }
+
+    console.info(`Processed: ${processed}`);
 
     return res.status(200).json({
       success: true,

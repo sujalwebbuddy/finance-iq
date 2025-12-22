@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LandingHeader from '../components/LandingHeader';
 import LandingFooter from '../components/LandingFooter';
@@ -33,6 +33,14 @@ const PricingPage = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const scrollTimeout = setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+
+    return () => clearTimeout(scrollTimeout);
+  },[]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">

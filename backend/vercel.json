@@ -13,7 +13,7 @@
   ],
   "crons": [
     {
-      "path": "/api/cron/recurring-transactions",
+      "path": "/api/cron/recurring-transactions?secret=CRON_SECRET",
       "schedule": "0 0 * * *"
     }
   ],

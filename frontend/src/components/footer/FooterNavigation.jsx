@@ -6,7 +6,7 @@ const FooterNavigation = () => {
     {
       title: 'About',
       links: [
-        { label: 'About us', to: '/contact' },
+        { label: 'Contact us', to: '/contact' },
         { label: 'FAQ', to: '/contact#faq' },
         { label: 'Blog', to: '/#blogs' },
         { label: 'Pricing', to: '/pricing' },

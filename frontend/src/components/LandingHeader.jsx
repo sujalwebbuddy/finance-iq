@@ -37,7 +37,7 @@ const LandingHeader = () => {
     { label: 'Capital', to: '/budgets' },
     { label: 'Resources', to: '/transactions' },
     { label: 'Pricing', to: '/pricing' },
-    { label: 'About', to: '/contact' },
+    { label: 'Contact', to: '/contact' },
   ];
 
   return (
