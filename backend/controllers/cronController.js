@@ -3,9 +3,9 @@ const IncomeExpense = require("../models/IncomeExpense");
 const { calculateNextDueDate } = require("../utils/calculateNextDueDate");
 
 exports.runRecurringTransactions = async (req, res) => {
-  // Protect endpoint – only Vercel cron
   console.info('Running recurring transactions cron');
-  if (req.query.secret !== process.env.CRON_SECRET) {
+
+  if (req.headers["x-vercel-cron"] !== "1") {
     console.info("Unauthorized cron attempt");
     return res.status(401).json({ error: "Unauthorized" });
   }
