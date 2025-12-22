@@ -14,7 +14,7 @@
   "crons": [
     {
       "path": "/api/cron/recurring-transactions",
-      "schedule": "* * * * *"
+      "schedule": "5 * * * *"
     }
   ],
   "env": {

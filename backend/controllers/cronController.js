@@ -5,11 +5,6 @@ const { calculateNextDueDate } = require("../utils/calculateNextDueDate");
 exports.runRecurringTransactions = async (req, res) => {
   console.info('Running recurring transactions cron');
 
-  if (req.headers["x-vercel-cron"] !== "1") {
-    console.info("Unauthorized cron attempt");
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   try {
     const now = new Date();
     let processed = 0;
