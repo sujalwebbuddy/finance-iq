@@ -75,7 +75,7 @@ function checkLimit(plan, metric, currentUsage) {
   const limit = limits[metric];
   
   if (limit === -1) {
-    return { allowed: true, remaining: -1 };
+    return { allowed: true, remaining: -1, limit: -1 };
   }
   
   const remaining = Math.max(0, limit - currentUsage);
