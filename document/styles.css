@@ -1077,6 +1077,13 @@ body::after {
   stroke: currentColor;
 }
 
+.icon-inline-red {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.375rem;
+  stroke: red;
+}
+
 .prose h2 .icon,
 .prose h3 .icon {
   margin-right: 0.5rem;
